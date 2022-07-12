@@ -39,6 +39,11 @@
                     </div>
                 </ul>
             </div>
+            <div class="flex p-2 bg-zinc-900 text-neutral-300 font-semibold px-32">
+                <a class="mx-2 hover:text-neutral-100 duration-200" href="/dashboard/server/{{ serverinfo[0][1] }}">Console</a>
+                <a class="mx-2 hover:text-neutral-100 duration-200" href="/dashboard/server/{{ serverinfo[0][1] }}">File manager</a>
+                <a class="mx-2 hover:text-neutral-100 duration-200" href="/dashboard/server/{{ serverinfo[0][1] }}">Configuration</a>
+            </div>
             {% block content %}
             {% endblock %}
         </div>
