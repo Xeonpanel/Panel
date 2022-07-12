@@ -1,4 +1,4 @@
-import flask, sqlite3, requests, os, sys, time
+import flask, requests, os, sys, time
 
 from __main__ import app, sqlquery
 
@@ -118,7 +118,7 @@ def api_createserver():
                         "image": image
                     }
                     try:
-                        if requests.post("http://{}/api/servers/{}/create".format(node_ip, uuid), data=payload).text == "server created":
+                        if requests.post("http://{}:8080/api/servers/{}/create".format(node_ip, uuid), data=payload).text == "server created":
                             sqlquery (
                                 "INSERT INTO servers (name, ownerid, nodeid, memory, disk, uuid, owneremail, start_command, image, nodeip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                                 flask.request.form["server_name"],
