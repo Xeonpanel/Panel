@@ -12,8 +12,7 @@ then
     mkdir -p /var/www/xeonpanel
     mv Panel/* /var/www/xeonpanel
     rm -rf Panel
-    cd /var/www/xeonpanel
-    mv /var/www/xeonpanel/xeonpanel.service /etc/systemd/system/
+    sudo mv /var/www/xeonpanel/xeonpanel.service /etc/systemd/system/
 else
     echo "Installation cancelled."
 fi
