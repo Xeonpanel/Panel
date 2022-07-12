@@ -22,7 +22,7 @@
                     ws.addEventListener("error", (err) => {
                         $(
                             `
-                                <div class="bg-red-500 py-2 px-4 rounded text-neutral-100 flex items-center">
+                                <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
                                     <i class="fas fa-circle-notch fa-spin"></i>
                                     <h2 class="ml-3">Could not connect to server, node offline</h2>
                                 </div>
@@ -97,9 +97,9 @@
             </div>
         </div>
         <div class="w-full ml-4 mr-8 shadow-xl">
-            <div class="bg-black rounded-t p-5 flex justify-center items-center">
+            <div class="bg-black rounded-t p-5 items-center">
                 <div id="terminal"></div>
-                <script>
+                <script>             
                     const theme = {
                         background: '#000',
                         cursor: 'transparent',
@@ -128,12 +128,16 @@
                             cursorStyle: 'underline',
                             allowTransparency: true,
                             fontSize: 15,
-                            rows: 25,
-                            theme: theme,
-                            cols: 110
+                            theme: theme
                         }
                     );
-                    term.open(document.getElementById('terminal'));
+                    var fitAddon = new FitAddon.FitAddon();
+                    term.loadAddon(fitAddon);
+                    term.open(document.getElementById("terminal"));
+                    fitAddon.fit();
+                    window.onresize = () => {
+                        fitAddon.fit();
+                    }
                 </script>
             </div>
             <div class="bg-zinc-800 p-3 flex items-center text-neutral-100">
