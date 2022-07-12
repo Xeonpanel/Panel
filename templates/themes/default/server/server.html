@@ -1,8 +1,9 @@
 {% extends "themes/default/server/server_layout.html" %}
 
 {% block content %}
-    <div class="flex mt-8 mb-8 justify-between" id="content">
-        <div class="w-1/3 ml-8 mr-4 h-fit">
+    <div id="error" class="mx-8 mt-5 duration-400 ease-in-out transition-all"></div>
+    <div class="flex mt-5 mb-8 justify-between" id="content">
+        <div class="w-1/3 ml-8 mr-2 h-fit">
             <div class="shadow-xl">
                 <div class="rounded-t text-neutral-100 font-semibold bg-zinc-900 p-3 border-b-2 border-blue-500">
                     <h2 class="text-xl"><i class="fa fa-server mr-3 ml-1"></i>{{ serverinfo[0][1] }}</h2>
@@ -12,11 +13,21 @@
                 function GetLogs() {
                     term.clear()
                     const ws = new WebSocket('ws://{{ serverinfo[0][10] }}:80/ws');
-                    ws.addEventListener('message', (event) => {
-                        term.write(`${event.data}`)
+                    ws.addEventListener("message", (msg) => {
+                        term.write(msg.data)
                     });
-                    ws.addEventListener('open', (event) => {
+                    ws.addEventListener("open", (event) => {
                         ws.send('{"uuid": "{{ serverinfo[0][6] }}"}');
+                    });
+                    ws.addEventListener("error", (err) => {
+                        $(
+                            `
+                                <div class="bg-red-500 py-2 px-4 rounded text-neutral-100 flex items-center">
+                                    <i class="fas fa-circle-notch fa-spin"></i>
+                                    <h2 class="ml-3">Could not connect to server, node offline</h2>
+                                </div>
+                            `
+                        ).appendTo("#error");
                     });
                 }
 
