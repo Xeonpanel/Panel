@@ -1,4 +1,4 @@
-import flask, sqlite3, os, requests
+import flask
 
 from __main__ import app, sqlquery
 
