@@ -17,7 +17,7 @@ then
     apt install screen
     screen
     cd /var/www/xeonpanel
-    python3 app.py
+    mv /var/www/xeonpanel/xeonpanel.service /etc/systemd/system/
 else
     echo "Installation cancelled."
 fi
