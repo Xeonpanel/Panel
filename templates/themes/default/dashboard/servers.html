@@ -1,0 +1,32 @@
+{% extends "themes/default/dashboard/dash_layout.html" %}
+
+{% block content %}
+    {% if servers %}
+        <div class="mt-8">
+            {% for server in servers %}
+                <div class="flex justify-center">
+                    <a href="/dashboard/server/{{ server[0] }}">
+                        <div class="justify-between flex w-[1200px] shadow-xl my-1 items-center bg-zinc-900/70 rounded border border-zinc-800 hover:border-zinc-600 duration-200 py-6 px-7 mx-8">
+                            <div class="text-neutral-100 font-semibold text-xl flex items-center">
+                                <div class="mr-5">
+                                    <i class="fa fa-server"></i>
+                                </div>
+                                <h2 class="mx-1">{{ server[1] }}</h2>
+                            </div>
+                            <!-- <div class="flex text-neutral-300 text-md items-center">
+                                <div class="flex items-center mx-1">
+                                    <i class="fa fa-ethernet"></i>
+                                    <h2 class="mx-2">{{ server[4] }}</h2>
+                                </div>
+                            </div> -->
+                        </div>
+                    </a>
+                </div>  
+            {% endfor %}
+        </div>
+    {% else %}
+        <h2 class="text-lg text-neutral-200 font-semibold text-center mt-12">
+            You do not have any servers
+        </h2>
+    {% endif %}
+{% endblock %}

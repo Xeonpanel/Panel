@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="/static/node_modules/flowbite/dist/flowbite.js">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-zinc-700 flex flex-col h-full w-full items-center justify-center">
+        {% if get_flashed_messages() %}
+            <div class="rounded w-[500px] py-2 px-4 bg-red-500 shadow-2xl my-2 text-white">
+                <h2>{{ get_flashed_messages(with_categories=true)[0][1] }}</h2>
+            </div>
+        {% endif %}
+        <div class="w-[500px] shadow-2xl">
+            <div class="bg-zinc-800 rounded-t flex items-center">
+                <h2 class="text-white p-5 text-3xl">Login to your account</h2>
+            </div>
+            <div class="bg-zinc-800/70 w-full inline-flex justify-center">
+                <div>
+                    <form action="/login" method="post" class="pt-4 text-white">
+                        <div>
+                            <div class="my-2 flex-col flex">
+                                <label for="email" class="text-neutral-100 my-1">Enter your email</label>
+                                <input type="email" name="email" class="rounded bg-zinc-700 py-2 px-4 text-xl" required>
+                            </div>
+                            <div class="my-2 flex-col flex">
+                                <label for="password" class="text-neutral-100 my-1">Enter your password</label>
+                                <input type="password" name="password" class="rounded bg-zinc-700 py-2 px-4 text-xl" required>
+                            </div>
+                            <input type="submit" id="submit" hidden>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="bg-zinc-800/70 flex p-5 p-8 items-center justify-between rounded-b">
+                <a href="/register" class="text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-20 py-2">Register</a>
+                <a onclick="document.getElementById('submit').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-20 py-2">Login</a>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>{{ title }}</title>
+        <script src="/static/node_modules/flowbite/dist/flowbite.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    </head>
+    <body class="bg-zinc-700">
+        <div>
+            <div class="bg-zinc-800 shadow-xl">
+                <ul class="flex justify-between h-[3.7rem] mx-24 text-neutral-200 items-center">
+                    <a href="/"><li class="text-2xl font-semibold">Xeon-Panel</li></a>
+                    <div class="flex items-center mr-4 h-full">
+                        {% if page == "servers" %}
+                            <a href="/dashboard">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
+                                    <i class="mt-1 fa fa-server"></i>
+                                </div>
+                            </a>
+                        {% else %}
+                            <a href="/dashboard">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                                    <i class="mt-1 fa fa-server"></i>
+                                </div>
+                            </a>
+                        {% endif %}
+                        {% if page == "account" %}
+                            <a href="/dasboard/account">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
+                                    <i class="mt-1 fa fa-user"></i>
+                                </div>
+                            </a>
+                        {% else %}
+                            <a href="/dashboard/account">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                                    <i class="mt-1 fa fa-user"></i>
+                                </div>
+                            </a>
+                        {% endif %}
+                        {% if session["user_type"] == "administrator" %}
+                            {% if page == "admin" %}
+                                <a href="/admin">
+                                    <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
+                                        <i class="mt-1 fa fa-cog"></i>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <a href="/admin">
+                                    <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                                        <i class="mt-1 fa fa-cog"></i>
+                                    </div>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        <a href="/logout?csrf={{ session['csrf_token'] }}">
+                            <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                                <i class="mt-1 fa fa-sign-out"></i>
+                            </div>
+                        </a>
+                    </div>
+                </ul>
+            </div>
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>

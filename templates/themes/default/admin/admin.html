@@ -1,0 +1,47 @@
+{% extends "themes/default/admin/admin_layout.html" %}
+
+{% block content %}
+    <div class="mt-[30px]">
+        {% if get_flashed_messages(with_categories=true) %}
+            {% if get_flashed_messages(with_categories=true)[0][0] == "succes" %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-blue-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% else %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-orange-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="shadow-xl w-[calc(100vw-320px)] mx-[30px]">
+        <div class="bg-zinc-800 p-3 rounded-t w-full border-b-2 border-blue-500">
+            <div class="flex items-center">
+                <i class="fa fa-cogs text-neutral-100 mx-2 mr-4"></i>
+                <h2 class="font-semibold text-xl text-neutral-100">Control center</h2>
+            </div> 
+        </div>
+        <div class="bg-zinc-800/70 p-12 flex items-center">
+            <div class="flex items-center scale-110">
+                <form action="/api/admin/settings" method="post" class="flex flex-col text-neutral-100">
+                    <label for="panel_name">Your panel name</label>
+                    <input type="text" name="panel_name" class="py-1 rounded bg-zinc-700 my-2 px-4 shadow-lg" value="{{ panelname }}" required>
+                    <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                    <input type="text" name="api_key" value="{{ session['api_key'] }}" hidden>
+                    <input type="submit" id="save_changes" hidden>
+                </form>
+            </div>
+        </div>
+        <div class="bg-zinc-800/70 rounded-b p-5">
+            <div class="flex justify-end">
+                <form action="/api/admin/reboot" method="post">
+                    <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                    <input type="text" name="api_key" value="{{ session['api_key'] }}" hidden>
+                    <input type="submit" id="reboot_server" hidden>
+                </form>
+                <a onclick="document.getElementById('reboot_server').click()" class="select-none text-white font-semibold bg-red-500 hover:bg-red-600 duration-300 rounded px-4 py-1 mx-1">Reboot Server</a>
+                <a onclick="document.getElementById('save_changes').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Save Changes</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

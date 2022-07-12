@@ -1,0 +1,118 @@
+{% extends "themes/default/server/server_layout.html" %}
+
+{% block content %}
+    <div class="flex mt-8 justify-between" id="content">
+        <div class="w-1/3 ml-8 mr-4 h-fit">
+            <div class="shadow-xl">
+                <div class="rounded-t text-neutral-100 font-semibold bg-zinc-800 p-3">
+                    <h2 class="text-xl"><i class="fa fa-server mr-3 ml-1"></i>{{ serverinfo[0][1] }}</h2>
+                </div>
+                <div class="bg-zinc-800/70 rounded-b p-3 px-5 pt-4">
+                    <ul class="text-neutral-100 mx-8">
+                        <li><i class="mr-2 fa fa-ethernet"></i>0.0.0.0</li>
+                        <li><i class="mr-2 fa fa-memory"></i><span id="server_memory">0.00</span> / {{ serverinfo[0][4] }}MB</li>
+                        <li><i class="mr-2 fa fa-hdd"></i><span id="server_storage">0.00</span> / {{ serverinfo[0][5] }}MB</li>
+                    </ul>
+                </div>
+            </div>
+            <script>
+                function GetLogs() {
+                    term.clear()
+                    const ws = new WebSocket('ws://{{ serverinfo[0][10] }}:80/ws');
+                    ws.addEventListener('message', (event) => {
+                        term.write(`${event.data}`)
+                    });
+                    ws.addEventListener('open', (event) => {
+                        ws.send('{"uuid": "{{ serverinfo[0][6] }}"}');
+                    });
+                }
+
+                $(document).ready( function() {
+                    GetLogs();
+                });
+
+                function StartServer() {
+                    $.ajax ({
+                        type: "post",
+                        url: "http://{{ serverinfo[0][10] }}/api/servers/{{ serverinfo[0][6] }}/start",
+                        data: JSON.stringify({
+                            "api_key": "{{ session['api_key'] }}",
+                            "image": "{{ serverinfo[0][9] }}",
+                            "startup_command": "{{ serverinfo[0][8] }}"
+                        }),
+                        dataType: "json",
+                        contentType: "application/json"
+                    });
+                    setTimeout(function(){
+                        GetLogs();
+                    }, 400); 
+                };
+
+                function StopServer() {
+
+                };
+            </script>
+            <div class="shadow-xl bg-zinc-800/70 rounded p-5 mt-5 flex items-center justify-center text-white select-none">
+                <a onclick="StartServer()" class="rounded px-5 py-1 font-semibold bg-green-600 hover:bg-green-700 duration-200 mx-1" id="start_btn">Start</a>
+                <a onclick="StopServer()" class="rounded px-5 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1">Stop</a>
+            </div>
+        </div>
+        <div class="w-full ml-4 mr-8 shadow-xl">
+            <div class="bg-black rounded-t p-5 flex justify-center items-center">
+                <div id="terminal"></div>
+                <script>
+                    const theme = {
+                        background: '#000',
+                        cursor: 'transparent',
+                        black: '#000',
+                        red: '#E54B4B',
+                        green: '#9ECE58',
+                        yellow: '#FAED70',
+                        blue: '#396FE2',
+                        magenta: '#BB80B3',
+                        cyan: '#2DDAFD',
+                        white: '#d0d0d0',
+                        brightBlack: 'rgba(255, 255, 255, 0.2)',
+                        brightRed: '#FF5370',
+                        brightGreen: '#C3E88D',
+                        brightYellow: '#FFCB6B',
+                        brightBlue: '#82AAFF',
+                        brightMagenta: '#C792EA',
+                        brightCyan: '#89DDFF',
+                        brightWhite: '#ffffff',
+                        selection: '#FAF089',
+                    };
+                    var term = new Terminal(
+                        {
+                            convertEol: true,
+                            disableStdin: true,
+                            cursorStyle: 'underline',
+                            allowTransparency: true,
+                            fontSize: 15,
+                            rows: 25,
+                            theme: theme,
+                            cols: 110
+                        }
+                    );
+                    term.open(document.getElementById('terminal'));
+                </script>
+            </div>
+            <div class="bg-zinc-800 p-3 flex items-center text-neutral-100">
+                <i class="fa fa-terminal mx-1"></i>
+                <input class="ml-3 text-neutral-200 bg-zinc-800 outline-none border-none w-full" type="text" placeholder="Enter a command..." id="consoleinput">
+                <script>
+                    var input = document.getElementById("consoleinput");
+                    input.addEventListener("keyup", function(event) {
+                        if (event.keyCode === 13) {
+                            event.preventDefault();
+                            if (input.value) {
+                                term.write(input.value + "\n");
+                                input.value = ""
+                            };
+                        };
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}
