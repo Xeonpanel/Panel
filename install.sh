@@ -8,7 +8,7 @@ then
     sudo apt install git python3 python3-pip -y
     python3 -m pip install flask requests
     cd /var/www
-    git clone https://github.com/Xeonpanel/Panel.git xeonpanel
+    sudo git clone https://github.com/Xeonpanel/Panel.git xeonpanel
     sudo mv /var/www/xeonpanel/xeonpanel.service /etc/systemd/system/
 else
     echo "Installation cancelled."
