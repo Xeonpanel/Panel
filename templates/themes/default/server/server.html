@@ -60,6 +60,30 @@
                 <a onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1" id="start_btn">Start</a>
                 <a onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1">Stop</a>
             </div>
+            <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                <div class="flex bg-zinc-700">
+                    <i class="fa fa-network-wired text-3xl"></i>
+                </div>
+                <div class="flex">
+                    <h2 class="text-xl font-semibold text-neutral-100">{{ serverinfo[0][10] }}</h2>
+                </div>
+            </div>
+            <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                <div class="flex bg-zinc-700">
+                    <i class="fa fa-memory text-3xl"></i>
+                </div>
+                <div class="flex">
+                    <h2 class="text-xl font-semibold text-neutral-100">0.00MB / {{ serverinfo[0][4] }}MB</h2>
+                </div>
+            </div>
+            <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                <div class="flex bg-zinc-700">
+                    <i class="fa fa-hdd text-3xl"></i>
+                </div>
+                <div class="flex">
+                    <h2 class="text-xl font-semibold text-neutral-100">0.00MB / {{ serverinfo[0][5] }}MB</h2>
+                </div>
+            </div>
         </div>
         <div class="w-full ml-4 mr-8 shadow-xl">
             <div class="bg-black rounded-t p-5 flex justify-center items-center">
