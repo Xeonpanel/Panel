@@ -12,7 +12,7 @@
             <script>
                 function GetLogs() {
                     term.clear()
-                    const ws = new WebSocket('ws://{{ serverinfo[0][10] }}:80/ws');
+                    const ws = new WebSocket('ws://{{ serverinfo[0][10] }}:8080/ws');
                     ws.addEventListener("message", (msg) => {
                         term.write(msg.data)
                     });
@@ -38,7 +38,7 @@
                 function StartServer() {
                     $.ajax ({
                         type: "post",
-                        url: "http://{{ serverinfo[0][10] }}/api/servers/{{ serverinfo[0][6] }}/start",
+                        url: "http://{{ serverinfo[0][10] }}:8080/api/servers/{{ serverinfo[0][6] }}/start",
                         data: JSON.stringify({
                             "api_key": "{{ session['api_key'] }}",
                             "image": "{{ serverinfo[0][9] }}",
@@ -55,7 +55,7 @@
                 function StopServer() {
                     $.ajax ({
                         type: "post",
-                        url: "http://{{ serverinfo[0][10] }}/api/servers/{{ serverinfo[0][6] }}/stop",
+                        url: "http://{{ serverinfo[0][10] }}:8080/api/servers/{{ serverinfo[0][6] }}/stop",
                         data: JSON.stringify({
                             "api_key": "{{ session['api_key'] }}"
                         }),
