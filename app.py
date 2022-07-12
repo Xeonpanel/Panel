@@ -13,8 +13,11 @@ import routes.api, routes.auth, routes.dashboard, routes.setup, routes.server, r
 
 for addon in os.listdir("addons/"):
     if not addon == "__pycache__":
-        __import__("addons.{}".format(os.path.splitext(addon)[0]))
-        print("Loaded {}".format(addon))
+        try:
+            __import__("addons.{}".format(os.path.splitext(addon)[0]))
+            print("Loaded {}".format(addon))
+        except Exception:
+            pass
 
 @app.route("/logout", methods=["GET"])
 def logout():
