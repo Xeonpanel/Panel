@@ -1,4 +1,5 @@
 import flask, sqlite3, requests, os, sys, json
+os.chdir("/var/www/xeonpanel/")
 
 app = flask.Flask("Xeon Panel")
 
