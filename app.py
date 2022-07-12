@@ -1,4 +1,5 @@
-import flask, sqlite3, requests, os, sys, json
+import flask, sqlite3, requests, os, sys, json, waitress
+
 os.chdir("/var/www/xeonpanel/")
 app = flask.Flask("Xeon Panel")
 
@@ -10,6 +11,8 @@ def sqlquery(sql, *parameter):
     return data
 
 import routes.api, routes.auth, routes.dashboard, routes.setup, routes.server, routes.admin
+
+# Autoload addons in addon folder
 
 for addon in os.listdir("addons/"):
     if not addon == "__pycache__":
@@ -37,4 +40,4 @@ def main():
 
 app.config["THEME"] = json.loads(open("config.json", "r").read())["theme"]
 app.config["SECRET_KEY"] = os.urandom(500).hex()
-app.run(debug=True, host="0.0.0.0", port=80)
+waitress.serve(app, host="0.0.0.0", port=5000)
