@@ -6,10 +6,11 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
     sudo apt update
     sudo apt install git python3 python3-pip -y
-    python3 -m pip install flask requests
+    python3 -m pip install flask requests waitress
     cd /var/www
     sudo git clone https://github.com/Xeonpanel/Panel.git xeonpanel
     sudo mv /var/www/xeonpanel/xeonpanel.service /etc/systemd/system/
+    echo "\n\n Panel succesfully installed, and started.. \n\n"
 else
     echo "Installation cancelled."
 fi
