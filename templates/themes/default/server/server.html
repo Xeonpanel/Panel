@@ -49,7 +49,18 @@
                 };
 
                 function StopServer() {
-
+                    $.ajax ({
+                        type: "post",
+                        url: "http://{{ serverinfo[0][10] }}/api/servers/{{ serverinfo[0][6] }}/stop",
+                        data: JSON.stringify({
+                            "api_key": "{{ session['api_key'] }}"
+                        }),
+                        dataType: "json",
+                        contentType: "application/json"
+                    });
+                    setTimeout(function(){
+                        GetLogs();
+                    }, 400); 
                 };
             </script>
             <div class="shadow-xl bg-zinc-800/70 rounded p-5 mt-5 flex items-center justify-center text-white select-none">
