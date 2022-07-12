@@ -1,0 +1,23 @@
+{% extends "themes/default/server/server_layout.html" %}
+
+{% block content %}
+    <div class="flex mt-5 mb-8 justify-center" id="content">
+        {% if files %}
+            <div class="flex flex-col text-neutral-100">
+                {% for file in files %}
+                    <div class="flex py-5 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 w-[1200px] items-center">
+                        <div class="flex items-center">
+                            <i class="fa fa-file text-xl mr-5"></i>
+                            <h2 class="text-xl">{{ file }}</h2>
+                        </div>
+                        <i class="text-xl fa fa-ellipsis-h"></i>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center text-neutral-200 font-semibold mt-5">
+                <h2>No files found on your server</h2>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
