@@ -9,7 +9,7 @@
                 </div>
                 <div class="bg-zinc-800/70 rounded-b p-3 px-5 pt-4">
                     <ul class="text-neutral-100 mx-8">
-                        <li><i class="mr-2 fa fa-ethernet"></i>0.0.0.0</li>
+                        <li><i class="mr-2 fa fa-ethernet"></i>{{ serverinfo[0][10] }}</li>
                         <li><i class="mr-2 fa fa-memory"></i><span id="server_memory">0.00</span> / {{ serverinfo[0][4] }}MB</li>
                         <li><i class="mr-2 fa fa-hdd"></i><span id="server_storage">0.00</span> / {{ serverinfo[0][5] }}MB</li>
                     </ul>
@@ -49,12 +49,23 @@
                 };
 
                 function StopServer() {
-
+                    $.ajax ({
+                        type: "post",
+                        url: "http://{{ serverinfo[0][10] }}/api/servers/{{ serverinfo[0][6] }}/stop",
+                        data: JSON.stringify({
+                            "api_key": "{{ session['api_key'] }}"
+                        }),
+                        dataType: "json",
+                        contentType: "application/json"
+                    });
+                    setTimeout(function(){
+                        GetLogs();
+                    }, 400); 
                 };
             </script>
             <div class="shadow-xl bg-zinc-800/70 rounded p-5 mt-5 flex items-center justify-center text-white select-none">
-                <a onclick="StartServer()" class="rounded px-5 py-1 font-semibold bg-green-600 hover:bg-green-700 duration-200 mx-1" id="start_btn">Start</a>
-                <a onclick="StopServer()" class="rounded px-5 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1">Stop</a>
+                <a onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1" id="start_btn">Start</a>
+                <a onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1">Stop</a>
             </div>
         </div>
         <div class="w-full ml-4 mr-8 shadow-xl">

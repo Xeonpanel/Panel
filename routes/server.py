@@ -9,7 +9,7 @@ def server(serverid):
         if len(data):
             return flask.render_template(
                 "themes/{}/server/server.html".format(app.config["THEME"]),
-                title=data[0][1],
+                title="Console",
                 serverinfo=data
             )
         else:

@@ -39,6 +39,15 @@
                     </div>
                 </ul>
             </div>
+            <div class="flex h-[3.1rem] items-center bg-zinc-900 text-neutral-300 font-semibold px-32 shadow">
+                {% if title == "Console" %}
+                    <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-blue-500" href="/dashboard/server/{{ serverinfo[0][0] }}">Console</a>
+                {% else %}
+                    <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-zinc-900 hover:border-blue-500" href="/dashboard/server/{{ serverinfo[0][0] }}">Console</a>
+                {% endif %}
+                <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-zinc-900 hover:border-blue-500" href="/dashboard/server/{{ serverinfo[0][0] }}/files">File manager</a>
+                <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-zinc-900 hover:border-blue-500" href="/dashboard/server/{{ serverinfo[0][0] }}/configuration">Configuration</a>
+            </div>
             {% block content %}
             {% endblock %}
         </div>
