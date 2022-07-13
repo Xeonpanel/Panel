@@ -7,8 +7,8 @@
         <link rel="stylesheet" href="/static/node_modules/xterm/css/xterm.css">
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     </head>
-    <body class="bg-zinc-700 h-full w-full">
-        <div class="fixed">
+    <body class="bg-zinc-700 h-full w-full smooth-scroll">
+        <div class="fixed w-full">
             <div class="bg-zinc-800 shadow-xl">
                 <ul class="flex justify-between h-[3.7rem] mr-24 ml-16 text-neutral-200 items-center">
                     <a href="/"><li class="text-2xl font-semibold">{{ panelname }}</li></a>
@@ -38,86 +38,91 @@
                     </div>
                 </ul>
             </div>
+        </div>
             {% if session["user_type"] == "administrator" %}
-                <aside class="w-[260px] fixed h-[calc(100vh-3.7rem)] bg-zinc-800 shadow-xl" aria-label="Sidebar">
-                    <div class="overflow-y-auto py-4 px-3 pt-5">
-                        <ul class="space-y-2">
-                            <li>
-                                {% if title == "Settings" %}
-                                    <a href="/admin" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-cogs text-gray-400"></i>
-                                        <span class="ml-3">Control Center</span>
-                                    </a>
-                                {% else %}
-                                    <a href="/admin" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-cogs text-gray-400"></i>
-                                        <span class="ml-3">Control Center</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                        </ul>
-                        <ul class="space-y-2 pt-4 mt-4 border-t border-zinc-700">
-                            <li>
-                                {% if title == "Nodes" %}
-                                    <a href="/admin/nodes" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-network-wired text-gray-400"></i>
-                                        <span class="ml-3">Nodes</span>
-                                    </a>
-                                {% else %}
-                                    <a href="/admin/nodes" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-network-wired text-gray-400"></i>
-                                        <span class="ml-3">Nodes</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                            <li>
-                                {% if title == "Servers" %}
-                                    <a href="/admin/servers" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-server text-gray-400"></i>
-                                        <span class="ml-3">Servers</span>
-                                    </a>
-                                {% else %}
-                                    <a href="/admin/servers" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-server text-gray-400"></i>
-                                        <span class="ml-3">Servers</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                            <li>
-                                {% if title == "Users" %}
-                                    <a href="/admin/users" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-users text-gray-400"></i>
-                                        <span class="ml-3">Users</span>
-                                    </a>
-                                {% else %}
-                                    <a href="/admin/users" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
-                                        <i class="fa fa-users text-gray-400"></i>
-                                        <span class="ml-3">Users</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                            <li>
-                        </ul>
-                        <ul class="space-y-2 pt-4 mt-4 border-t border-zinc-700">
-                            <li>
-                                {% if title == "Images" %}
-                                    <a href="/admin/images" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
-                                        <i class="fa-brands fa-docker text-gray-400"></i>
-                                        <span class="ml-3">Server Images</span>
-                                    </a>
-                                {% else %}
-                                    <a href="/admin/images" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
-                                        <i class="fa-brands fa-docker text-gray-400"></i>
-                                        <span class="ml-3">Server Images</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                        </ul>
+                <div class="fixed">
+                    <aside class="w-[260px] mt-[3.7rem] h-[calc(100vh-3.7rem)] bg-zinc-800 shadow-xl" aria-label="Sidebar">
+                        <div class="overflow-y-auto py-4 px-3 pt-5">
+                            <ul class="space-y-2">
+                                <li>
+                                    {% if title == "Settings" %}
+                                        <a href="/admin" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-cogs text-gray-400"></i>
+                                            <span class="ml-3">Control Center</span>
+                                        </a>
+                                    {% else %}
+                                        <a href="/admin" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-cogs text-gray-400"></i>
+                                            <span class="ml-3">Control Center</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                            <ul class="space-y-2 pt-4 mt-4 border-t border-zinc-700">
+                                <li>
+                                    {% if title == "Nodes" %}
+                                        <a href="/admin/nodes" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-network-wired text-gray-400"></i>
+                                            <span class="ml-3">Nodes</span>
+                                        </a>
+                                    {% else %}
+                                        <a href="/admin/nodes" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-network-wired text-gray-400"></i>
+                                            <span class="ml-3">Nodes</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    {% if title == "Servers" %}
+                                        <a href="/admin/servers" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-server text-gray-400"></i>
+                                            <span class="ml-3">Servers</span>
+                                        </a>
+                                    {% else %}
+                                        <a href="/admin/servers" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-server text-gray-400"></i>
+                                            <span class="ml-3">Servers</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    {% if title == "Users" %}
+                                        <a href="/admin/users" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-users text-gray-400"></i>
+                                            <span class="ml-3">Users</span>
+                                        </a>
+                                    {% else %}
+                                        <a href="/admin/users" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
+                                            <i class="fa fa-users text-gray-400"></i>
+                                            <span class="ml-3">Users</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                                <li>
+                            </ul>
+                            <ul class="space-y-2 pt-4 mt-4 border-t border-zinc-700">
+                                <li>
+                                    {% if title == "Images" %}
+                                        <a href="/admin/images" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
+                                            <i class="fa-brands fa-docker text-gray-400"></i>
+                                            <span class="ml-3">Server Images</span>
+                                        </a>
+                                    {% else %}
+                                        <a href="/admin/images" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
+                                            <i class="fa-brands fa-docker text-gray-400"></i>
+                                            <span class="ml-3">Server Images</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </aside>
+                </div>
+                <div class="ml-[260px] w-[calc(100vw-260px)] h-full overflow-auto">
+                    <div class="mt-[90px]">
+                        {% block content %}
+                        {% endblock %}
                     </div>
-                </aside>
-                <div class="ml-[260px] w-[calc(100vw-260px)] overflow-auto">
-                    {% block content %}
-                    {% endblock %}
                 </div>
             {% endif %}
         </div>
