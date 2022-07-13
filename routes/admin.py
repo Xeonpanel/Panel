@@ -51,6 +51,21 @@ def create_node():
     else:
         return flask.redirect("/login")
 
+@app.route("/admin/users/create", methods=["GET"])
+def create_user():
+    if flask.session:
+        if flask.session["user_type"] == "administrator":
+            return flask.render_template(
+                "themes/{}/admin/createuser.html".format(app.config["THEME"]),
+                title="Users",
+                page="users",
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
+            )
+        else:
+            flask.abort(401)
+    else:
+        return flask.redirect("/login")
+
 @app.route("/admin/nodes/<nodeid>/view", methods=["GET"])
 def view_node(nodeid):
     if flask.session:
@@ -129,15 +144,20 @@ def admin_servers():
 def create_server():
     if flask.session:
         if flask.session["user_type"] == "administrator":
-            return flask.render_template(
-                "themes/{}/admin/createserver.html".format(app.config["THEME"]),
-                title="Servers",
-                page="servers",
-                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
-                nodes=sqlquery("SELECT * FROM nodes ORDER BY id ASC").fetchall(),
-                users=sqlquery("SELECT * FROM users ORDER BY id ASC").fetchall(),
-                images=sqlquery("SELECT * FROM images ORDER BY id ASC").fetchall()
-            )
+            data = sqlquery("SELECT * FROM nodes ORDER BY id ASC").fetchall()
+            if len(data):
+                return flask.render_template(
+                    "themes/{}/admin/createserver.html".format(app.config["THEME"]),
+                    title="Servers",
+                    page="servers",
+                    panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
+                    nodes=sqlquery("SELECT * FROM nodes ORDER BY id ASC").fetchall(),
+                    users=sqlquery("SELECT * FROM users ORDER BY id ASC").fetchall(),
+                    images=sqlquery("SELECT * FROM images ORDER BY id ASC").fetchall()
+                )
+            else:
+                flask.flash("error", "There are no nodes available")
+                return flask.redirect("/admin/servers")
         else:
             flask.abort(401)
     else:
