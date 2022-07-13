@@ -31,7 +31,7 @@
                     });
                 }
 
-                $(document).ready( function() {
+                $(document).ready( () => {
                     GetLogs();
                 });
 
@@ -47,7 +47,7 @@
                         dataType: "json",
                         contentType: "application/json"
                     });
-                    setTimeout(function(){
+                    setTimeout( () => {
                         GetLogs();
                     }, 400); 
                 };
@@ -62,7 +62,7 @@
                         dataType: "json",
                         contentType: "application/json"
                     });
-                    setTimeout(function(){
+                    setTimeout( () => {
                         GetLogs();
                     }, 400); 
                 };
