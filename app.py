@@ -11,7 +11,7 @@ def sqlquery(sql, *parameter):
     return data
 
 import routes.api, routes.auth, routes.dashboard, routes.setup, routes.server, routes.admin
-import routes.admin.images, routes.admin.nodes, routes.admin.servers, routes.admin.users
+import admin.images, admin.nodes, admin.servers, admin.users
 
 # Autoload addons in addon folder
 
