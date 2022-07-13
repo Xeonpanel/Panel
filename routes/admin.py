@@ -71,6 +71,22 @@ def view_node(nodeid):
     else:
         return flask.redirect("/login")
 
+@app.route("/admin/users", methods=["GET"])
+def admin_users():
+    if flask.session:
+        if flask.session["user_type"] == "administrator":
+            return flask.render_template(
+                "themes/{}/admin/users.html".format(app.config["THEME"]),
+                title="Users",
+                page="users",
+                users=sqlquery("SELECT * FROM users ORDER BY id ASC").fetchall(),
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
+            )
+        else:
+            flask.abort(401)
+    else:
+        return flask.redirect("/login")
+
 # View, create, list servers
 
 @app.route("/admin/servers", methods=["GET"])
