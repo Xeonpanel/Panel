@@ -225,10 +225,32 @@ def api_createserver():
 # docker_image
 # startup_command
 
-# /api/admin/images/<imageid>/variables/create
+@app.route("/api/admin/images/<imageid>/variables/create", methods=["POST"])
+def api_createvariable(imageid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form["csrf_token"]:
+            data = sqlquery("SELECT * FROM users WHERE api_key = ?", flask.request.form["api_key"]).fetchall()
+            if len(data):
+                if data[0][4] == "administrator":
+                    sqlquery(
+                        "INSERT INTO variables (name, variable, imageid) VALUES (?, ?, ?)",
+                        flask.request.form["variable_name"],
+                        flask.request.form["veriable"],
+                        imageid
+                    )
+                    flask.flash("Variable created succesfully", "succes")
+                    return flask.redirect("/admin/images")
+                else:
+                    flask.flash("Something went wrong", "error")
+                    return flask.redirect("/admin/images")
+            else:
+                flask.flash("Something went wrong", "error")
+                return flask.redirect("/admin/images")
+        else:
+            flask.abort(403)
+    else:
+        return flask.redirect("/login")
 
-# csrf_token
-# api_key
 
 # variable_name
 # variable
