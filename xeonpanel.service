@@ -4,6 +4,6 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/usr/bin/python3 /var/www/xeonpanel/app.py
+ExecStart=/usr/bin/python3 /etc/xeonpanel/app.py
 [Install]
 WantedBy=multi-user.target

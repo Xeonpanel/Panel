@@ -1,7 +1,6 @@
-from multiprocessing.connection import wait
 import flask, sqlite3, requests, os, sys, json, waitress
 if json.loads(open("config.json", "r").read())["environment"] == "production":
-    os.chdir("/var/www/xeonpanel")
+    os.chdir("/etc/xeonpanel")
 
 app = flask.Flask("Xeon Panel")
 
