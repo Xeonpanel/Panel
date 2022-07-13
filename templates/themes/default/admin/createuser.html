@@ -1,0 +1,63 @@
+{% extends "themes/default/admin/admin_layout.html" %}
+
+{% block content %}
+    <div class="mt-[30px]">
+        {% if get_flashed_messages(with_categories=true) %}
+            {% if get_flashed_messages(with_categories=true)[0][0] == "succes" %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-blue-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% else %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-orange-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="shadow-xl w-[calc(100vw-320px)] mx-[30px]">
+        <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
+            <div class="flex items-center">
+                <i class="fa fa-users text-neutral-100 mx-2 mr-4"></i>
+                <h2 class="font-semibold text-xl text-neutral-100">View user</h2>
+            </div> 
+        </div>
+        <div class="w-[calc(100vw-320px)] bg-zinc-800/70 p-6 overflow-y-auto">
+            <form action="/api/admin/users/{{ user[0] }}/update" method="post">
+                <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                <input type="text" name="api_key" value="{{ session['api_key'] }}" hidden>
+                <div class="flex">
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="username" class="mb-2">Username</label>
+                        <input type="text" name="username" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" value="{{ user[1] }}" required>
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="email" class="mb-2">Email</label>
+                        <input type="email" name="email" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" value="{{ user[2] }}" required>
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="password" class="mb-2">Password</label>
+                        <input type="password" name="password" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600">
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="user_type" class="mb-2">User type</label>
+                        <select name="user_type" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
+                            {% if user[4] == "administrator" %}
+                                <option value="administrator">Admin</option>
+                                <option value="user">User</option>
+                            {% else %}
+                                <option value="user">User</option>
+                                <option value="administrator">Admin</option>
+                            {% endif %}
+                         </select>
+                    </div>
+                </div>
+                <input type="submit" id="create_user" hidden>
+            </form>
+        </div>
+        <div class="bg-zinc-800/70 rounded-b p-4">
+            <div class="flex justify-end">
+                <a onclick="document.getElementById('create_user').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Update User</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
