@@ -9,7 +9,7 @@ then
     cd /etc
     sudo git clone https://github.com/Xeonpanel/Panel.git xeonpanel
     python3 -m pip install -r xeonpanel/requirements.txt
-    sudo mv /var/www/xeonpanel/xeonpanel.service /etc/systemd/system/
+    sudo mv /etc/xeonpanel/xeonpanel.service /etc/systemd/system/
     echo "\n\n Panel succesfully installed, and started.. \n\n"
 else
     echo "Installation cancelled."
