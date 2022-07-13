@@ -87,6 +87,26 @@ def admin_users():
     else:
         return flask.redirect("/login")
 
+@app.route("/admin/users/<userid>/view", methods=["GET"])
+def view_user(userid):
+    if flask.session:
+        if flask.session["user_type"] == "administrator":
+            data = sqlquery("SELECT * FROM users WHERE id = ?", int(userid),).fetchall()
+            if len(data):
+                return flask.render_template(
+                    "themes/{}/admin/viewuser.html".format(app.config["THEME"]),
+                    title="Users",
+                    page="users",
+                    panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
+                    user=sqlquery("SELECT * FROM users WHERE id = ?", int(userid),).fetchall()[0]
+                )
+            else:
+                flask.abort(404)
+        else:
+            flask.abort(401)
+    else:
+        return flask.redirect("/login")
+
 # View, create, list servers
 
 @app.route("/admin/servers", methods=["GET"])

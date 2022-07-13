@@ -71,6 +71,43 @@ def api_createnode():
     else:
         return flask.redirect("/login")
 
+@app.route("/api/admin/users/<userid>/update", methods=["POST"])
+def api_updateuser(userid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form["csrf_token"]:
+            data = sqlquery("SELECT * FROM users WHERE api_key = ? and id = ?", flask.request.form["api_key"], int(userid)).fetchall()
+            if len(data):
+                if data[0][4] == "administrator":
+                    if flask.request.form["password"]:
+                        sqlquery(
+                            "UPDATE users SET username = ?, email = ?, password = ?, user_type = ? WHERE id = ?",
+                            flask.request.form["username"],
+                            flask.request.form["email"],
+                            flask.request.form["password"],
+                            flask.request.form["user_type"],
+                            int(userid)
+                        )
+                    else:
+                        sqlquery(
+                            "UPDATE users SET username = ?, email = ?, user_type = ? WHERE id = ?",
+                            flask.request.form["username"],
+                            flask.request.form["email"],
+                            flask.request.form["user_type"],
+                            int(userid)
+                        )
+                    flask.flash("User updated succesfully", "succes")
+                    return flask.redirect("/admin/users")
+                else:
+                    flask.flash("Something went wrong", "error")
+                    return flask.redirect("/admin/users")
+            else:
+                flask.flash("Something went wrong", "error")
+                return flask.redirect("/admin/users")
+        else:
+            flask.abort(403)
+    else:
+        return flask.redirect("/login")
+
 @app.route("/api/admin/images/create", methods=["POST"])
 def api_createimage():
     if flask.session:
