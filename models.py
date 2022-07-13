@@ -63,6 +63,7 @@ sqlquery("""
         "name"	VARCHAR(255),
         "variable"	VARCHAR(255),
         "imageid"	VARCHAR(255),
+        "variable_data"	VARCHAR(255),
         PRIMARY KEY("id" AUTOINCREMENT)
     );
 """)
