@@ -252,6 +252,50 @@ def api_createvariable(imageid):
     else:
         return flask.redirect("/login")
 
+@app.route("/api/admin/images/<imageid>/variables/<variableid>/update", methods=["POST"])
+def api_updatevariable(imageid, variableid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form["csrf_token"]:
+            data = sqlquery("SELECT * FROM users WHERE api_key = ?", flask.request.form["api_key"]).fetchall()
+            if len(data):
+                if data[0][4] == "administrator":
+                    sqlquery(
+                        "UPDATE variables SET name = ?, variable = ?, variable_data = ? WHERE id = ?",
+                        flask.request.form["variable_name"],
+                        flask.request.form["variable"],
+                        flask.request.form["variable_data"],
+                        int(variableid)
+                    )
+                    flask.flash("Variable updated succesfully", "succes")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
+                else:
+                    flask.flash("Something went wrong", "error")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
+            else:
+                flask.flash("Something went wrong", "error")
+                return flask.redirect("/admin/images/{}/view".format(imageid))
+        else:
+            flask.abort(403)
+    else:
+        return flask.redirect("/login")
 
-# variable_name
-# variable
+@app.route("/api/admin/images/<imageid>/variables/<variableid>/delete", methods=["POST"])
+def api_deletevariable(imageid, variableid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form["csrf_token"]:
+            data = sqlquery("SELECT * FROM users WHERE api_key = ?", flask.request.form["api_key"]).fetchall()
+            if len(data):
+                if data[0][4] == "administrator":
+                    sqlquery("DELETE FROM variables WHERE id = ? and imageid = ?", variableid, imageid)
+                    flask.flash("Variable deleted succesfully", "succes")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
+                else:
+                    flask.flash("Something went wrong", "error")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
+            else:
+                flask.flash("Something went wrong", "error")
+                return flask.redirect("/admin/images/{}/view".format(imageid))
+        else:
+            flask.abort(403)
+    else:
+        return flask.redirect("/login")
