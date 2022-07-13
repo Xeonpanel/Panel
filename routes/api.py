@@ -239,13 +239,13 @@ def api_createvariable(imageid):
                         imageid
                     )
                     flask.flash("Variable created succesfully", "succes")
-                    return flask.redirect("/admin/images")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
                 else:
                     flask.flash("Something went wrong", "error")
-                    return flask.redirect("/admin/images")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
             else:
                 flask.flash("Something went wrong", "error")
-                return flask.redirect("/admin/images")
+                return flask.redirect("/admin/images/{}/view".format(imageid))
         else:
             flask.abort(403)
     else:
