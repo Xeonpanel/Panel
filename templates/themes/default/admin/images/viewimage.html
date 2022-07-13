@@ -41,6 +41,12 @@
                 </div>
                 <input type="submit" id="update_image" hidden>
             </form>
+            <form action="/api/admin/images/{{ image[0] }}/variables/create">
+                <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                <input type="text" name="api_key" value="{{ session['api_key'] }}" hidden>
+                <input type="text" name="variable_name" value="My variable" hidden>
+                <input type="text" name="variable" value="${MY_VARIABLE}" hidden>
+            </form>
         </div>
         <div class="bg-zinc-800/70 rounded-b p-4">
             <div class="flex justify-end">
