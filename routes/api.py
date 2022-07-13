@@ -235,7 +235,7 @@ def api_createvariable(imageid):
                     sqlquery(
                         "INSERT INTO variables (name, variable, imageid) VALUES (?, ?, ?)",
                         flask.request.form["variable_name"],
-                        flask.request.form["veriable"],
+                        flask.request.form["variable"],
                         imageid
                     )
                     flask.flash("Variable created succesfully", "succes")
