@@ -84,10 +84,17 @@
                                 {% endif %}
                             </li>
                             <li>
-                                <a href="/admin/users" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
-                                    <i class="fa fa-users text-gray-400"></i>
-                                    <span class="ml-3">Users</span>
-                                </a>
+                                {% if title == "Users" %}
+                                    <a href="/admin/users" class="flex items-center py-3 px-4 text-base font-normal rounded text-white bg-zinc-900/40 duration-200">
+                                        <i class="fa fa-users text-gray-400"></i>
+                                        <span class="ml-3">Users</span>
+                                    </a>
+                                {% else %}
+                                    <a href="/admin/users" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
+                                        <i class="fa fa-users text-gray-400"></i>
+                                        <span class="ml-3">Users</span>
+                                    </a>
+                                {% endif %}
                             </li>
                             <li>
                         </ul>
