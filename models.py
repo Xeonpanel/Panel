@@ -56,3 +56,12 @@ sqlquery("""
         PRIMARY KEY("id" AUTOINCREMENT)
     );
 """)
+
+sqlquery("""
+    CREATE TABLE "variables" (
+        "id"	INTEGER UNIQUE,
+        "name"	VARCHAR(255),
+        "variable"	VARCHAR(255),
+        PRIMARY KEY("id" AUTOINCREMENT)
+    );
+""")
