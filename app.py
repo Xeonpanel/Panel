@@ -1,7 +1,9 @@
-import flask, sqlite3, requests, os, sys, json, waitress
+import flask, sqlite3, requests, os, sys, json, waitress, logging
 
 if sys.platform == 'linux' or sys.platform == 'linux2':
     os.chdir("/etc/xeonpanel")
+
+logging.basicConfig(filename="logs/log.txt", level=logging.DEBUG)
 
 app = flask.Flask("Xeon Panel")
 
