@@ -224,3 +224,11 @@ def api_createserver():
 # image_name
 # docker_image
 # startup_command
+
+# /api/admin/images/<imageid>/variables/create
+
+# csrf_token
+# api_key
+
+# variable_name
+# variable
