@@ -71,6 +71,34 @@ def api_createnode():
     else:
         return flask.redirect("/login")
 
+@app.route("/api/admin/users/create", methods=["POST"])
+def api_createuser():
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form["csrf_token"]:
+            data = sqlquery("SELECT * FROM users WHERE api_key = ?", flask.request.form["api_key"]).fetchall()
+            if len(data):
+                if data[0][4] == "administrator":
+                    sqlquery( 
+                        "INSERT INTO users (username, email, password, user_type, api_key) VALUES (?, ?, ?, ?, ?)",
+                        flask.request.form["username"],
+                        flask.request.form["email"],
+                        flask.request.form["password"],
+                        flask.request.form["user_type"],
+                        os.urandom(250).hex()
+                    )
+                    flask.flash("User created succesfully", "succes")
+                    return flask.redirect("/admin/users")
+                else:
+                    flask.flash("Something went wrong", "error")
+                    return flask.redirect("/admin/users")
+            else:
+                flask.flash("Something went wrong", "error")
+                return flask.redirect("/admin/users")
+        else:
+            flask.abort(403)
+    else:
+        return flask.redirect("/login")
+
 @app.route("/api/admin/users/<userid>/update", methods=["POST"])
 def api_updateuser(userid):
     if flask.session:
