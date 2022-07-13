@@ -62,6 +62,7 @@ sqlquery("""
         "id"	INTEGER UNIQUE,
         "name"	VARCHAR(255),
         "variable"	VARCHAR(255),
+        "imageid"	VARCHAR(255),
         PRIMARY KEY("id" AUTOINCREMENT)
     );
 """)
