@@ -45,7 +45,7 @@ def view_image(imageid):
                     page="images",
                     panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
                     image=sqlquery("SELECT * FROM images WHERE id = ?", int(imageid),).fetchall()[0],
-                    variables=sqlquery("SELECT * FROM variables WHERE imageid = ?", int(imageid),).fetchall()[0],
+                    variables=sqlquery("SELECT * FROM variables WHERE imageid = ?", int(imageid),).fetchall(),
                 )
             else:
                 flask.abort(404)
