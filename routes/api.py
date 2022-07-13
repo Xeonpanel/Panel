@@ -233,10 +233,11 @@ def api_createvariable(imageid):
             if len(data):
                 if data[0][4] == "administrator":
                     sqlquery(
-                        "INSERT INTO variables (name, variable, imageid) VALUES (?, ?, ?)",
+                        "INSERT INTO variables (name, variable, imageid, variable_data) VALUES (?, ?, ?, ?)",
                         flask.request.form["variable_name"],
                         flask.request.form["variable"],
-                        imageid
+                        imageid,
+                        flask.request.form["variable_data"]
                     )
                     flask.flash("Variable created succesfully", "succes")
                     return flask.redirect("/admin/images/{}/view".format(imageid))
