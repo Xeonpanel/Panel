@@ -8,7 +8,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     </head>
     <body class="bg-zinc-700 h-full w-full">
-        <div>
+        <div class="fixed">
             <div class="bg-zinc-800 shadow-xl">
                 <ul class="flex justify-between h-[3.7rem] mr-24 ml-16 text-neutral-200 items-center">
                     <a href="/"><li class="text-2xl font-semibold">{{ panelname }}</li></a>
@@ -115,7 +115,7 @@
                         </ul>
                     </div>
                 </aside>
-                <div class="ml-[260px] w-[calc(100vw-260px)]">
+                <div class="ml-[260px] w-[calc(100vw-260px)] overflow-auto">
                     {% block content %}
                     {% endblock %}
                 </div>
