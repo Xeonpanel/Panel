@@ -25,7 +25,7 @@ def admin_nodes():
     if flask.session:
         if flask.session["user_type"] == "administrator":
             return flask.render_template(
-                "themes/{}/admin/nodes.html".format(app.config["THEME"]),
+                "themes/{}/admin/nodes/nodes.html".format(app.config["THEME"]),
                 title="Nodes",
                 page="nodes",
                 nodes=sqlquery("SELECT * FROM nodes ORDER BY id ASC").fetchall(),
@@ -41,7 +41,7 @@ def create_node():
     if flask.session:
         if flask.session["user_type"] == "administrator":
             return flask.render_template(
-                "themes/{}/admin/createnode.html".format(app.config["THEME"]),
+                "themes/{}/admin/nodes/createnode.html".format(app.config["THEME"]),
                 title="Nodes",
                 page="nodes",
                 panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
@@ -56,7 +56,7 @@ def create_user():
     if flask.session:
         if flask.session["user_type"] == "administrator":
             return flask.render_template(
-                "themes/{}/admin/createuser.html".format(app.config["THEME"]),
+                "themes/{}/admin/users/createuser.html".format(app.config["THEME"]),
                 title="Users",
                 page="users",
                 panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
@@ -73,7 +73,7 @@ def view_node(nodeid):
             data = sqlquery("SELECT * FROM nodes WHERE id = ?", int(nodeid),).fetchall()
             if len(data):
                 return flask.render_template(
-                    "themes/{}/admin/viewnode.html".format(app.config["THEME"]),
+                    "themes/{}/admin/nodes/viewnode.html".format(app.config["THEME"]),
                     title="Nodes",
                     page="nodes",
                     panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
@@ -91,7 +91,7 @@ def admin_users():
     if flask.session:
         if flask.session["user_type"] == "administrator":
             return flask.render_template(
-                "themes/{}/admin/users.html".format(app.config["THEME"]),
+                "themes/{}/admin/users/users.html".format(app.config["THEME"]),
                 title="Users",
                 page="users",
                 users=sqlquery("SELECT * FROM users ORDER BY id ASC").fetchall(),
@@ -109,7 +109,7 @@ def view_user(userid):
             data = sqlquery("SELECT * FROM users WHERE id = ?", int(userid),).fetchall()
             if len(data):
                 return flask.render_template(
-                    "themes/{}/admin/viewuser.html".format(app.config["THEME"]),
+                    "themes/{}/admin/users/viewuser.html".format(app.config["THEME"]),
                     title="Users",
                     page="users",
                     panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
@@ -129,7 +129,7 @@ def admin_servers():
     if flask.session:
         if flask.session["user_type"] == "administrator":
             return flask.render_template(
-                "themes/{}/admin/servers.html".format(app.config["THEME"]),
+                "themes/{}/admin/servers/servers.html".format(app.config["THEME"]),
                 title="Servers",
                 page="servers",
                 servers=sqlquery("SELECT * FROM servers ORDER BY id ASC").fetchall(),
@@ -147,7 +147,7 @@ def create_server():
             data = sqlquery("SELECT * FROM nodes ORDER BY id ASC").fetchall()
             if len(data):
                 return flask.render_template(
-                    "themes/{}/admin/createserver.html".format(app.config["THEME"]),
+                    "themes/{}/admin/servers/createserver.html".format(app.config["THEME"]),
                     title="Servers",
                     page="servers",
                     panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
@@ -170,7 +170,7 @@ def admin_images():
     if flask.session:
         if flask.session["user_type"] == "administrator":
             return flask.render_template(
-                "themes/{}/admin/images.html".format(app.config["THEME"]),
+                "themes/{}/admin/images/images.html".format(app.config["THEME"]),
                 title="Images",
                 page="images",
                 images=sqlquery("SELECT * FROM images ORDER BY id ASC").fetchall(),
@@ -186,7 +186,7 @@ def create_image():
     if flask.session:
         if flask.session["user_type"] == "administrator":
             return flask.render_template(
-                "themes/{}/admin/createimage.html".format(app.config["THEME"]),
+                "themes/{}/admin/images/createimage.html".format(app.config["THEME"]),
                 title="Images",
                 page="images",
                 panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
