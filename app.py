@@ -1,5 +1,5 @@
 import flask, sqlite3, requests, os, sys, json, waitress
-if json.loads(open("config.json", "r").read())["environment"] == "production":
+if sys.platform == 'linux' or sys.platform == 'linux2':
     os.chdir("/etc/xeonpanel")
 
 app = flask.Flask("Xeon Panel")
