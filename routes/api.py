@@ -216,24 +216,11 @@ def api_createserver():
     else:
         return flask.redirect("/login")
 
-# Container actions
+# /api/admin/images/<imageid>/update
 
-# @app.route("/api/server/<uuid>/start", methods=["POST"])
-# def api_startserver(uuid):
-#     if flask.session:
-#         if flask.session["csrf_token"] == flask.request.form["csrf_token"]:
-#             server_data = sqlquery("SELECT * FROM servers WHERE uuid = ?", uuid,).fetchall()
-#             if int(server_data[0][2]) == int(flask.session["id"]):
-#                 node_data = sqlquery("SELECT * FROM nodes WHERE id = ?", server_data[0][3],).fetchall()
-#                 payload = {
-#                     "startup_command": server_data[0][8],
-#                     "docker_image": server_data[0][9],
-#                     "api_key": node_data[0][5]
-#                 }
-#                 return requests.post("http://{}/api/servers/{}/start".format(node_data[0][2], uuid), data=payload).text
-#             else:
-#                 flask.abort(401)
-#         else:
-#             flask.abort(403)
-#     else:
-#         return flask.redirect("/login")
+# csrf_token
+# api_key
+
+# image_name
+# docker_image
+# startup_command
