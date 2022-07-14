@@ -216,14 +216,32 @@ def api_createserver():
     else:
         return flask.redirect("/login")
 
-# /api/admin/images/<imageid>/update
-
-# csrf_token
-# api_key
-
-# image_name
-# docker_image
-# startup_command
+@app.route("/api/admin/images/<imageid>/update", methods=["POST"])
+def api_updateimage(imageid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form["csrf_token"]:
+            data = sqlquery("SELECT * FROM users WHERE api_key = ?", flask.request.form["api_key"]).fetchall()
+            if len(data):
+                if data[0][4] == "administrator":
+                    sqlquery(
+                        "UPDATE images SET name = ?, startup_command = ?, docker_image = ? WHERE id = ?",
+                        flask.request.form["image_name"],
+                        flask.request.form["startup_command"],
+                        flask.request.form["docker_image"],
+                        int(imageid)
+                    )
+                    flask.flash("Image updated succesfully", "succes")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
+                else:
+                    flask.flash("Something went wrong", "error")
+                    return flask.redirect("/admin/images/{}/view".format(imageid))
+            else:
+                flask.flash("Something went wrong", "error")
+                return flask.redirect("/admin/images/{}/view".format(imageid))
+        else:
+            flask.abort(403)
+    else:
+        return flask.redirect("/login")
 
 @app.route("/api/admin/images/<imageid>/variables/create", methods=["POST"])
 def api_createvariable(imageid):
