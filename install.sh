@@ -11,9 +11,8 @@ then
     python3 -m pip install -r xeonpanel/requirements.txt
     sudo mv /etc/xeonpanel/xeonpanel.service /etc/systemd/system/
     sudo systemctl daemon-reload
-    sudo systemctl enable xeonpanel.service
-    sudo systemctl start xeonpanel.service
-    echo "\n\n Panel succesfully installed, and started.. \n\n"
+    sudo systemctl enable --now xeonpanel.service
+    echo "\n\n Panel succesfully installed and started.. \n\n"
 else
     echo "Installation cancelled."
 fi
