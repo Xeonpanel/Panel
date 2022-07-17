@@ -10,7 +10,8 @@ def api_settings():
             if len(data):
                 if data[0][4] == "administrator":
                     sqlquery("UPDATE settings SET panel_name = ?", flask.request.form["panel_name"],)
-                    flask.flash("Panel name updated succesfully", "succes")
+                    sqlquery("UPDATE settings SET panel_logo = ?", flask.request.form["panel_logo"],)
+                    flask.flash("Panel settings updated succesfully", "succes")
                     return flask.redirect("/admin")
                 else:
                     flask.flash("Something went wrong", "error")

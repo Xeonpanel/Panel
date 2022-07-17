@@ -11,7 +11,8 @@ def admin_images():
                 title="Images",
                 page="images",
                 images=sqlquery("SELECT * FROM images ORDER BY id ASC").fetchall(),
-                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             flask.abort(401)
@@ -26,7 +27,8 @@ def create_image():
                 "themes/{}/admin/images/createimage.html".format(app.config["THEME"]),
                 title="Images",
                 page="images",
-                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             flask.abort(401)
@@ -44,6 +46,7 @@ def view_image(imageid):
                     title="Images",
                     page="images",
                     panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
+                    panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0], 
                     image=sqlquery("SELECT * FROM images WHERE id = ?", int(imageid),).fetchall()[0],
                     variables=sqlquery("SELECT * FROM variables WHERE imageid = ?", int(imageid),).fetchall(),
                 )

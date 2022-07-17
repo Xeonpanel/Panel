@@ -11,7 +11,8 @@ def admin_servers():
                 title="Servers",
                 page="servers",
                 servers=sqlquery("SELECT * FROM servers ORDER BY id ASC").fetchall(),
-                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             flask.abort(401)
@@ -29,6 +30,7 @@ def create_server():
                     title="Servers",
                     page="servers",
                     panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
+                    panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0], 
                     nodes=sqlquery("SELECT * FROM nodes ORDER BY id ASC").fetchall(),
                     users=sqlquery("SELECT * FROM users ORDER BY id ASC").fetchall(),
                     images=sqlquery("SELECT * FROM images ORDER BY id ASC").fetchall()

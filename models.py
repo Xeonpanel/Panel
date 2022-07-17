@@ -43,7 +43,8 @@ sqlquery("""
 
 sqlquery("""   
     CREATE TABLE "settings" (
-        "panel_name"	VARCHAR(255)
+        "panel_name"	VARCHAR(255), 
+        "panel_logo"	VARCHAR(255)
     );
 """)
 
