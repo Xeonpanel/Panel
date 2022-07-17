@@ -27,7 +27,7 @@
                     <label for="panel_name">Your panel name</label>
                     <input type="text" name="panel_name" class="py-1 rounded bg-zinc-700 my-2 px-4 shadow-lg" value="{{ panelname }}" required>
                     <label for="panel_logo" style="padding-top: 30px;">Your panel logo</label>
-                    <input type="text" name="panel_logo" class="py-1 rounded bg-zinc-700 my-2 px-4 shadow-lg" value="{{ panellogo }}" required>
+                    <input type="text" name="panel_logo" class="py-1 rounded bg-zinc-700 my-2 px-4 shadow-lg" value="{{ panellogo }}">
                     <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
                     <input type="text" name="api_key" value="{{ session['api_key'] }}" hidden>
                     <input type="submit" id="save_changes" hidden>
