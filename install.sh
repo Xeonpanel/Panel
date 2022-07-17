@@ -10,7 +10,7 @@ then
     sudo apt update
     sudo apt install git python3 python3-pip -y
     cd /etc
-    sudo git clone https://github.com/Marijn-de-Mul/Panel.git xeonpanel
+    sudo git clone https://github.com/Xeonpanel/Panel.git xeonpanel
     python3 -m pip install -r xeonpanel/requirements.txt
     sudo mv /etc/xeonpanel/xeonpanel.service /etc/systemd/system/
     sudo systemctl daemon-reload
