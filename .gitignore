@@ -2,4 +2,4 @@
 *.db
 __pycache__/
 *.DS_Store
-*.txt
+logs/log.txt
