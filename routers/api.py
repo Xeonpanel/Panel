@@ -279,7 +279,9 @@ def api_create_server():
                         server_uuid = os.urandom(13).hex()
                         payload = {
                             "system_token": sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][5],
-                            "user_token": flask.request.form.get("token")
+                            "user_token": flask.request.form.get("token"),
+                            "port": flask.request.form.get("server_port"),
+                            "memory": flask.request.form.get("server_memory")
                         }
                         if requests.post("http://{}:8080/api/servers/{}/create".format(sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], server_uuid), data=payload).text == "server created":
                             sqlquery (
