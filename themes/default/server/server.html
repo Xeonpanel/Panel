@@ -38,17 +38,43 @@
                         });
                     }
 
+                    function GetDiskStats() {
+                        term.clear();
+                        const diskstats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/disk");
+                        const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
+                        diskstats.addEventListener("message", (msg) => {
+                            $("#disk_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
+                        });
+                        diskstats.addEventListener("open", (event) => {
+                            diskstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                        });
+                        diskstats.addEventListener("error", (err) => {
+                            $("#error").empty();
+                            term.write("\x1b[31mCould not fetch messages, connection refused\n")
+                            $(
+                                `
+                                    <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
+                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                        <h2 class="ml-3">Could not connect to server, node offline</h2>
+                                    </div>
+                                `
+                            ).appendTo("#error");
+                            $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
+                            $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                        });
+                    }
+
                     function GetMemoryStats() {
                         term.clear();
-                        const stats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
+                        const memstats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
                         const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
-                        stats.addEventListener("message", (msg) => {
+                        memstats.addEventListener("message", (msg) => {
                             $("#memory_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
                         });
-                        stats.addEventListener("open", (event) => {
-                            stats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                        memstats.addEventListener("open", (event) => {
+                            memstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                         });
-                        stats.addEventListener("error", (err) => {
+                        memstats.addEventListener("error", (err) => {
                             $("#error").empty();
                             term.write("\x1b[31mCould not fetch messages, connection refused\n")
                             $(
@@ -133,7 +159,7 @@
                         setTimeout( () => {
                             GetLogs();
                             GetMemoryStats();
-                        }, 300); 
+                        }, 400); 
                     };
                 </script>
                 <div class="shadow-xl bg-zinc-800/70 rounded-b p-5 flex items-center justify-center text-white select-none">
@@ -153,7 +179,7 @@
                         <i class="fa fa-memory text-3xl"></i>
                     </div>
                     <div class="flex">
-                        <h2 class="text-xl font-semibold text-neutral-100"><span id="memory_usage">0.00</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
+                        <h2 class="text-xl font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
                     </div>
                 </div>
                 <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
@@ -161,7 +187,7 @@
                         <i class="fa fa-hdd text-3xl"></i>
                     </div>
                     <div class="flex">
-                        <h2 class="text-xl font-semibold text-neutral-100">0.00MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</h2>
+                        <h2 class="text-xl font-semibold text-neutral-100"><span id="disk_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</h2>
                     </div>
                 </div>
             </div>
