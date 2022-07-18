@@ -11,7 +11,8 @@ def admin():
                 title="Settings",
                 page="settings",
                 settings=sqlquery("SELECT * FROM settings").fetchall()[0],
-                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0  ]
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             flask.abort(401)

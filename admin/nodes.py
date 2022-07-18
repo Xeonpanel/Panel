@@ -11,7 +11,8 @@ def admin_nodes():
                 title="Nodes",
                 page="nodes",
                 nodes=sqlquery("SELECT * FROM nodes ORDER BY id ASC").fetchall(),
-                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             flask.abort(401)
@@ -26,7 +27,8 @@ def create_node():
                 "themes/{}/admin/nodes/createnode.html".format(app.config["THEME"]),
                 title="Nodes",
                 page="nodes",
-                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0]
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             flask.abort(401)
@@ -44,6 +46,7 @@ def view_node(nodeid):
                     title="Nodes",
                     page="nodes",
                     panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0],
+                    panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0], 
                     node=sqlquery("SELECT * FROM nodes WHERE id = ?", int(nodeid),).fetchall()[0]
                 )
             else:

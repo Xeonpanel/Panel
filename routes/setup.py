@@ -10,6 +10,10 @@ def register_admin():
             "INSERT INTO settings (panel_name) VALUES (?)",
             "Xeonpanel"
         )
+        sqlquery(
+            "INSERT INTO settings (panel_logo) VALUES (?)",
+            "Xeonpanel"
+        )
         sqlquery( 
             "INSERT INTO users (username, email, password, user_type, api_key) VALUES (?, ?, ?, ?, ?)",
             flask.request.form["username"],

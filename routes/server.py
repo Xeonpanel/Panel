@@ -10,7 +10,9 @@ def server(serverid):
             return flask.render_template(
                 "themes/{}/server/server.html".format(app.config["THEME"]),
                 title="Console",
-                serverinfo=data
+                serverinfo=data, 
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             flask.abort(401)

@@ -11,7 +11,9 @@ def dashboard():
                 "themes/{}/dashboard/servers.html".format(app.config["THEME"]),
                 title="Your Servers",
                 page="servers",
-                servers=data
+                servers=data, 
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             return flask.redirect("/login")
@@ -25,7 +27,9 @@ def account():
             return flask.render_template(
                 "themes/{}/dashboard/account.html".format(app.config["THEME"]),
                 title="Account Settings",
-                page="account"
+                page="account", 
+                panelname=sqlquery("SELECT panel_name FROM settings").fetchone()[0], 
+                panellogo=sqlquery("SELECT panel_logo FROM settings").fetchone()[0]
             )
         else:
             return flask.redirect("/login")
