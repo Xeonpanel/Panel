@@ -9,8 +9,8 @@
                         <h2 class="text-xl"><i class="fa fa-cogs mr-3 ml-1"></i>Startup command</h2>
                     </div>
                     <div class="text-neutral-200 rounded-b p-5 bg-zinc-800/70">
-                        <h2 class="bg-zinc-800 border-2 border-zinc-800/90 text-lg rounded p-2">
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum atque, explicabo nulla qui ex illum suscipit corrupti deleniti voluptatem excepturi quidem voluptatum dolorum autem natus vero sit neque inventore laudantium, consectetur enim facere dolor aliquam odit. Aliquid atque, eum dolor rem, rerum, sint provident ratione temporibus deleniti corrupti molestias numquam?
+                        <h2 class="bg-zinc-800 border-2 border-zinc-800/90 text-lg text-neutral-300 font-mono rounded p-2">
+                            {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][10] }}
                         </h2>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="flex rounded-b justify-end items-center p-4 bg-zinc-800/70">
+                    <div class="flex rounded-b justify-end items-center pb-4 pr-4 bg-zinc-800/70">
                         <a class="select-none bg-blue-500 hover:bg-blue-600 duration-200 rounded py-1 px-4 text-white font-semibold">Update Name</a>
                     </div>
                 </div>
