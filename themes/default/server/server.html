@@ -182,7 +182,7 @@
                         <i class="fa fa-network-wired text-3xl"></i>
                     </div>
                     <div class="flex">
-                        <h2 class="text-xl font-semibold text-neutral-100">{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][4] }}</h2>
+                        <h2 class="text-lg font-semibold text-neutral-100">{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][4] }}</h2>
                     </div>
                 </div>
                 <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
@@ -190,7 +190,7 @@
                         <i class="fa fa-memory text-3xl"></i>
                     </div>
                     <div class="flex">
-                        <h2 class="text-xl font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
+                        <h2 class="text-lg font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
                     </div>
                 </div>
                 <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
@@ -198,7 +198,7 @@
                         <i class="fa fa-hdd text-3xl"></i>
                     </div>
                     <div class="flex">
-                        <h2 class="text-xl font-semibold text-neutral-100"><span id="disk_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</h2>
+                        <h2 class="text-lg font-semibold text-neutral-100"><span id="disk_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</h2>
                     </div>
                 </div>
             </div>
