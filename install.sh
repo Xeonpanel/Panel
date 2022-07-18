@@ -1,10 +1,11 @@
+#!/bin/bash
 if [ "$(id -u)" != "0" ]; then
     printf "This script must be run as root\nYou can login as root with\033[0;32m sudo su -\033[0m\n" 1>&2
     exit 1
 fi
 echo "This script will install the following packages:"
-read -p "Are you sure you want to continue? [y/n] " -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
+read -p "Are you sure you want to continue? [y/n] " installation
+if [[ $installation =~ ^[Yy]$ ]]
 then
     echo "Installing..."
     sudo apt update
@@ -23,8 +24,8 @@ then
     echo "1. Domain name"
     echo "2. IP address"
     echo "3. Exit"
-    read -p "Enter your choice: " -n 1 -r
-    if [[ $REPLY =~ ^[1]$ ]]
+    read -p 'Enter your choice:'  choice
+    if [[ $choice =~ ^[1]$ ]]
     then
         echo "Enter the domain name you want to use: "
         read domain
@@ -33,22 +34,20 @@ then
         sudo ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
         sudo systemctl restart nginx
         echo "Panel is now available at http://$domain"
-    elif [[ $REPLY =~ ^[2]$ ]]
+    elif [[ $choice =~ ^[2]$ ]]
     then
-        echo "Enter the IP address you want to use: "
-        read ip
         sudo mv /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
         sudo sed -i "s/url/\n_\n/g" /etc/nginx/sites-available/xeonpanel.conf
         sudo ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
         sudo systemctl restart nginx
-        echo "Panel is now available at http://$ip"
-    elif [[ $REPLY =~ ^[3]$ ]]
+        echo "Panel is now available"
+    elif [[ $choice =~ ^[3]$ ]]
     then
         echo "Exiting..."
         exit 0
     else
         echo "Invalid option"
-        exit 1
+        exit
     fi
 else
     echo "Installation cancelled."
