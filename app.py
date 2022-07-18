@@ -2,21 +2,20 @@ import flask, os, sqlite3, logging
 
 logging.basicConfig(filename="logs/log.txt", level=logging.DEBUG)
 app = flask.Flask("Xeonpanel", template_folder="themes/default")
-app.config["DATABASE_FILE"] = "database.db"
 app.config["MAINTENANCE_MODE"] = False
-app.config["SECRET_KEY"] = "test"
-
-# Do not change this line
-# This can give an attacker access on your panel
-if not os.path.exists("database.db"):
-    import routers.setup
+app.config["SECRET_KEY"] =  os.urandom(200).hex()
 
 def sqlquery(sql, *parameter):
-    conn = sqlite3.connect(app.config["DATABASE_FILE"], check_same_thread=False)
+    conn = sqlite3.connect("database.db", check_same_thread=False)
     cursor = conn.cursor()
     data = cursor.execute(sql, (parameter)).fetchall()
     conn.commit()
     return data
+
+# Do not change this line
+# This can give an attacker access on your panel
+if not os.path.isfile("database.db"):
+    import routers.setup
 
 import routers.dashboard, routers.auth, routers.api, routers.server
 import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
@@ -25,11 +24,13 @@ import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
 def maintenance():
     if app.config["MAINTENANCE_MODE"]:
         flask.abort(503) 
-
-@app.before_first_request
-def setup():
-    if not os.path.isfile("database.db"):
-        return flask.redirect("/setup/getting-started")
+    else:
+        if not "/setup" in flask.request.path:
+            if not "/static" in flask.request.path:
+                if not os.path.isfile("database.db"):
+                    return flask.redirect("/setup/getting-started")
+        elif "/setup/reboot" in flask.request.path:
+            return flask.redirect("/")
 
 @app.errorhandler(503)
 def error_503(error):
@@ -57,4 +58,4 @@ def main():
     else:
         return flask.redirect("/login")
 
-app.run(debug=True, host="0.0.0.0", port=80)
+app.run(debug=True, host="0.0.0.0", port=5000)
