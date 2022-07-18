@@ -38,12 +38,12 @@
                         });
                     }
 
-                    function GetStats() {
+                    function GetMemoryStats() {
                         term.clear();
-                        const stats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/stats");
+                        const stats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
+                        const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
                         stats.addEventListener("message", (msg) => {
-                            const message = msg.data
-                            console.log(JSON.parse(message))
+                            $("#memory_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
                         });
                         stats.addEventListener("open", (event) => {
                             stats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
@@ -98,7 +98,7 @@
 
                     $(document).ready( () => {
                         GetLogs();
-                        GetStats();
+                        GetMemoryStats();
                         GetStatus();
                     });
 
@@ -116,7 +116,7 @@
                         });
                         setTimeout( () => {
                             GetLogs();
-                            GetStats();
+                            GetMemoryStats();
                         }, 300); 
                     };
 
@@ -132,7 +132,7 @@
                         });
                         setTimeout( () => {
                             GetLogs();
-                            GetStats();
+                            GetMemoryStats();
                         }, 300); 
                     };
                 </script>
@@ -153,7 +153,7 @@
                         <i class="fa fa-memory text-3xl"></i>
                     </div>
                     <div class="flex">
-                        <h2 class="text-xl font-semibold text-neutral-100">0.00MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
+                        <h2 class="text-xl font-semibold text-neutral-100"><span id="memory_usage">0.00</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
                     </div>
                 </div>
                 <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
