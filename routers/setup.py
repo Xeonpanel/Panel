@@ -23,7 +23,7 @@ def setup_register_admin():
     )
     conn.commit()
     cursor.execute(
-        "INSERT INTO images (name, startup, image) VALUES ('Python bot', 'python3 -m pip install -U  [[PIP_PACKAGES]]; python3 /home/container/[[PYTHON_FILE]]', 'python:3.9')"
+        "INSERT INTO images (name, startup, image) VALUES ('Python bot', 'python -m pip install -U [[PIP_PACKAGES]]; python /home/container/[[PYTHON_FILE]]', 'python:latest')"
     )
     conn.commit()
     cursor.execute(
@@ -32,6 +32,19 @@ def setup_register_admin():
     conn.commit()
     cursor.execute(
         "INSERT INTO image_variables (name, variable, image_id) VALUES ('Python packages', 'PIP_PACKAGES', '1')"
+    )
+    conn.commit()
+    #
+    cursor.execute(
+        "INSERT INTO images (name, startup, image) VALUES ('Nodejs bot', 'npm install [[NODE_PACKAGES]]; node /home/container/[[NODE_FILE]]', 'node:latest')"
+    )
+    conn.commit()
+    cursor.execute(
+        "INSERT INTO image_variables (name, variable, image_id) VALUES ('Node file', 'NODE_FILE', '2')"
+    )
+    conn.commit()
+    cursor.execute(
+        "INSERT INTO image_variables (name, variable, image_id) VALUES ('Node packages', 'NODE_PACKAGES', '2')"
     )
     conn.commit()
     return flask.redirect("/setup/setup-final")
