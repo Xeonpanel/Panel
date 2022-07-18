@@ -50,13 +50,19 @@
                                 <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
                                 <div class="flex flex-col">
                                     <label for="{{ variable[2] }}" class="my-1 text-lg">{{ variable[1] }}</label>
-                                    <input type="text" name="{{ variable[2] }}" value="{{ sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?') }}[0][1]" class="rounded py-2 px-3 bg-zinc-700 my-1">
-                                    <input type="submit" id="update{{ variable[1] }}" hidden>
+                                    {% set imageid = sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]  %}
+                                    {% set variableid = variable[0] %}
+                                    {% if sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid) | length > 1 %}
+                                        <input type="text" name="variable_data" value="{{ sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1">
+                                    {% else %}
+                                        <input type="text" name="variable_data" class="rounded py-2 px-3 bg-zinc-700 my-1">
+                                    {% endif %}
+                                    <input type="submit" id="update{{ variable[0] }}" hidden>
                                 </div>
                             </form>
                         </div>
                         <div class="flex rounded-b justify-end items-center p-4 bg-zinc-800/70">
-                            <a class="select-none bg-blue-500 hover:bg-blue-600 duration-200 rounded py-1 px-4 text-white font-semibold">Update {{ variable[1] }}</a>
+                            <a onclick="document.getElementById('update{{ variable[0] }}').click()" class="select-none bg-blue-500 hover:bg-blue-600 duration-200 rounded py-1 px-4 text-white font-semibold">Update {{ variable[1] }}</a>
                         </div>
                     </div>
                 </div>
