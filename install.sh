@@ -26,7 +26,7 @@ then
     read -p "Enter your choice: " -n 1 -r
     if [[ $REPLY =~ ^[1]$ ]]
     then
-        echo "Enter the domain name you want to use:"
+        echo "Enter the domain name you want to use: "
         read domain
         sudo cp /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
         sudo sed -i "s/url/\n$domain\n/g" /etc/nginx/sites-available/xeonpanel.conf
@@ -35,7 +35,7 @@ then
         echo "Panel is now available at http://$domain"
     elif [[ $REPLY =~ ^[2]$ ]]
     then
-        echo "Enter the IP address you want to use:"
+        echo "Enter the IP address you want to use: "
         read ip
         sudo mv /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
         sudo sed -i "s/url/\n_\n/g" /etc/nginx/sites-available/xeonpanel.conf
