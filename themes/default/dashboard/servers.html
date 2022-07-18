@@ -4,6 +4,22 @@
     {% if sqlquery("SELECT * FROM servers WHERE owner_id = ?", session["id"]) %}
         <div class="mt-8">
             {% for server in sqlquery("SELECT * FROM servers WHERE owner_id = ?", session["id"]) %}
+                <script>
+                    var stats{{ loop.index }} = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', server[0])[0][5])[0][4] }}:8080/status");
+                    stats{{ loop.index }}.addEventListener("message", (msg) => {
+                        if (msg.data === "online") {
+                            $("#server_status{{ loop.index }}").removeClass().addClass("py-5 px-1 bg-green-500 rounded-lg ml-4");
+                        } else {
+                            $("#server_status{{ loop.index }}").removeClass().addClass("py-5 px-1 bg-red-500 rounded-lg ml-4");
+                        }
+                    });
+                    stats{{ loop.index }}.addEventListener("open", (event) => {
+                        stats{{ loop.index }}.send('{"uuid": "{{ server[9] }}"}');
+                    });
+                    stats{{ loop.index }}.addEventListener("error", (err) => {
+                        $("#server_status{{ loop.index }}").removeClass().addClass("py-5 px-1 bg-red-500 rounded-lg ml-4");
+                    });
+                </script>
                 <div class="flex justify-center">
                     <a href="/dashboard/server/{{ server[0] }}">
                         <div class="justify-between flex w-[1200px] shadow-xl my-1 items-center bg-zinc-900/70 rounded border border-zinc-800 hover:border-zinc-600 duration-200 p-4 mx-8">
@@ -27,22 +43,6 @@
                         </div>
                     </a>
                 </div>
-                <script>
-                    const stats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', server[0])[0][5])[0][4] }}:8080/status");
-                    stats.addEventListener("message", (msg) => {
-                        if (msg.data === "online") {
-                            $("#server_status{{ loop.index }}").removeClass().addClass("py-5 px-1 bg-green-500 rounded-lg ml-4");
-                        } else {
-                            $("#server_status{{ loop.index }}").removeClass().addClass("py-5 px-1 bg-red-500 rounded-lg ml-4");
-                        }
-                    });
-                    stats.addEventListener("open", (event) => {
-                        stats.send('{"uuid": "{{ server[9] }}"}');
-                    });
-                    stats.addEventListener("error", (err) => {
-                        $("#server_status").removeClass().addClass("py-5 px-1 bg-red-500 rounded-lg ml-4");
-                    });
-                </script>
             {% endfor %}
         </div>
     {% else %}
