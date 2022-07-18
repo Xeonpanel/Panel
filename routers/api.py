@@ -95,8 +95,35 @@ def api_reboot_server():
             data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    time.sleep(3)
-                    os.execv(sys.executable, ["python"] + sys.argv)
+                    if data[0][0] == 1:
+                        time.sleep(3)
+                        os.execv(sys.executable, ["python"] + sys.argv)
+                    else:
+                        flask.flash("Only the master user can restart the panel", "error")
+                        return flask.redirect("/admin")
+                else:
+                    flask.flash("Something went wrong", "error")
+                    return flask.redirect("/admin")
+            else:
+                flask.abort(401)
+        else:
+            flask.abort(401)
+    else:
+        return flask.redirect("/login")
+
+@app.route("/api/admin/reset", methods=["POST"])
+def api_factory_reset():
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
+            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            if len(data):
+                if data[0][5] == "administrator":
+                    if data[0][0] == 1:
+                        os.remove("database.db")
+                        os.execv(sys.executable, ["python"] + sys.argv)
+                    else:
+                        flask.flash("Only the master user can reset the panel", "error")
+                        return flask.redirect("/admin")
                 else:
                     flask.flash("Something went wrong", "error")
                     return flask.redirect("/admin")
