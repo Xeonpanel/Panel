@@ -2,8 +2,6 @@ import flask, requests, json
 
 from __main__ import app, sqlquery
 
-from waitress import serve
-
 @app.route("/dashboard/server/<serverid>")
 def server(serverid):
     if flask.session:
