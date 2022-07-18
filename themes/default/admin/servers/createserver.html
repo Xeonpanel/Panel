@@ -1,0 +1,87 @@
+{% extends "/admin/layout.html" %}
+
+{% block content %}
+    <div class="mt-[30px]">
+        {% if get_flashed_messages(with_categories=true) %}
+            {% if get_flashed_messages(with_categories=true)[0][0] == "succes" %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-blue-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% else %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-orange-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="shadow-xl w-[calc(100vw-320px)] mx-[30px]">
+        <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
+            <div class="flex items-center">
+                <i class="fa fa-server text-neutral-100 mx-2 mr-4"></i>
+                <h2 class="font-semibold text-xl text-neutral-100">Create server</h2>
+            </div> 
+        </div>
+        <div class="w-[calc(100vw-320px)] bg-zinc-800/70 p-6 overflow-y-auto">
+            <form action="/api/admin/servers/create" method="post">
+                <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                <input type="text" name="token" value="{{ session['token'] }}" hidden>
+                <div class="flex">
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/3">
+                        <label for="server_image" class="mb-2">Server Image</label>
+                        <select name="server_image" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
+                            {% for image in sqlquery("SELECT * FROM images ORDER BY id ASC") %}
+                                <option value="{{ image[0] }}">{{ image[1] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/3">
+                        <label for="server_node" class="mb-2">Server Node</label>
+                        <select name="server_node" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
+                            {% for node in sqlquery("SELECT * FROM nodes ORDER BY id ASC") %}
+                                <option value="{{ node[0] }}">{{ node[1] }} ( {{ node[4] }} )</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/3">
+                        <label for="server_owner" class="mb-2">Server Owner</label>
+                        <select name="server_owner" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
+                            {% for user in sqlquery("SELECT * FROM users ORDER BY id ASC") %}
+                                <option value="{{ user[0] }}">{{ user[2] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="flex mt-5">
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="server_name" class="mb-2">Name</label>
+                        <input type="text" name="server_name" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" required>
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="server_port" class="mb-2">Port</label>
+                        <input type="text" name="server_port" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" required>
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="server_memory" class="mb-2">Memory</label>
+                        <div class="flex border border-zinc-600 rounded bg-zinc-700 justify-between">
+                            <input type="text" name="server_memory" class="rounded-l bg-zinc-700 outline-none py-1 px-3" required>
+                            <div class="bg-zinc-700 p-1 text-neutral-300">MB</div>
+                        </div>
+                    </div>
+                    <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
+                        <label for="server_storage" class="mb-2">Storage</label>
+                        <div class="flex border border-zinc-600 rounded bg-zinc-700 justify-between">
+                            <input type="text" name="server_storage" class="rounded-l bg-zinc-700 outline-none py-1 px-3" required>
+                            <div class="bg-zinc-700 p-1 text-neutral-300">MB</div>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" id="create_server" hidden>
+            </form>
+        </div>
+        <div class="bg-zinc-800/70 rounded-b p-4">
+            <div class="flex justify-end">
+                <a onclick="document.getElementById('create_server').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Create Server</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

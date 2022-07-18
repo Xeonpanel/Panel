@@ -1,0 +1,80 @@
+{% extends "/admin/layout.html" %}
+
+{% block content %}
+    <div class="mt-[30px]">
+        {% if get_flashed_messages(with_categories=true) %}
+            {% if get_flashed_messages(with_categories=true)[0][0] == "succes" %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-blue-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% else %}
+                <div class="shadow-xl w-[calc(100vw-320px)] bg-orange-500 text-neutral-100 py-2 px-4 mx-[30px] rounded mb-4">
+                    {{ get_flashed_messages(with_categories=true)[0][1] }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="shadow-xl w-[calc(100vw-320px)] mx-[30px]">
+        <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fa fa-server text-neutral-100 mx-2 mr-4"></i>
+                    <h2 class="font-semibold text-xl text-neutral-100">Servers</h2>
+                </div>
+                <a href="/admin/servers/create" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Create Server</a>
+            </div> 
+        </div>
+        <div class="w-[calc(100vw-320px)]">
+            <table class="w-full text-sm text-left text-neutral-300">
+                <thead class="text-xs uppercase bg-zinc-800/70 text-neutral-100 font-semibold">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Memory
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Storage
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Owner
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Connection
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            <span class="sr-only">Settings</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if sqlquery("SELECT * FROM servers ORDER BY id ASC") %}
+                        {% for server in sqlquery("SELECT * FROM servers ORDER BY id ASC") %}
+                            <tr class="border-t bg-zinc-800/70 border-zinc-700 hover:bg-zinc-800 duration-200">
+                                <td class="pl-6 py-4">
+                                    {{ server[1] }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ server[2] }}MB
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ server[3] }}MB
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ sqlquery("SELECT * FROM users WHERE id = ?", server[7])[0][2] }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ server[4] }}
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <a href="/dashboard/server/{{ server[0] }}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Manage server</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
