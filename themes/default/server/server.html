@@ -140,7 +140,7 @@
                     function StartServer() {
                         $.ajax ({
                             type: "post",
-                            url: "http://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/start",
+                            url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/start",
                             data: JSON.stringify({
                                 "user_token": "{{ session['token'] }}",
                                 "image": "{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][11] }}",
@@ -159,7 +159,7 @@
                     function StopServer() {
                         $.ajax ({
                             type: "post",
-                            url: "http://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/stop",
+                            url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/stop",
                             data: JSON.stringify({
                                 "user_token": "{{ session['token'] }}"
                             }),
