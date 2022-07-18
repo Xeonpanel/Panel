@@ -283,7 +283,7 @@ def api_create_server():
                             "port": flask.request.form.get("server_port"),
                             "memory": flask.request.form.get("server_memory")
                         }
-                        if requests.post("http://{}:8080/api/servers/{}/create".format(sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], server_uuid), data=payload).text == "server created":
+                        if requests.post("https://{}:8080/api/servers/{}/create".format(sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], server_uuid), data=payload).text == "server created":
                             sqlquery (
                                 "INSERT INTO servers (name, memory, disk, ip_port, node_id, image_id, owner_id, suspended, uuid, image, startup) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                                 flask.request.form.get("server_name"),
