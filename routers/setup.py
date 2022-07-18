@@ -22,6 +22,18 @@ def setup_register_admin():
         )
     )
     conn.commit()
+    cursor.execute(
+        "INSERT INTO images (name, startup, image) VALUES ('Python bot', 'python3 -m pip install -U  [[PIP_PACKAGES]]; python3 /home/container/[[PYTHON_FILE]]', 'python:3.9')"
+    )
+    conn.commit()
+    cursor.execute(
+        "INSERT INTO image_variables (name, variable, image_id) VALUES ('Python file', 'PYTHON_FILE', '1')"
+    )
+    conn.commit()
+    cursor.execute(
+        "INSERT INTO image_variables (name, variable, image_id) VALUES ('Python packages', 'PIP_PACKAGES', '1')"
+    )
+    conn.commit()
     return flask.redirect("/setup/setup-final")
 
 @app.route("/setup/reboot", methods=["GET"])
