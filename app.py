@@ -1,4 +1,4 @@
-import flask, os, sqlite3, logging, jinja2
+import flask, os, sqlite3, logging
 
 logging.basicConfig(filename="logs/log.txt", level=logging.DEBUG)
 app = flask.Flask("Xeonpanel", template_folder="themes/default")
