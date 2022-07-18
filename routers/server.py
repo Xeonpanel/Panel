@@ -26,7 +26,8 @@ def server_files(serverid):
 def server_configuration(serverid):
     if flask.session:
         if len(sqlquery("SELECT * FROM servers WHERE owner_id = ? and id = ?", flask.session["id"], serverid)):
-            return flask.render_template("/server/configuration.html", title="Configuration", sqlquery=sqlquery, serverid=serverid)
+            startup = "test"
+            return flask.render_template("/server/configuration.html", title="Configuration", sqlquery=sqlquery, serverid=serverid, startup=startup)
         else:
             flask.abort(401)
     else:
