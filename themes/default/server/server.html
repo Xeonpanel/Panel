@@ -42,7 +42,8 @@
                         term.clear();
                         const stats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/stats");
                         stats.addEventListener("message", (msg) => {
-                            stats.write(msg.data)
+                            const message = msg.data
+                            console.log(JSON.parse(message))
                         });
                         stats.addEventListener("open", (event) => {
                             stats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
