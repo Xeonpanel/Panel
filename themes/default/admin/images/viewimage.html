@@ -81,12 +81,6 @@
                                     <input type="text" name="variable" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600" value="{{ variable[2] }}" required>
                                 </div>
                             </div>
-                            <div class="flex mt-2 justify-center">
-                                <div class="text-neutral-100 flex flex-col w-full">
-                                    <label for="variable_data" class="mb-2">Variable data</label>
-                                    <input type="text" name="variable_data" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600" value="{{ variable[3] }}">
-                                </div>
-                            </div>
                             <input type="submit" id="update_variable{{ loop.index }}" hidden>
                         </form>
                         <form action="/api/admin/images/{{ sqlquery('SELECT * FROM images WHERE id = ?', imageid)[0][0] }}/variables/{{ variable[0] }}/delete" method="post">
