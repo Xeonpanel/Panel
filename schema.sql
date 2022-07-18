@@ -55,11 +55,10 @@ CREATE TABLE IF NOT EXISTS "images" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-CREATE TABLE IF NOT EXISTS "image_variables" (
+CREATE TABLE "image_variables" (
 	"id"	INTEGER UNIQUE,
 	"name"	VARCHAR(255),
 	"variable"	VARCHAR(255),
-	"data"	VARCHAR(255),
 	"image_id"	VARCHAR(255),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
