@@ -322,10 +322,9 @@ def api_create_variable(imageid):
             if len(data):
                 if data[0][5] == "administrator":
                     sqlquery(
-                        "INSERT INTO image_variables (name, variable, data, image_id) VALUES (?, ?, ?, ?)",
+                        "INSERT INTO image_variables (name, variable, image_id) VALUES (?, ?, ?)",
                         flask.request.form.get("variable_name"),
                         flask.request.form.get("variable"),
-                        flask.request.form.get("variable_data"),
                         imageid
                     )
                     flask.flash("Variable created succesfully", "succes")
@@ -349,10 +348,9 @@ def api_update_variable(imageid, variableid):
             if len(data):
                 if data[0][5] == "administrator":
                     sqlquery(
-                        "UPDATE image_variables SET name = ?, variable = ?, data = ? WHERE id = ?",
+                        "UPDATE image_variables SET name = ?, variable = ? WHERE id = ?",
                         flask.request.form.get("variable_name"),
                         flask.request.form.get("variable"),
-                        flask.request.form.get("variable_data"),
                         variableid
                     )
                     flask.flash("Variable updated succesfully", "succes")
