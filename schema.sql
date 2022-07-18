@@ -71,5 +71,3 @@ CREATE TABLE IF NOT EXISTS "server_variables" (
 	"variable_id"	VARCHAR(255),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-
-INSERT INTO "settings" (panel_name) VALUES ("Xeonpanel");
