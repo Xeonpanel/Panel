@@ -28,8 +28,8 @@ then
     then
         echo "Enter the domain name you want to use:"
         read domain
-        sudo cp xeonpanel/nginx/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
-        sudo sed -i "s/domainorip/\n$domain\n/g" /etc/nginx/sites-available/xeonpanel.conf
+        sudo cp /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
+        sudo sed -i "s/url/\n$domain\n/g" /etc/nginx/sites-available/xeonpanel.conf
         sudo ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
         sudo systemctl restart nginx
         echo "Panel is now available at http://$domain"
@@ -37,8 +37,8 @@ then
     then
         echo "Enter the IP address you want to use:"
         read ip
-        sudo cp xeonpanel/nginx/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
-        sudo sed -i "s/domainorip/\n_\n/g" /etc/nginx/sites-available/xeonpanel.conf
+        sudo mv /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
+        sudo sed -i "s/url/\n_\n/g" /etc/nginx/sites-available/xeonpanel.conf
         sudo ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
         sudo systemctl restart nginx
         echo "Panel is now available at http://$ip"
