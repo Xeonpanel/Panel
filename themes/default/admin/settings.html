@@ -14,7 +14,7 @@
                     <form action="/api/admin/settings/update" method="post" class="flex flex-col text-neutral-100">
                         <label for="panel_name">Panel name</label>
                         <input type="text" name="panel_name" class="py-2 rounded bg-zinc-700 my-2 px-4" value="{{ sqlquery('SELECT panel_name FROM settings')[0][0] }}">
-                        <label for="panel_logo" class="mt-5">Panel logo</label>
+                        <label for="panel_logo" class="mt-5" value="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">Panel logo</label>
                         <input type="text" name="panel_logo" class="py-2 rounded bg-zinc-700 my-2 px-4">
                         <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
                         <input type="text" name="token" value="{{ session['token'] }}" hidden>
