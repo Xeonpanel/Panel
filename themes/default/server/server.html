@@ -108,7 +108,7 @@
                             data: JSON.stringify({
                                 "user_token": "{{ session['token'] }}",
                                 "image": "{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][11] }}",
-                                "startup_command": "{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][10] }}"
+                                "startup_command": "{{ startup }}"
                             }),
                             dataType: "json",
                             contentType: "application/json"
