@@ -4,7 +4,7 @@ logging.basicConfig(filename="logs/log.txt", level=logging.DEBUG)
 app = flask.Flask("Xeonpanel", template_folder="themes/default")
 app.config["DATABASE_FILE"] = "database.db"
 app.config["MAINTENANCE_MODE"] = False
-app.config["SECRET_KEY"] = os.urandom(400).hex()
+app.config["SECRET_KEY"] = "test"
 
 def sqlquery(sql, *parameter):
     conn = sqlite3.connect(app.config["DATABASE_FILE"], check_same_thread=False)
