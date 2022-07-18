@@ -5,7 +5,25 @@
         <div class="mt-8 mb-8 w-[1200px]" id="content">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="text-neutral-200 font-semibold select-none">/home/container</h2>
-                <form action="http://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
+                <script>
+                    $(document).ready(function(){
+                        $("#upload").on("submit", function(e){
+                            e.preventDefault();
+                            $.ajax({
+                                type: "POST",
+                                url: "http://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload",
+                                data: new FormData(this),
+                                contentType: false,
+                                cache: false,
+                                processData: false,
+                                success: function(data) {
+                                    window.location.reload();
+                                },
+                            });
+                        });
+                    });
+                </script>
+                <form id="upload" action="http://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
                     <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
                     <input type="file" name="file" id="upload_file" onchange="document.getElementById('submit_file').click()" hidden>
                     <input type="submit" id="submit_file" hidden>
