@@ -58,7 +58,7 @@
                                 <script>
                                     $.ajax({
                                         type: "GET",
-                                        url: "http://{{ node[4] }}:8080",
+                                        url: "https://{{ node[4] }}:8080",
                                         timeout: 3000,
                                     }).done(function (data) {
                                         $("#ping{{ loop.index }}").removeClass();
