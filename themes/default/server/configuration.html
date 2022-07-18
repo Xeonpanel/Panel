@@ -45,17 +45,19 @@
                             <h2 class="text-xl"><i class="fa fa-cogs mr-3 ml-1"></i>{{ variable[1] }}</h2>
                         </div>
                         <div class="text-neutral-200 py-2 px-4 bg-zinc-800/70">
-                            <form action="/api/servers/variables/update" method="post">
+                            <form action="/api/servers/{{ serverid }}/variables/update" method="post">
+                                {% set imageid = sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]  %}
+                                {% set variableid = variable[0] %}
                                 <input type="text" name="token" value="{{ session['token'] }}" hidden>
                                 <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                                <input type="text" name="image_id" value="{{ imageid }}" hidden>
+                                <input type="text" name="variable_id" value="{{ variableid }}" hidden>
                                 <div class="flex flex-col">
                                     <label for="{{ variable[2] }}" class="my-1 text-lg">{{ variable[1] }}</label>
-                                    {% set imageid = sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]  %}
-                                    {% set variableid = variable[0] %}
                                     {% if sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid) | length > 1 %}
-                                        <input type="text" name="variable_data" value="{{ sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1">
+                                        <input type="text" name="variable_data" value="{{ sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1" required>
                                     {% else %}
-                                        <input type="text" name="variable_data" class="rounded py-2 px-3 bg-zinc-700 my-1">
+                                        <input type="text" name="variable_data" class="rounded py-2 px-3 bg-zinc-700 my-1" required>
                                     {% endif %}
                                     <input type="submit" id="update{{ variable[0] }}" hidden>
                                 </div>
