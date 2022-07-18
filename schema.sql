@@ -63,3 +63,12 @@ CREATE TABLE IF NOT EXISTS "image_variables" (
 	"image_id"	VARCHAR(255),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
+
+CREATE TABLE IF NOT EXISTS "server_variables" (
+	"id"	INTEGER UNIQUE,
+	"data"	VARCHAR(255),
+	"image_id"	VARCHAR(255),
+	"server_id"	VARCHAR(255),
+	"variable_id"	VARCHAR(255),
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
