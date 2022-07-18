@@ -35,6 +35,8 @@
                             ).appendTo("#error");
                             $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
                             $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                            $("#start_button").prop("disabled", true);
+                            $("#stop_button").prop("disabled", true);
                         });
                     }
 
@@ -60,6 +62,8 @@
                             ).appendTo("#error");
                             $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
                             $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                            $("#start_button").prop("disabled", true);
+                            $("#stop_button").prop("disabled", true);
                         });
                     }
 
@@ -85,6 +89,8 @@
                             ).appendTo("#error");
                             $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
                             $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                            $("#start_button").prop("disabled", true);
+                            $("#stop_button").prop("disabled", true);
                         });
                     }
 
@@ -95,10 +101,13 @@
                             if (msg.data === "offline") {
                                 $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-800 duration-200 mx-1");
                                 $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1");
+                                $("#start_button").prop("disabled", false);
+                                $("#stop_button").prop("disabled", true);
                             } else {
                                 $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-800 duration-200 mx-1");
                                 $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1");
-
+                                $("#start_button").prop("disabled", true);
+                                $("#stop_button").prop("disabled", false);
                             }
                         });
                         stats.addEventListener("open", (event) => {
@@ -116,6 +125,8 @@
                             ).appendTo("#error");
                             $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
                             $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                            $("#start_button").prop("disabled", true);
+                            $("#stop_button").prop("disabled", true);
                         });
                     }
 
@@ -163,8 +174,8 @@
                     };
                 </script>
                 <div class="shadow-xl bg-zinc-800/70 rounded-b p-5 flex items-center justify-center text-white select-none">
-                    <a onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1" id="start_button">Start</a>
-                    <a onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1" id="stop_button">Stop</a>
+                    <button onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1" id="start_button">Start</button>
+                    <button onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1" id="stop_button">Stop</button>
                 </div>
                 <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
                     <div class="flex">
