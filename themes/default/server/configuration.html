@@ -37,10 +37,10 @@
         </div>
     </div>
     <div class="w-full flex justify-center">
-        <div class="flex justify-between w-[1200px] mt-8">
+        <div class="flex justify-center flex-wrap w-[1200px] mt-8">
             {% for variable in sqlquery("SELECT * FROM image_variables WHERE image_id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]) %}
-                <div class="w-1/2 mx-2">
-                    <div class="shadow-xl">
+                <div class="w-1/2">
+                    <div class="shadow-xl mx-2">
                         <div class="rounded-t text-neutral-100 font-semibold bg-zinc-900 p-3 border-b-2 border-blue-500">
                             <h2 class="text-xl"><i class="fa fa-cogs mr-3 ml-1"></i>{{ variable[1] }}</h2>
                         </div>
@@ -54,7 +54,7 @@
                                 <input type="text" name="variable_id" value="{{ variableid }}" hidden>
                                 <div class="flex flex-col">
                                     <label for="{{ variable[2] }}" class="my-1 text-lg">{{ variable[1] }}</label>
-                                    {% if sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid) | length > 1 %}
+                                    {% if sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid) | length > 0 %}
                                         <input type="text" name="variable_data" value="{{ sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1" required>
                                     {% else %}
                                         <input type="text" name="variable_data" class="rounded py-2 px-3 bg-zinc-700 my-1" required>
