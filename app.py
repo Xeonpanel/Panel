@@ -6,6 +6,11 @@ app.config["DATABASE_FILE"] = "database.db"
 app.config["MAINTENANCE_MODE"] = False
 app.config["SECRET_KEY"] = "test"
 
+# Do not change this line
+# This can give an attacker access on your panel
+if not os.path.exists("database.db"):
+    import routers.setup
+
 def sqlquery(sql, *parameter):
     conn = sqlite3.connect(app.config["DATABASE_FILE"], check_same_thread=False)
     cursor = conn.cursor()
@@ -20,6 +25,11 @@ import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
 def maintenance():
     if app.config["MAINTENANCE_MODE"]:
         flask.abort(503) 
+
+@app.before_first_request
+def setup():
+    if not os.path.isfile("database.db"):
+        return flask.redirect("/setup/getting-started")
 
 @app.errorhandler(503)
 def error_503(error):
