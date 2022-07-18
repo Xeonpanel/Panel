@@ -11,7 +11,7 @@
                             e.preventDefault();
                             $.ajax({
                                 type: "POST",
-                                url: "http://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload",
+                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload",
                                 data: new FormData(this),
                                 contentType: false,
                                 cache: false,
@@ -23,16 +23,16 @@
                         });
                     });
                 </script>
-                <form id="upload" action="http://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
+                <form id="upload" action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
                     <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
                     <input type="file" name="file" id="upload_file" onchange="document.getElementById('submit_file').click()" hidden>
                     <input type="submit" id="submit_file" hidden>
                 </form>
                 <a onclick="document.getElementById('upload_file').click()" class="select-none py-2 px-5 bg-blue-500 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Upload File</a>
             </div>
-            {% if requests.get("http://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data={"user_token": session["token"]}).status_code == 200 %}
+            {% if requests.get("https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data={"user_token": session["token"]}).status_code == 200 %}
                 <div class="text-neutral-100">
-                    {% for file in requests.get("http://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data={"user_token": session["token"]}).json() %}
+                    {% for file in requests.get("https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data={"user_token": session["token"]}).json() %}
                         <div class="flex py-5 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-start rounded duration-200 items-center">
                             <div class="flex items-center">
                                 {% if json.loads(json.dumps(file))["type"] == "file" %}
