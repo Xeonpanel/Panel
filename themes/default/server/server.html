@@ -50,7 +50,6 @@
                         });
                         diskstats.addEventListener("error", (err) => {
                             $("#error").empty();
-                            term.write("\x1b[31mCould not fetch messages, connection refused\n")
                             $(
                                 `
                                     <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
@@ -76,7 +75,6 @@
                         });
                         memstats.addEventListener("error", (err) => {
                             $("#error").empty();
-                            term.write("\x1b[31mCould not fetch messages, connection refused\n")
                             $(
                                 `
                                     <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
@@ -108,7 +106,6 @@
                         });
                         stats.addEventListener("error", (err) => {
                             $("#error").empty();
-                            term.write("\x1b[31mCould not fetch messages, connection refused\n")
                             $(
                                 `
                                     <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
