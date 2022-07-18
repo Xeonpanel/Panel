@@ -39,41 +39,19 @@
                 {% endif %}
             </div>
         </div>
-        <div class="w-1/2 shadow-xl mr-4">
-            <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
-                <div class="flex items-center">
-                    <i class="fa fa-cogs text-neutral-100 mx-2 mr-4"></i>
-                    <h2 class="font-semibold text-xl text-neutral-100">Panel settings</h2>
-                </div> 
-            </div>
-            <div class="bg-zinc-800/70 p-5 flex justify-center items-center">
-                <div class="w-full">
-                    <form action="/api/admin/settings/update" method="post" class="flex flex-col text-neutral-100">
-                        <label for="panel_name">Panel name</label>
-                        <input type="text" name="panel_name" class="py-2 rounded bg-zinc-700 my-2 px-4" value="{{ sqlquery('SELECT panel_name FROM settings')[0][0] }}">
-                        <label for="panel_logo" class="mt-5">Panel logo</label>
-                        <input type="text" name="panel_logo" class="py-2 rounded bg-zinc-700 my-2 px-4">
-                        <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
-                        <input type="text" name="token" value="{{ session['token'] }}" hidden>
-                        <input type="submit" id="save_changes" hidden>
-                    </form>
+        <div class="w-1/2 mr-4">
+            <div class="shadow-xl w-full">
+                <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
+                    <div class="flex items-center">
+                        <i class="fa fa-cogs text-neutral-100 mx-2 mr-4"></i>
+                        <h2 class="font-semibold text-xl text-neutral-100">Panel controls</h2>
+                    </div> 
                 </div>
-            </div>
-            <div class="bg-zinc-800/70 rounded-b p-4 w-full">
-                {% if get_flashed_messages(with_categories=true) %}
-                    <div class="flex justify-between">
-                        {% if get_flashed_messages(with_categories=true)[0][0] == "succes" %}
-                            <h2 class="text-neutral-100">{{ get_flashed_messages(with_categories=true)[0][1] }}</h2>
-                        {% else %}
-                            <h2 class="text-red-500">{{ get_flashed_messages(with_categories=true)[0][1] }}</h2>
-                        {% endif %}
-                        <a onclick="document.getElementById('save_changes').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Update Settings</a>
-                    </div>
-                {% else %}
-                    <div class="flex justify-end">
-                        <a onclick="document.getElementById('save_changes').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Update Settings</a>
-                    </div>
-                {% endif %}
+                <div class="bg-zinc-800/70 p-5 flex flex-col justify-center items-center">
+                    <a class="select-none px-5 py-2 rounded bg-blue-500 hover:bg-blue-600 duration-200 text-neutral-100 font-semibold w-full text-center my-2">Backup Database</a>
+                    <a class="select-none px-5 py-2 rounded bg-orange-500 hover:bg-orange-600 duration-200 text-neutral-100 font-semibold w-full text-center my-2">Restart Server</a>
+                    <a class="select-none px-5 py-2 rounded bg-red-500 hover:bg-red-600 duration-200 text-neutral-100 font-semibold w-full text-center my-2">Factory Reset</a>
+                </div>
             </div>
         </div>
     </div>
