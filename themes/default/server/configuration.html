@@ -38,25 +38,29 @@
     </div>
     <div class="w-full flex justify-center">
         <div class="flex justify-between w-[1200px] mt-8">
-            <div class="w-1/2 mx-2">
-                <div class="shadow-xl">
-                    <div class="rounded-t text-neutral-100 font-semibold bg-zinc-900 p-3 border-b-2 border-blue-500">
-                        <h2 class="text-xl"><i class="fa fa-cogs mr-3 ml-1"></i>Server name</h2>
-                    </div>
-                    <div class="text-neutral-200 py-2 px-4 bg-zinc-800/70">
-                        <form action="" method="post">
-                            <input type="text" name="token" value="{{ session['token'] }}" hidden>
-                            <div class="flex flex-col">
-                                <label for="server_name" class="my-1 text-lg">Server name</label>
-                                <input type="text" name="server_name" class="rounded py-2 px-3 bg-zinc-700 my-1">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="flex rounded-b justify-end items-center p-4 bg-zinc-800/70">
-                        <a class="select-none bg-blue-500 hover:bg-blue-600 duration-200 rounded py-1 px-4 text-white font-semibold">Update Name</a>
+            {% for variable in sqlquery("SELECT * FROM image_variables WHERE image_id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]) %}
+                <div class="w-1/2 mx-2">
+                    <div class="shadow-xl">
+                        <div class="rounded-t text-neutral-100 font-semibold bg-zinc-900 p-3 border-b-2 border-blue-500">
+                            <h2 class="text-xl"><i class="fa fa-cogs mr-3 ml-1"></i>{{ variable[1] }}</h2>
+                        </div>
+                        <div class="text-neutral-200 py-2 px-4 bg-zinc-800/70">
+                            <form action="/api/servers/variables/update" method="post">
+                                <input type="text" name="token" value="{{ session['token'] }}" hidden>
+                                <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                                <div class="flex flex-col">
+                                    <label for="{{ variable[2] }}" class="my-1 text-lg">{{ variable[1] }}</label>
+                                    <input type="text" name="{{ variable[2] }}" value="{{ sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?') }}[0][1]" class="rounded py-2 px-3 bg-zinc-700 my-1">
+                                    <input type="submit" id="update{{ variable[1] }}" hidden>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="flex rounded-b justify-end items-center p-4 bg-zinc-800/70">
+                            <a class="select-none bg-blue-500 hover:bg-blue-600 duration-200 rounded py-1 px-4 text-white font-semibold">Update {{ variable[1] }}</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
