@@ -1,6 +1,6 @@
 if [ "$(id -u)" != "0" ]; then
-   printf "This script must be run as root\nYou can login as root with\033[0;32m sudo su -\033[0m\n" 1>&2
-   exit 1
+    printf "This script must be run as root\nYou can login as root with\033[0;32m sudo su -\033[0m\n" 1>&2
+    exit 1
 fi
 echo "This script will install the following packages:"
 read -p "Are you sure you want to continue? [y/n] " -n 1 -r
@@ -16,6 +16,40 @@ then
     sudo systemctl daemon-reload
     sudo systemctl enable --now xeonpanel.service
     echo "Panel succesfully installed and started.."
+    echo "Now installing nginx config..."
+    sudo apt install nginx -y
+    # ask if user wants to use domain or IP address
+    echo "Do you want to use a domain name or an IP address?"
+    echo "1. Domain name"
+    echo "2. IP address"
+    echo "3. Exit"
+    read -p "Enter your choice: " -n 1 -r
+    if [[ $REPLY =~ ^[1]$ ]]
+    then
+        echo "Enter the domain name you want to use:"
+        read domain
+        sudo cp xeonpanel/nginx/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
+        sudo sed -i "s/domainorip/\n$domain\n/g" /etc/nginx/sites-available/xeonpanel.conf
+        sudo ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
+        sudo systemctl restart nginx
+        echo "Panel is now available at http://$domain"
+    elif [[ $REPLY =~ ^[2]$ ]]
+    then
+        echo "Enter the IP address you want to use:"
+        read ip
+        sudo cp xeonpanel/nginx/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
+        sudo sed -i "s/domainorip/\n_\n/g" /etc/nginx/sites-available/xeonpanel.conf
+        sudo ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
+        sudo systemctl restart nginx
+        echo "Panel is now available at http://$ip"
+    elif [[ $REPLY =~ ^[3]$ ]]
+    then
+        echo "Exiting..."
+        exit 0
+    else
+        echo "Invalid option"
+        exit 1
+    fi
 else
     echo "Installation cancelled."
 fi
