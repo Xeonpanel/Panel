@@ -1,4 +1,3 @@
-from aiohttp import payload_type
 import flask, hashlib, sys, time, requests, os
 
 from __main__ import app, sqlquery
@@ -383,6 +382,25 @@ def api_delete_variable(imageid, variableid):
                     return flask.redirect("/admin/images/{}/view".format(imageid))
             else:
                 flask.abort(401)
+        else:
+            flask.abort(401)
+    else:
+        return flask.redirect("/login")
+
+@app.route("/api/servers/<serverid>/variables/update", methods=["POST"])
+def api_update_server_variable(serverid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
+            data = sqlquery("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
+            if len(data):
+                if len(sqlquery("SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?", serverid, flask.request.form.get("image_id"), flask.request.form.get("variable_id"))):
+                    sqlquery("UPDATE server_variables SET data = ? WHERE server_id = ? and image_id = ? and variable_id = ?", flask.request.form.get("variable_data"), serverid, flask.request.form.get("image_id"), flask.request.form.get("variable_id"))
+                    return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
+                else:
+                    sqlquery("INSERT INTO server_variables (data, image_id, server_id, variable_id) VALUES (?, ?, ?, ?)", flask.request.form.get("variable_data"), flask.request.form.get("image_id"), serverid, flask.request.form.get("variable_id"))
+                    return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
+            else:
+                flask.abort(404)
         else:
             flask.abort(401)
     else:
