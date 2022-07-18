@@ -126,6 +126,7 @@
                         GetLogs();
                         GetMemoryStats();
                         GetStatus();
+                        GetDiskStats();
                     });
 
                     function StartServer() {
@@ -143,6 +144,7 @@
                         setTimeout( () => {
                             GetLogs();
                             GetMemoryStats();
+                            GetDiskStats();
                         }, 300); 
                     };
 
@@ -159,6 +161,7 @@
                         setTimeout( () => {
                             GetLogs();
                             GetMemoryStats();
+                            GetDiskStats();
                         }, 400); 
                     };
                 </script>
