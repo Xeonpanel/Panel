@@ -2,10 +2,13 @@
 
 {% block content %}
     <style>
-        .cm-s-monokai { height: calc(100% - 8.6rem) }
+        .cm-s-monokai { height: calc(100% - 8.6rem); background-color: #202024 !important; }
         .cm-scroller { overflow: auto }
+        .CodeMirror { font-size: 16px; }
+        .CodeMirror-sizer { margin-left: 40px !important; }
+        .CodeMirror-gutter { background-color: #202024 !important; }
     </style>
-    <div class="p-3 bg-[#272822] rounded">
+    <div class="p-3 bg-[#202024] rounded">
         <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit" method="post" id="save_file">
             <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
             <input type="text" name="file" value="{{ path }}" hidden>
@@ -17,15 +20,9 @@
         var editor = CodeMirror.fromTextArea(code, {
             theme: "monokai",
             lineNumbers: true,
-            styleActiveLine: true,
-            matchBrackets: true,
             autoCloseTags: true,
             autoCloseBrackets: true,
-            enableSearchTools: true,
-            enableCodeFolding: true,
-            enableCodeFormatting: true,
             mode: "text/x-python"
         });
-        // editor.setSize(1300, 400);
     </script>
 {% endblock %}
