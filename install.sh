@@ -20,14 +20,12 @@ then
     mv /etc/xeonpanel/xeonpanel.service /etc/systemd/system/
     systemctl daemon-reload
     systemctl enable --now xeonpanel.service
-    echo "Now installing nginx config..."
+    echo "Installing nginx config..."
 	clear
-    read -p 'Enter your domain ( No IP ): '  domain
-    echo "Enter the domain name you want to use: "
+    read -p 'Enter your domain ( No IP ): ' domain
     read domain
-    service nginx stop
     certbot certonly --standalone -d $domain
-    cp /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
+    mv /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/
     sed -i "s/url/\n$domain\n/g" /etc/nginx/sites-available/xeonpanel.conf
     ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
     systemctl restart nginx
