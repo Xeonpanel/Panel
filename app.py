@@ -1,8 +1,7 @@
-import flask, os, sqlite3, logging
+import flask, os, sqlite3
 
 os.chdir("/etc/xeonpanel")
 
-logging.basicConfig(filename="logs/log.txt", level=logging.DEBUG)
 app = flask.Flask("Xeonpanel", template_folder="themes/default")
 app.config["MAINTENANCE_MODE"] = False
 app.config["SECRET_KEY"] =  os.urandom(200).hex()
