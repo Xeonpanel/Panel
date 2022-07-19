@@ -14,6 +14,7 @@ if [[ $installation == "y" || $installation == "Y" || $installation == "yes" || 
 then
     clear
     echo "Installing panel ( v0.8 )"
+    echo ""
     sleep 1s
     apt update
     apt-get git python3 python3-pip nginx -y
