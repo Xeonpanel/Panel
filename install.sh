@@ -13,10 +13,11 @@ if [[ $installation == "y" || $installation == "Y" || $installation == "yes" || 
 then
     echo "Installing panel ( v0.8 )"
     apt update
-    apt-get git python3 python3-pip certbot nginx -y
+    apt-get git python3 python3-pip nginx -y
+    sudo apt install certbot python3-certbot-nginx
     cd /etc
     git clone https://github.com/Xeonpanel/Panel.git xeonpanel
-    python3 -m pip install -r xeonpanel/requirements.txt
+    python3 -m pip install -r /etc/xeonpanel/requirements.txt
     mv /etc/xeonpanel/xeonpanel.service /etc/systemd/system/
     systemctl daemon-reload
     systemctl enable --now xeonpanel.service
@@ -24,8 +25,8 @@ then
 	clear
     read -p 'Enter your domain ( No IP ): ' domain
     read domain
-    certbot certonly --standalone -d $domain
-    mv /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/
+    sudo certbot certonly --standalone -d $domain
+    cp /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
     sed -i "s/url/\n$domain\n/g" /etc/nginx/sites-available/xeonpanel.conf
     ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
     systemctl restart nginx
