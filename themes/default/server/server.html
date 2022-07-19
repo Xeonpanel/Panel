@@ -15,7 +15,7 @@
                 <script>
                     function GetLogs() {
                         term.clear();
-                        const ws = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/logs");
+                        const ws = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/logs");
                         ws.addEventListener("message", (msg) => {
                             term.write(msg.data)
                         });
@@ -42,7 +42,7 @@
 
                     function GetDiskStats() {
                         term.clear();
-                        const diskstats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/disk");
+                        const diskstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/disk");
                         const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
                         diskstats.addEventListener("message", (msg) => {
                             $("#disk_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
@@ -69,7 +69,7 @@
 
                     function GetMemoryStats() {
                         term.clear();
-                        const memstats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
+                        const memstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
                         const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
                         memstats.addEventListener("message", (msg) => {
                             $("#memory_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
@@ -96,7 +96,7 @@
 
                     function GetStatus() {
                         term.clear();
-                        const stats = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/status");
+                        const stats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/status");
                         stats.addEventListener("message", (msg) => {
                             if (msg.data === "offline") {
                                 $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-800 duration-200 mx-1");
