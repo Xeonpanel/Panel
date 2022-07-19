@@ -17,7 +17,7 @@ then
     echo ""
     sleep 1s
     sudo apt update
-    sudo apt-get --ignore-missing install python3 git python3-pip nginx certbot python3-certbot-nginx -y 
+    sudo apt-get --ignore-missing install python3 git python3-pip nginx certbot python3-certbot-nginx
     cd /etc
     git clone https://github.com/Xeonpanel/Panel.git xeonpanel
     python3 -m pip install flask requests
@@ -40,7 +40,7 @@ then
 	if [[ $deamon == "y" || $deamon == "Y" || $deamon == "yes" || $deamon == "Yes" ]]
 	then
 		sudo apt update
-		sudo apt --ignore-missing install git python3 python3-pip docker containerd docker.io -y
+		sudo apt --ignore-missing install git python3 python3-pip docker containerd docker.io
 		python3 -m pip install flask flask_sock flask_cors docker waitress
 		cd /etc
 		sudo git clone https://github.com/Xeonpanel/Deamon.git deamon
