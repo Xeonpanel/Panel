@@ -1,17 +1,20 @@
 #!/bin/bash
+clear
 echo "XeonPanel v0.8 Installation Script"
 echo "Copyright © 2022 Xeonpanel."
 echo "For support join our community: https://discord.gg/4y9X28Ubxd"
+sleep 1s
 echo ""
 if [ "$(id -u)" != "0" ]; then
     printf "This script must be run as root\nYou can login as root with\033[0;32m sudo su -\033[0m\n" 1>&2
     exit 1
 fi
-echo "This script will install the following packages:"
 read -p "Are you sure you want to continue? [y/n] " installation
 if [[ $installation == "y" || $installation == "Y" || $installation == "yes" || $installation == "Yes" ]]
 then
+    clear
     echo "Installing panel ( v0.8 )"
+    sleep 1s
     apt update
     apt-get git python3 python3-pip nginx -y
     sudo apt install certbot python3-certbot-nginx
