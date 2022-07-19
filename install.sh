@@ -28,6 +28,7 @@ then
     echo "Installing nginx config..."
 	clear
     read -p 'Enter your domain ( No IP ): ' domain
+    echo ""
     sudo certbot certonly --standalone -d $domain
     cp /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
     sed -i "s/url/$domain/" /etc/nginx/sites-available/xeonpanel.conf
