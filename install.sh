@@ -24,10 +24,9 @@ then
     echo "Installing nginx config..."
 	clear
     read -p 'Enter your domain ( No IP ): ' domain
-    read domain
     sudo certbot certonly --standalone -d $domain
     cp /etc/xeonpanel/xeonpanel.conf /etc/nginx/sites-available/xeonpanel.conf
-    sed -i "s/url/\n$domain\n/g" /etc/nginx/sites-available/xeonpanel.conf
+    sed -i "s/url/$domain/" /etc/nginx/sites-available/xeonpanel.conf
     ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
     systemctl restart nginx
     echo "Panel is now available at https://$domain"
