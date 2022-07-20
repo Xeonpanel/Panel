@@ -1,65 +1,71 @@
 {% extends "/server/layout.html" %}
 
 {% block content %}
-    <div class="flex justify-center">
-        <div class="mt-8 mb-8 w-[1200px]" id="content">
-            <div class="flex items-center justify-between mb-5">
-                <h2 class="text-neutral-200 font-semibold select-none">{{ path }}</h2>
-                <script>
-                    $(document).ready(function(){
-                        $("#upload").on("submit", function(e){
-                            e.preventDefault();
-                            $.ajax({
-                                type: "POST",
-                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload",
-                                data: new FormData(this),
-                                contentType: false,
-                                cache: false,
-                                processData: false,
-                                success: function(data) {
-                                    window.location.reload();
-                                },
+    <div class="mt-[4rem]">
+        <div class="flex justify-center w-full">
+            <div class="mt-8 mb-8 mx-16 w-full" id="content">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-neutral-200 text-lg font-semibold select-none tracking-wide">{{ path }}</h2>
+                    <script>
+                        $(document).ready(function(){
+                            $("#upload").on("submit", function(e){
+                                e.preventDefault();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload",
+                                    data: new FormData(this),
+                                    contentType: false,
+                                    cache: false,
+                                    processData: false,
+                                    success: function(data) {
+                                        window.location.reload();
+                                    },
+                                });
                             });
                         });
-                    });
-                </script>
-                <form id="upload" action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
-                    <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
-                    <input type="file" name="file" id="upload_file" onchange="document.getElementById('submit_file').click()" hidden>
-                    <input type="text" name="path" value="{{ subpath }}" hidden>
-                    <input type="submit" id="submit_file" hidden>
-                </form>
-                <a onclick="document.getElementById('upload_file').click()" class="select-none py-1 px-5 bg-blue-500 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Upload File</a>
-            </div>
-            {% if files %}
-                <div class="text-neutral-100">
-                    {% for file in files %}
-                        {% if json.loads(json.dumps(file))["edit"] == True %}
-                            <a href="/dashboard/server/{{ serverid }}/files/edit/{{ json.loads(json.dumps(file))['path'] }}{{ json.loads(json.dumps(file))['name'] }}">
-                        {% else %}
-                            <a href="/dashboard/server/{{ serverid }}/files/{{ json.loads(json.dumps(file))['path'] }}{{ json.loads(json.dumps(file))['name'] }}">
-                        {% endif %}
-                            <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-start rounded duration-200 items-center">
-                                <div class="flex items-center">
-                                    {% if json.loads(json.dumps(file))["type"] == "file" %}
-                                        <i class="fa fa-file text-center text-xl mr-5"></i>
-                                        <h2 class="text-xl">{{ json.loads(json.dumps(file))["name"] }}</h2>
-                                    {% endif %}
-                                    {% if json.loads(json.dumps(file))["type"] == "dir" %}
-                                        <i class="fa fa-folder text-center text-xl mr-5"></i>
-                                        <h2 class="text-xl">{{ json.loads(json.dumps(file))["name"] }}</h2>
-                                    {% endif %}
+                    </script>
+                    <form id="upload" action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
+                        <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
+                        <input type="file" name="file" id="upload_file" onchange="document.getElementById('submit_file').click()" hidden>
+                        <input type="text" name="path" value="{{ subpath }}" hidden>
+                        <input type="submit" id="submit_file" hidden>
+                    </form>
+                    <div>
+                        <a class="select-none py-2 px-5 bg-blue-500 mx-1 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Create Directory</a>
+                        <a class="select-none py-2 px-5 bg-blue-500 mx-1 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Create File</a>
+                        <a onclick="document.getElementById('upload_file').click()" class="select-none py-2 px-5 bg-blue-500 mx-1 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Upload File</a>
+                    </div>
+                </div>
+                {% if files %}
+                    <div class="text-neutral-100">
+                        {% for file in files %}
+                            {% if json.loads(json.dumps(file))["edit"] == True %}
+                                <a href="/dashboard/server/{{ serverid }}/files/edit/{{ json.loads(json.dumps(file))['path'] }}{{ json.loads(json.dumps(file))['name'] }}">
+                            {% else %}
+                                <a href="/dashboard/server/{{ serverid }}/files/{{ json.loads(json.dumps(file))['path'] }}{{ json.loads(json.dumps(file))['name'] }}">
+                            {% endif %}
+                                <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 items-center">
+                                    <div class="flex items-center">
+                                        {% if json.loads(json.dumps(file))["type"] == "file" %}
+                                            <i class="fa fa-file text-center text-xl mr-5"></i>
+                                            <h2 class="text-xl">{{ json.loads(json.dumps(file))["name"] }}</h2>
+                                        {% endif %}
+                                        {% if json.loads(json.dumps(file))["type"] == "dir" %}
+                                            <i class="fa fa-folder text-center text-xl mr-5"></i>
+                                            <h2 class="text-xl">{{ json.loads(json.dumps(file))["name"] }}</h2>
+                                        {% endif %}
+                                    </div>
+                                    <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i>
                                 </div>
-                                <!-- <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i> -->
-                            </div>
-                        </a>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="text-center text-neutral-200 font-semibold mt-5">
-                    <h2>No files found on your server</h2>
-                </div>
-            {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center text-neutral-200 font-semibold mt-5">
+                        <h2>No files found on your server</h2>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
