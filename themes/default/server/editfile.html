@@ -2,27 +2,27 @@
 
 {% block content %}
     <style>
-        .cm-s-monokai { height: calc(100% - 8.6rem); background-color: #52525b !important; }
+        .cm-s-monokai { height: calc(100% - 4rem) !important; background-color: #18181b !important; position: fixed; width: 100%; padding: 10px; margin-top: 3rem; }
         .cm-scroller { overflow: auto }
         .CodeMirror { font-size: 16px; }
         .CodeMirror-sizer { margin-left: 40px !important; }
-        .CodeMirror-gutter { background-color: #52525b !important; }
+        .CodeMirror-gutter { background-color: #18181b !important; }
     </style>
-    <div class="p-3 bg-[#52525b] rounded">
-        <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit" method="post" id="save_file">
-            <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
-            <input type="text" name="file" value="{{ path }}" hidden>
-            <textarea name="content" id="code">{{ content }}</textarea>
-            <input type="submit" id="submit_file" hidden>
-        </form>
-    </div>
+    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit" method="post" id="save_file">
+        <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
+        <input type="text" name="file" value="{{ path }}" hidden>
+        <textarea name="content" id="code">{{ content }}</textarea>
+        <input type="submit" id="submit_file" hidden>
+    </form>
     <script>
         var editor = CodeMirror.fromTextArea(code, {
             theme: "monokai",
             lineNumbers: true,
             autoCloseTags: true,
             autoCloseBrackets: true,
-            mode: "text/x-python"
+            codeFolding: true,
+            mode: "text/x-python",
+            tabSize: 4
         });
     </script>
 {% endblock %}
