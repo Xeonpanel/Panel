@@ -1,266 +1,268 @@
 {% extends "/server/layout.html" %}
 
 {% block content %}
-    <div class="flex justify-center">
-        <div id="error" class="w-[1200px] mt-8 duration-400 ease-in-out transition-all"></div>
-    </div>
-    <div class="flex justify-center">
-        <div class="flex mt-5 justify-between w-[1200px]" id="content">
-            <div class="mr-2 h-fit">
-                <div class="shadow-xl">
-                    <div class="rounded-t text-neutral-100 font-semibold bg-zinc-900 p-3 border-b-2 border-blue-500">
-                        <h2 class="text-xl"><i class="fa fa-server mr-3 ml-1"></i>{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][1] }}</h2>
+    <div class="mt-[4rem]">
+        <div class="flex justify-center">
+            <div id="error" class="mx-16 duration-400 ease-in-out transition-all"></div>
+        </div>
+        <div class="flex justify-center">
+            <div class="mx-16 flex mt-8 mb-8 justify-between w-full" id="content">
+                <div class="mr-2 h-fit">
+                    <div class="shadow-xl">
+                        <div class="rounded-t text-neutral-100 font-semibold bg-zinc-900 p-3 border-b-2 border-blue-500">
+                            <h2 class="text-xl"><i class="fa fa-server mr-3 ml-1"></i>{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][1] }}</h2>
+                        </div>
                     </div>
-                </div>
-                <script>
-                    function GetLogs() {
-                        term.clear();
-                        const ws = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/logs");
-                        ws.addEventListener("message", (msg) => {
-                            term.write(msg.data)
-                        });
-                        ws.addEventListener("open", (event) => {
-                            ws.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
-                        });
-                        ws.addEventListener("error", (err) => {
-                            $("#error").empty();
-                            term.write("\x1b[31mCould not fetch messages, connection refused\n")
-                            $(
-                                `
-                                    <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                        <i class="fas fa-circle-notch fa-spin"></i>
-                                        <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                    </div>
-                                `
-                            ).appendTo("#error");
-                            $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                            $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
-                            $("#start_button").prop("disabled", true);
-                            $("#stop_button").prop("disabled", true);
-                        });
-                    }
-
-                    function GetDiskStats() {
-                        term.clear();
-                        const diskstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/disk");
-                        const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
-                        diskstats.addEventListener("message", (msg) => {
-                            $("#disk_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
-                        });
-                        diskstats.addEventListener("open", (event) => {
-                            diskstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
-                        });
-                        diskstats.addEventListener("error", (err) => {
-                            $("#error").empty();
-                            $(
-                                `
-                                    <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                        <i class="fas fa-circle-notch fa-spin"></i>
-                                        <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                    </div>
-                                `
-                            ).appendTo("#error");
-                            $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                            $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
-                            $("#start_button").prop("disabled", true);
-                            $("#stop_button").prop("disabled", true);
-                        });
-                    }
-
-                    function GetMemoryStats() {
-                        term.clear();
-                        const memstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
-                        const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
-                        memstats.addEventListener("message", (msg) => {
-                            $("#memory_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
-                        });
-                        memstats.addEventListener("open", (event) => {
-                            memstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
-                        });
-                        memstats.addEventListener("error", (err) => {
-                            $("#error").empty();
-                            $(
-                                `
-                                    <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                        <i class="fas fa-circle-notch fa-spin"></i>
-                                        <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                    </div>
-                                `
-                            ).appendTo("#error");
-                            $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                            $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
-                            $("#start_button").prop("disabled", true);
-                            $("#stop_button").prop("disabled", true);
-                        });
-                    }
-
-                    function GetStatus() {
-                        term.clear();
-                        const stats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/status");
-                        stats.addEventListener("message", (msg) => {
-                            if (msg.data === "offline") {
-                                $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-800 duration-200 mx-1");
-                                $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1");
-                                $("#start_button").prop("disabled", false);
-                                $("#stop_button").prop("disabled", true);
-                            } else {
-                                $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-800 duration-200 mx-1");
-                                $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1");
-                                $("#start_button").prop("disabled", true);
-                                $("#stop_button").prop("disabled", false);
-                            }
-                        });
-                        stats.addEventListener("open", (event) => {
-                            stats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
-                        });
-                        stats.addEventListener("error", (err) => {
-                            $("#error").empty();
-                            $(
-                                `
-                                    <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                        <i class="fas fa-circle-notch fa-spin"></i>
-                                        <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                    </div>
-                                `
-                            ).appendTo("#error");
-                            $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                            $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
-                            $("#start_button").prop("disabled", true);
-                            $("#stop_button").prop("disabled", true);
-                        });
-                    }
-
-                    $(document).ready( () => {
-                        GetLogs();
-                        GetMemoryStats();
-                        GetStatus();
-                        GetDiskStats();
-                    });
-
-                    function StartServer() {
-                        $.ajax ({
-                            type: "post",
-                            url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/start",
-                            data: JSON.stringify({
-                                "user_token": "{{ session['token'] }}",
-                                "image": "{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][11] }}",
-                                "startup_command": "{{ startup }}"
-                            }),
-                            dataType: "json",
-                            contentType: "application/json"
-                        });
-                        setTimeout( () => {
-                            GetLogs();
-                            GetMemoryStats();
-                            GetDiskStats();
-                        }, 300); 
-                    };
-
-                    function StopServer() {
-                        $.ajax ({
-                            type: "post",
-                            url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/stop",
-                            data: JSON.stringify({
-                                "user_token": "{{ session['token'] }}"
-                            }),
-                            dataType: "json",
-                            contentType: "application/json"
-                        });
-                        setTimeout( () => {
-                            GetLogs();
-                            GetMemoryStats();
-                            GetDiskStats();
-                        }, 400); 
-                    };
-                </script>
-                <div class="shadow-xl bg-zinc-800/70 rounded-b p-5 flex items-center justify-center text-white select-none">
-                    <button onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1" id="start_button">Start</button>
-                    <button onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1" id="stop_button">Stop</button>
-                </div>
-                <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
-                    <div class="flex">
-                        <i class="fa fa-network-wired text-3xl"></i>
-                    </div>
-                    <div class="flex">
-                        <h2 class="text-lg font-semibold text-neutral-100">{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][4] }}</h2>
-                    </div>
-                </div>
-                <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
-                    <div class="flex">
-                        <i class="fa fa-memory text-3xl"></i>
-                    </div>
-                    <div class="flex">
-                        <h2 class="text-lg font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
-                    </div>
-                </div>
-                <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
-                    <div class="flex">
-                        <i class="fa fa-hdd text-3xl"></i>
-                    </div>
-                    <div class="flex">
-                        <h2 class="text-lg font-semibold text-neutral-100"><span id="disk_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="w-full ml-4 shadow-xl">
-                <div class="bg-black rounded-t p-5 items-center">
-                    <div id="terminal"></div>
-                    <script>             
-                        const theme = {
-                            background: '#000',
-                            cursor: 'transparent',
-                            black: '#000',
-                            red: '#E54B4B',
-                            green: '#9ECE58',
-                            yellow: '#FAED70',
-                            blue: '#396FE2',
-                            magenta: '#BB80B3',
-                            cyan: '#2DDAFD',
-                            white: '#d0d0d0',
-                            brightBlack: 'rgba(255, 255, 255, 0.2)',
-                            brightRed: '#FF5370',
-                            brightGreen: '#C3E88D',
-                            brightYellow: '#FFCB6B',
-                            brightBlue: '#82AAFF',
-                            brightMagenta: '#C792EA',
-                            brightCyan: '#89DDFF',
-                            brightWhite: '#ffffff',
-                            selection: '#FAF089',
-                        };
-                        var term = new Terminal(
-                            {
-                                convertEol: true,
-                                disableStdin: true,
-                                cursorStyle: 'underline',
-                                allowTransparency: true,
-                                fontSize: 15,
-                                theme: theme
-                            }
-                        );
-                        var fitAddon = new FitAddon.FitAddon();
-                        term.loadAddon(fitAddon);
-                        term.open(document.getElementById("terminal"));
-                        fitAddon.fit();
-                        window.onresize = () => {
-                            fitAddon.fit();
-                        }
-                    </script>
-                </div>
-                <div class="bg-zinc-800 p-3 rounded-b flex items-center text-neutral-100">
-                    <i class="fa fa-terminal mx-1"></i>
-                    <input class="ml-3 text-neutral-200 bg-zinc-800 outline-none border-none w-full" type="text" placeholder="Enter a command..." id="consoleinput">
                     <script>
-                        var input = document.getElementById("consoleinput");
-                        input.addEventListener("keyup", function(event) {
-                            if (event.keyCode === 13) {
-                                event.preventDefault();
-                                if (input.value) {
-                                    term.write(input.value + "\n");
-                                    input.value = ""
-                                };
-                            };
+                        function GetLogs() {
+                            term.clear();
+                            const ws = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/logs");
+                            ws.addEventListener("message", (msg) => {
+                                term.write(msg.data)
+                            });
+                            ws.addEventListener("open", (event) => {
+                                ws.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                            });
+                            ws.addEventListener("error", (err) => {
+                                $("#error").empty();
+                                term.write("\x1b[31mCould not fetch messages, connection refused\n")
+                                $(
+                                    `
+                                        <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
+                                        </div>
+                                    `
+                                ).appendTo("#error");
+                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
+                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                                $("#start_button").prop("disabled", true);
+                                $("#stop_button").prop("disabled", true);
+                            });
+                        }
+
+                        function GetDiskStats() {
+                            term.clear();
+                            const diskstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/disk");
+                            const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
+                            diskstats.addEventListener("message", (msg) => {
+                                $("#disk_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
+                            });
+                            diskstats.addEventListener("open", (event) => {
+                                diskstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                            });
+                            diskstats.addEventListener("error", (err) => {
+                                $("#error").empty();
+                                $(
+                                    `
+                                        <div class="bg-red-500 mt-8 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
+                                        </div>
+                                    `
+                                ).appendTo("#error");
+                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
+                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                                $("#start_button").prop("disabled", true);
+                                $("#stop_button").prop("disabled", true);
+                            });
+                        }
+
+                        function GetMemoryStats() {
+                            term.clear();
+                            const memstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
+                            const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
+                            memstats.addEventListener("message", (msg) => {
+                                $("#memory_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
+                            });
+                            memstats.addEventListener("open", (event) => {
+                                memstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                            });
+                            memstats.addEventListener("error", (err) => {
+                                $("#error").empty();
+                                $(
+                                    `
+                                        <div class="bg-red-500 mt-8 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
+                                        </div>
+                                    `
+                                ).appendTo("#error");
+                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
+                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                                $("#start_button").prop("disabled", true);
+                                $("#stop_button").prop("disabled", true);
+                            });
+                        }
+
+                        function GetStatus() {
+                            term.clear();
+                            const stats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/status");
+                            stats.addEventListener("message", (msg) => {
+                                if (msg.data === "offline") {
+                                    $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-800 duration-200 mx-1");
+                                    $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1");
+                                    $("#start_button").prop("disabled", false);
+                                    $("#stop_button").prop("disabled", true);
+                                } else {
+                                    $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-800 duration-200 mx-1");
+                                    $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1");
+                                    $("#start_button").prop("disabled", true);
+                                    $("#stop_button").prop("disabled", false);
+                                }
+                            });
+                            stats.addEventListener("open", (event) => {
+                                stats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                            });
+                            stats.addEventListener("error", (err) => {
+                                $("#error").empty();
+                                $(
+                                    `
+                                        <div class="bg-red-500 mt-8 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
+                                            <i class="fas fa-circle-notch fa-spin"></i>
+                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
+                                        </div>
+                                    `
+                                ).appendTo("#error");
+                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
+                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                                $("#start_button").prop("disabled", true);
+                                $("#stop_button").prop("disabled", true);
+                            });
+                        }
+
+                        $(document).ready( () => {
+                            GetLogs();
+                            GetMemoryStats();
+                            GetStatus();
+                            GetDiskStats();
                         });
+
+                        function StartServer() {
+                            $.ajax ({
+                                type: "post",
+                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/start",
+                                data: JSON.stringify({
+                                    "user_token": "{{ session['token'] }}",
+                                    "image": "{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][11] }}",
+                                    "startup_command": "{{ startup }}"
+                                }),
+                                dataType: "json",
+                                contentType: "application/json"
+                            });
+                            setTimeout( () => {
+                                GetLogs();
+                                GetMemoryStats();
+                                GetDiskStats();
+                            }, 300); 
+                        };
+
+                        function StopServer() {
+                            $.ajax ({
+                                type: "post",
+                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/stop",
+                                data: JSON.stringify({
+                                    "user_token": "{{ session['token'] }}"
+                                }),
+                                dataType: "json",
+                                contentType: "application/json"
+                            });
+                            setTimeout( () => {
+                                GetLogs();
+                                GetMemoryStats();
+                                GetDiskStats();
+                            }, 400); 
+                        };
                     </script>
+                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-5 flex items-center justify-center text-white select-none">
+                        <button onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1" id="start_button">Start</button>
+                        <button onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1" id="stop_button">Stop</button>
+                    </div>
+                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                        <div class="flex">
+                            <i class="fa fa-network-wired text-3xl"></i>
+                        </div>
+                        <div class="flex">
+                            <h2 class="text-lg font-semibold text-neutral-100">{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][4] }}</h2>
+                        </div>
+                    </div>
+                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                        <div class="flex">
+                            <i class="fa fa-memory text-3xl"></i>
+                        </div>
+                        <div class="flex">
+                            <h2 class="text-lg font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
+                        </div>
+                    </div>
+                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                        <div class="flex">
+                            <i class="fa fa-hdd text-3xl"></i>
+                        </div>
+                        <div class="flex">
+                            <h2 class="text-lg font-semibold text-neutral-100"><span id="disk_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full ml-4 shadow-xl">
+                    <div class="bg-black rounded-t p-5 items-center">
+                        <div id="terminal"></div>
+                        <script>             
+                            const theme = {
+                                background: '#000',
+                                cursor: 'transparent',
+                                black: '#000',
+                                red: '#E54B4B',
+                                green: '#9ECE58',
+                                yellow: '#FAED70',
+                                blue: '#396FE2',
+                                magenta: '#BB80B3',
+                                cyan: '#2DDAFD',
+                                white: '#d0d0d0',
+                                brightBlack: 'rgba(255, 255, 255, 0.2)',
+                                brightRed: '#FF5370',
+                                brightGreen: '#C3E88D',
+                                brightYellow: '#FFCB6B',
+                                brightBlue: '#82AAFF',
+                                brightMagenta: '#C792EA',
+                                brightCyan: '#89DDFF',
+                                brightWhite: '#ffffff',
+                                selection: '#FAF089',
+                            };
+                            var term = new Terminal(
+                                {
+                                    convertEol: true,
+                                    disableStdin: true,
+                                    cursorStyle: 'underline',
+                                    allowTransparency: true,
+                                    fontSize: 15,
+                                    theme: theme
+                                }
+                            );
+                            var fitAddon = new FitAddon.FitAddon();
+                            term.loadAddon(fitAddon);
+                            term.open(document.getElementById("terminal"));
+                            fitAddon.fit();
+                            window.onresize = () => {
+                                fitAddon.fit();
+                            }
+                        </script>
+                    </div>
+                    <div class="bg-zinc-800 p-3 rounded-b flex items-center text-neutral-100">
+                        <i class="fa fa-terminal mx-1"></i>
+                        <input class="ml-3 text-neutral-200 bg-zinc-800 outline-none border-none w-full" type="text" placeholder="Enter a command..." id="consoleinput">
+                        <script>
+                            var input = document.getElementById("consoleinput");
+                            input.addEventListener("keyup", function(event) {
+                                if (event.keyCode === 13) {
+                                    event.preventDefault();
+                                    if (input.value) {
+                                        term.write(input.value + "\n");
+                                        input.value = ""
+                                    };
+                                };
+                            });
+                        </script>
+                    </div>
                 </div>
             </div>
         </div>
