@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS "servers" (
 	"uuid"	VARCHAR(255),
 	"startup"	VARCHAR(255),
 	"image"	VARCHAR(255),
+	"subusers"	VARCHAR(255)
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
