@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>{{ title }}</title>
-        <script src="/static/node_modules/flowbite/dist/flowbite.js"></script>
+        <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
@@ -19,11 +19,12 @@
         <script src="https://esironal.github.io/cmtouch/addon/selection/active-line.js"></script>
         <script src="https://esironal.github.io/cmtouch/addon/edit/matchbrackets.js"></script>
         <script src="https://esironal.github.io/cmtouch/addon/edit/closebrackets.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
     </head>
-    <body class="bg-zinc-600">
+    <body class="bg-zinc-700">
         <div>
-            <div class="bg-zinc-800 shadow-xl">
-                <ul class="flex justify-between h-[4rem] mx-16 text-neutral-200 items-center">
+            <div class="bg-zinc-800 shadow-xl fixed w-full">
+                <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
                     <a href="/">
                         {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
                             <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">
@@ -31,7 +32,7 @@
                             <li class="text-2xl font-semibold">{{ sqlquery("SELECT panel_name FROM settings")[0][0] }}</li>
                         {% endif %}
                     </a>
-                    <div class="flex items-center mr-4 h-full">
+                    <div class="flex items-center h-full">
                         <a href="/dashboard">
                             <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
                                 <i class="mt-1 fa fa-server"></i>
@@ -57,56 +58,88 @@
                     </div>
                 </ul>
             </div>
-            <div class="flex h-[3.1rem] justify-between items-center bg-zinc-900 text-neutral-300 font-semibold px-32 shadow">
-                <div class="flex">
-                    {% if title == "Console" %}
-                        <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-blue-500" href="/dashboard/server/{{ serverid }}">Console</a>
-                    {% else %}
-                        <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-zinc-900 hover:border-blue-500" href="/dashboard/server/{{ serverid }}">Console</a>
-                    {% endif %}
-                    {% if title == "File Manager" or title == "Edit File" %}
-                        <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-blue-500" href="/dashboard/server/{{ serverid }}/files">File manager</a>
-                    {% else %}
-                        <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-zinc-900 hover:border-blue-500" href="/dashboard/server/{{ serverid }}/files">File manager</a>
-                    {% endif %}
-                    {% if title == "Configuration" %}
-                        <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-blue-500" href="/dashboard/server/{{ serverid }}/configuration">Configuration</a>
-                    {% else %}
-                        <a class="mx-2 hover:text-neutral-100 duration-200 border-b-2 p-3 border-zinc-900 hover:border-blue-500" href="/dashboard/server/{{ serverid }}/configuration">Configuration</a>
-                    {% endif %}
-                </div>
-                <div class="flex">
-                    {% if title == "Edit File" %}
-                        <script>
-                            $(document).ready(function(){
-                                $("#save_file").on("submit", function(e){
-                                    e.preventDefault();
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit",
-                                        data: new FormData(this),
-                                        contentType: false,
-                                        cache: false,
-                                        processData: false,
-                                        success: function(data) {
-                                            $("#save_button").removeClass().addClass("select-none text-center rounded py-1 mx-1 px-5 font-semibold text-neutral-100 duration-200 bg-green-500 w-[150px]")
-                                            $("#save_button").html("Saved")
-                                            setTimeout(function () {
-                                                $("#save_button").removeClass().addClass("select-none text-center rounded py-1 mx-1 px-5 font-semibold text-neutral-100 duration-200 bg-blue-500 hover:bg-blue-600 w-[150px]")
-                                                $("#save_button").html("Save Changes")
-                                            }, 1400);
-                                        },
-                                    });
+            <div class="text-neutral-100 w-[4rem] mt-[4rem] shadow-xl h-full fixed flex flex-col bg-zinc-800">
+                {% if title == "Console" %}
+                    <a href="/dashboard/server/{{ serverid }}">
+                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
+                            <i class="ml-[2px] fa-solid fa-terminal"></i>
+                        </div>
+                    </a>
+                {% else %}
+                    <a href="/dashboard/server/{{ serverid }}">
+                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
+                            <i class="ml-[2px] fa-solid fa-terminal"></i>
+                        </div>
+                    </a>
+                {% endif %}
+                {% if title == "File Manager" or title == "Edit File" %}
+                    <a href="/dashboard/server/{{ serverid }}/files">
+                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
+                            <i class="ml-[2px] fa-solid fa-folder"></i>
+                        </div>
+                    </a>
+                {% else %}
+                    <a href="/dashboard/server/{{ serverid }}/files">
+                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
+                            <i class="ml-[2px] fa-solid fa-folder"></i>
+                        </div>
+                    </a>
+                {% endif %}
+                {% if title == "Configuration" %}
+                    <a href="/dashboard/server/{{ serverid }}/configuration">
+                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
+                            <i class="ml-[2px] fa-solid fa-cogs"></i>
+                        </div>
+                    </a>
+                {% else %}
+                    <a href="/dashboard/server/{{ serverid }}/configuration">
+                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
+                            <i class="ml-[2px] fa-solid fa-cogs"></i>
+                        </div>
+                    </a>
+                {% endif %}
+                {% if title == "Edit File" %}
+                    <script>
+                        $(document).ready(function(){
+                            $("#save_file").on("submit", function(e){
+                                e.preventDefault();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit",
+                                    data: new FormData(this),
+                                    contentType: false,
+                                    cache: false,
+                                    processData: false,
+                                    success: function(data) {
+                                        $("#save_button").removeClass().addClass("ml-[2px] fas fa-sync fa-spin")
+                                        setTimeout(function () {
+                                            $("#save_button").removeClass().addClass("ml-[2px] fa-solid fa-save")
+                                        }, 500);
+                                    },
                                 });
                             });
-                        </script>
-                        <a href="/dashboard/server/{{ serverid }}/files" class="select-none rounded py-1 mx-1 px-5 font-semibold text-neutral-100 duration-200 bg-blue-500 hover:bg-blue-600">Return</a>
-                        <a onclick="document.getElementById('submit_file').click()" class="select-none text-center rounded py-1 mx-1 px-5 font-semibold text-neutral-100 duration-200 bg-blue-500 hover:bg-blue-600 w-[150px]" id="save_button">Save Changes</a>
-                    {% endif %}
+                        });
+
+                        $(document).keydown(function(event) {
+                            if((event.ctrlKey || event.metaKey) && event.which == 83) {
+                                event.preventDefault();
+                                document.getElementById("submit_file").click();
+                            };
+                        });
+                    </script>
+                    <a onclick="document.getElementById('submit_file').click()">
+                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-zinc-800 hover:border-zinc-900">
+                            <i id="save_button" class="ml-[2px] fa-solid fa-save"></i>
+                        </div>
+                    </a>
+                {% endif %}
+            </div>
+            <div class="ml-[4rem] w-[calc(100vw-4rem)] h-full overflow-auto">
+                <div class="mt-[1rem]">
+                    {% block content %}
+                    {% endblock %}
                 </div>
             </div>
-            {% block content %}
-            {% endblock %}
         </div>
     </body>
 </html>
