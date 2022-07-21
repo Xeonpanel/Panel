@@ -21,124 +21,122 @@
         <script src="https://esironal.github.io/cmtouch/addon/edit/closebrackets.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
     </head>
-    <body class="bg-zinc-700">
-        <div>
-            <div class="bg-zinc-800 shadow-xl fixed w-full">
-                <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
-                    <a href="/">
-                        {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
-                            <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">
-                        {% else %}    
-                            <li class="text-2xl font-semibold">{{ sqlquery("SELECT panel_name FROM settings")[0][0] }}</li>
-                        {% endif %}
+    <body class="bg-zinc-600">
+        <div class="bg-zinc-800 shadow-xl fixed top-0 w-full">
+            <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
+                <a href="/">
+                    {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
+                        <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">
+                    {% else %}    
+                        <li class="text-2xl font-semibold">{{ sqlquery("SELECT panel_name FROM settings")[0][0] }}</li>
+                    {% endif %}
+                </a>
+                <div class="flex items-center h-full">
+                    <a href="/dashboard">
+                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
+                            <i class="mt-1 fa fa-server"></i>
+                        </div>
                     </a>
-                    <div class="flex items-center h-full">
-                        <a href="/dashboard">
-                            <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
-                                <i class="mt-1 fa fa-server"></i>
-                            </div>
-                        </a>
-                        <a href="/dashboard/account">
+                    <a href="/dashboard/account">
+                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                            <i class="mt-1 fa fa-user"></i>
+                        </div>
+                    </a>
+                    {% if sqlquery("SELECT user_type FROM users WHERE id = ?", session["id"])[0][0] == "administrator" %}
+                        <a href="/admin">
                             <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
-                                <i class="mt-1 fa fa-user"></i>
+                                <i class="mt-1 fa fa-cog"></i>
                             </div>
                         </a>
-                        {% if sqlquery("SELECT user_type FROM users WHERE id = ?", session["id"])[0][0] == "administrator" %}
-                            <a href="/admin">
-                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
-                                    <i class="mt-1 fa fa-cog"></i>
-                                </div>
-                            </a>
-                        {% endif %}
-                        <a href="/logout?csrf={{ session['csrf_token'] }}">
-                            <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
-                                <i class="mt-1 fa fa-sign-out"></i>
-                            </div>
-                        </a>
+                    {% endif %}
+                    <a href="/logout?csrf={{ session['csrf_token'] }}">
+                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                            <i class="mt-1 fa fa-sign-out"></i>
+                        </div>
+                    </a>
+                </div>
+            </ul>
+        </div>
+        <div class="text-neutral-100 top-0 w-[4rem] mt-[4rem] shadow-xl h-full fixed flex flex-col bg-zinc-800">
+            {% if title == "Console" %}
+                <a href="/dashboard/server/{{ serverid }}">
+                    <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
+                        <i class="ml-[2px] fa-solid fa-terminal"></i>
                     </div>
-                </ul>
-            </div>
-            <div class="text-neutral-100 w-[4rem] mt-[4rem] shadow-xl h-full fixed flex flex-col bg-zinc-800">
-                {% if title == "Console" %}
-                    <a href="/dashboard/server/{{ serverid }}">
-                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
-                            <i class="ml-[2px] fa-solid fa-terminal"></i>
-                        </div>
-                    </a>
-                {% else %}
-                    <a href="/dashboard/server/{{ serverid }}">
-                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
-                            <i class="ml-[2px] fa-solid fa-terminal"></i>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if title == "File Manager" or title == "Edit File" %}
-                    <a href="/dashboard/server/{{ serverid }}/files">
-                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
-                            <i class="ml-[2px] fa-solid fa-folder"></i>
-                        </div>
-                    </a>
-                {% else %}
-                    <a href="/dashboard/server/{{ serverid }}/files">
-                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
-                            <i class="ml-[2px] fa-solid fa-folder"></i>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if title == "Configuration" %}
-                    <a href="/dashboard/server/{{ serverid }}/configuration">
-                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
-                            <i class="ml-[2px] fa-solid fa-cogs"></i>
-                        </div>
-                    </a>
-                {% else %}
-                    <a href="/dashboard/server/{{ serverid }}/configuration">
-                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
-                            <i class="ml-[2px] fa-solid fa-cogs"></i>
-                        </div>
-                    </a>
-                {% endif %}
-                {% if title == "Edit File" %}
-                    <script>
-                        $(document).ready(function(){
-                            $("#save_file").on("submit", function(e){
-                                e.preventDefault();
-                                $.ajax({
-                                    type: "POST",
-                                    url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit",
-                                    data: new FormData(this),
-                                    contentType: false,
-                                    cache: false,
-                                    processData: false,
-                                    success: function(data) {
-                                        $("#save_button").removeClass().addClass("ml-[2px] fas fa-sync fa-spin")
-                                        setTimeout(function () {
-                                            $("#save_button").removeClass().addClass("ml-[2px] fa-solid fa-save")
-                                        }, 500);
-                                    },
-                                });
+                </a>
+            {% else %}
+                <a href="/dashboard/server/{{ serverid }}">
+                    <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
+                        <i class="ml-[2px] fa-solid fa-terminal"></i>
+                    </div>
+                </a>
+            {% endif %}
+            {% if title == "File Manager" or title == "Edit File" %}
+                <a href="/dashboard/server/{{ serverid }}/files">
+                    <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
+                        <i class="ml-[2px] fa-solid fa-folder"></i>
+                    </div>
+                </a>
+            {% else %}
+                <a href="/dashboard/server/{{ serverid }}/files">
+                    <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
+                        <i class="ml-[2px] fa-solid fa-folder"></i>
+                    </div>
+                </a>
+            {% endif %}
+            {% if title == "Configuration" %}
+                <a href="/dashboard/server/{{ serverid }}/configuration">
+                    <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-blue-500">
+                        <i class="ml-[2px] fa-solid fa-cogs"></i>
+                    </div>
+                </a>
+            {% else %}
+                <a href="/dashboard/server/{{ serverid }}/configuration">
+                    <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 hover:border-blue-500 border-zinc-800">
+                        <i class="ml-[2px] fa-solid fa-cogs"></i>
+                    </div>
+                </a>
+            {% endif %}
+            {% if title == "Edit File" %}
+                <script>
+                    $(document).ready(function(){
+                        $("#save_file").on("submit", function(e){
+                            e.preventDefault();
+                            $.ajax({
+                                type: "POST",
+                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit",
+                                data: new FormData(this),
+                                contentType: false,
+                                cache: false,
+                                processData: false,
+                                success: function(data) {
+                                    $("#save_button").removeClass().addClass("ml-[2px] fas fa-sync fa-spin")
+                                    setTimeout(function () {
+                                        $("#save_button").removeClass().addClass("ml-[2px] fa-solid fa-save")
+                                    }, 500);
+                                },
                             });
                         });
+                    });
 
-                        $(document).keydown(function(event) {
-                            if((event.ctrlKey || event.metaKey) && event.which == 83) {
-                                event.preventDefault();
-                                document.getElementById("submit_file").click();
-                            };
-                        });
-                    </script>
-                    <a onclick="document.getElementById('submit_file').click()">
-                        <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-zinc-800 hover:border-zinc-900">
-                            <i id="save_button" class="ml-[2px] fa-solid fa-save"></i>
-                        </div>
-                    </a>
-                {% endif %}
-            </div>
-            <div class="ml-[4rem] w-[calc(100vw-4rem)] h-full overflow-auto">
-                <div class="mt-[1rem]">
-                    {% block content %}
-                    {% endblock %}
-                </div>
+                    $(document).keydown(function(event) {
+                        if((event.ctrlKey || event.metaKey) && event.which == 83) {
+                            event.preventDefault();
+                            document.getElementById("submit_file").click();
+                        };
+                    });
+                </script>
+                <a onclick="document.getElementById('submit_file').click()">
+                    <div class="h-full flex justify-center items-center duration-200 hover:bg-zinc-900 p-5 px-6 border-r-2 border-zinc-800 hover:border-zinc-900">
+                        <i id="save_button" class="ml-[2px] fa-solid fa-save"></i>
+                    </div>
+                </a>
+            {% endif %}
+        </div>
+        <div class="ml-[4rem] w-[calc(100vw-4rem)] h-full overflow-auto">
+            <div class="mt-[1rem]">
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
     </body>
