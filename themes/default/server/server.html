@@ -1,16 +1,19 @@
 {% extends "/server/layout.html" %}
 
 {% block content %}
-    <div class="mt-[4rem]">
-        <div class="flex justify-center">
-            <div id="error" class="mx-16 duration-400 ease-in-out transition-all"></div>
+    <div class="pt-20">
+        <div id="error" class="mb-5 hidden mx-16 duration-400 ease-in-out transition-all">
+            <div class="bg-red-500 py-2 my-1 px-4 rounded-md text-neutral-100 flex items-center">
+                <i class="fas fa-circle-notch fa-spin"></i>
+                <h2 class="ml-3">Could not connect to server, node offline</h2>
+            </div>
         </div>
         <div class="flex justify-center">
-            <div class="mx-16 flex mt-8 mb-8 justify-between w-full" id="content">
+            <div class="mx-16 flex mb-8 justify-between w-full" id="content">
                 <div class="mr-2 h-fit">
                     <div class="shadow-xl">
-                        <div class="rounded-t text-neutral-100 font-semibold bg-zinc-900 p-3 border-b-2 border-blue-500">
-                            <h2 class="text-xl"><i class="fa fa-server mr-3 ml-1"></i>{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][1] }}</h2>
+                        <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                            <h2 class="text-sm uppercase">{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][1] }}</h2>
                         </div>
                     </div>
                     <script>
@@ -24,18 +27,8 @@
                                 ws.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
                             ws.addEventListener("error", (err) => {
-                                $("#error").empty();
                                 term.write("\x1b[31mCould not fetch messages, connection refused\n")
-                                $(
-                                    `
-                                        <div class="bg-red-500 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                            <i class="fas fa-circle-notch fa-spin"></i>
-                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                        </div>
-                                    `
-                                ).appendTo("#error");
-                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
+                                $("#error").removeClass("hidden").addClass("block")
                                 $("#start_button").prop("disabled", true);
                                 $("#stop_button").prop("disabled", true);
                             });
@@ -51,21 +44,6 @@
                             diskstats.addEventListener("open", (event) => {
                                 diskstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
-                            diskstats.addEventListener("error", (err) => {
-                                $("#error").empty();
-                                $(
-                                    `
-                                        <div class="bg-red-500 mt-8 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                            <i class="fas fa-circle-notch fa-spin"></i>
-                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                        </div>
-                                    `
-                                ).appendTo("#error");
-                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
-                                $("#start_button").prop("disabled", true);
-                                $("#stop_button").prop("disabled", true);
-                            });
                         }
 
                         function GetMemoryStats() {
@@ -78,21 +56,6 @@
                             memstats.addEventListener("open", (event) => {
                                 memstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
-                            memstats.addEventListener("error", (err) => {
-                                $("#error").empty();
-                                $(
-                                    `
-                                        <div class="bg-red-500 mt-8 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                            <i class="fas fa-circle-notch fa-spin"></i>
-                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                        </div>
-                                    `
-                                ).appendTo("#error");
-                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
-                                $("#start_button").prop("disabled", true);
-                                $("#stop_button").prop("disabled", true);
-                            });
                         }
 
                         function GetStatus() {
@@ -101,11 +64,11 @@
                             stats.addEventListener("message", (msg) => {
                                 if (msg.data === "offline") {
                                     $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-800 duration-200 mx-1");
-                                    $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1");
+                                    $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-green-600 hover:bg-green-700 duration-200 mx-1");
                                     $("#start_button").prop("disabled", false);
                                     $("#stop_button").prop("disabled", true);
                                 } else {
-                                    $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-blue-800 duration-200 mx-1");
+                                    $("#start_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-green-800 duration-200 mx-1");
                                     $("#stop_button").removeClass().addClass("rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1");
                                     $("#start_button").prop("disabled", true);
                                     $("#stop_button").prop("disabled", false);
@@ -114,24 +77,9 @@
                             stats.addEventListener("open", (event) => {
                                 stats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
-                            stats.addEventListener("error", (err) => {
-                                $("#error").empty();
-                                $(
-                                    `
-                                        <div class="bg-red-500 mt-8 py-2 my-1 px-4 rounded text-neutral-100 flex items-center">
-                                            <i class="fas fa-circle-notch fa-spin"></i>
-                                            <h2 class="ml-3">Could not connect to server, node offline</h2>
-                                        </div>
-                                    `
-                                ).appendTo("#error");
-                                $("#start_button").removeClass("bg-blue-600 hover:bg-blue-700").addClass("bg-blue-700");
-                                $("#stop_button").removeClass("bg-red-600 hover:bg-red-700").addClass("bg-red-700");
-                                $("#start_button").prop("disabled", true);
-                                $("#stop_button").prop("disabled", true);
-                            });
                         }
 
-                        $(document).ready( () => {
+                        $( document ).ready( () => {
                             GetLogs();
                             GetMemoryStats();
                             GetStatus();
@@ -139,6 +87,7 @@
                         });
 
                         function StartServer() {
+                            term.write("Server marked as starting..\n");
                             $.ajax ({
                                 type: "post",
                                 url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/start",
@@ -158,6 +107,7 @@
                         };
 
                         function StopServer() {
+                            term.write("\nServer marked a stopping..");
                             $.ajax ({
                                 type: "post",
                                 url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/stop",
@@ -174,11 +124,11 @@
                             }, 400); 
                         };
                     </script>
-                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-5 flex items-center justify-center text-white select-none">
-                        <button onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-blue-600 hover:bg-blue-700 duration-200 mx-1" id="start_button">Start</button>
-                        <button onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-600 hover:bg-red-700 duration-200 mx-1" id="stop_button">Stop</button>
+                    <div class="shadow-xl bg-zinc-800/70 rounded-b-md p-5 flex items-center justify-center text-white select-none">
+                        <button onclick="StartServer()" class="rounded px-12 py-1 font-semibold bg-green-800 duration-200 mx-1" id="start_button">Start</button>
+                        <button onclick="StopServer()" class="rounded px-12 py-1 font-semibold bg-red-800 duration-200 mx-1" id="stop_button">Stop</button>
                     </div>
-                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                    <div class="shadow-xl bg-zinc-800/70 rounded-md p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
                         <div class="flex">
                             <i class="fa fa-network-wired text-3xl"></i>
                         </div>
@@ -186,7 +136,7 @@
                             <h2 class="text-lg font-semibold text-neutral-100">{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][4] }}</h2>
                         </div>
                     </div>
-                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                    <div class="shadow-xl bg-zinc-800/70 rounded-md p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
                         <div class="flex">
                             <i class="fa fa-memory text-3xl"></i>
                         </div>
@@ -194,7 +144,7 @@
                             <h2 class="text-lg font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</h2>
                         </div>
                     </div>
-                    <div class="shadow-xl bg-zinc-800/70 rounded-b p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
+                    <div class="shadow-xl bg-zinc-800/70 rounded-md p-3 mt-5 flex items-center justify-between px-8 text-white select-none">
                         <div class="flex">
                             <i class="fa fa-hdd text-3xl"></i>
                         </div>
@@ -204,7 +154,7 @@
                     </div>
                 </div>
                 <div class="w-full ml-4 shadow-xl">
-                    <div class="bg-black rounded-t p-5 items-center">
+                    <div class="bg-black rounded-t-md p-5 items-center">
                         <div id="terminal"></div>
                         <script>             
                             const theme = {
@@ -247,9 +197,9 @@
                             }
                         </script>
                     </div>
-                    <div class="bg-zinc-800 p-3 rounded-b flex items-center text-neutral-100">
+                    <div class="bg-zinc-800 py-1 px-3 rounded-b-md flex items-center text-neutral-100">
                         <i class="fa fa-terminal mx-1"></i>
-                        <input class="ml-3 text-neutral-200 bg-zinc-800 outline-none border-none w-full" type="text" placeholder="Enter a command..." id="consoleinput">
+                        <input class="ml-3 text-neutral-200 bg-zinc-800 outline-none focus:outline-none focus:border-none border-none w-full" type="text" placeholder="Enter a command..." id="consoleinput">
                         <script>
                             var input = document.getElementById("consoleinput");
                             input.addEventListener("keyup", function(event) {
