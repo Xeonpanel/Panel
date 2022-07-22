@@ -135,6 +135,22 @@
         </div>
         <div class="ml-[4rem] w-[calc(100vw-4rem)] h-full overflow-auto">
             <div class="mt-[1rem]">
+                <div id="loader">
+                    <div class="mt-[-1rem] text-neutral-100 h-full opacity-50 text-8xl w-full flex justify-center items-center">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                    </div>
+                </div>
+                <script>
+                    document.onreadystatechange = function() {
+                        if (document.readyState !== "complete") {
+                            document.querySelector("#loader").style.visibility = "visible";
+                        } else {
+                            setTimeout(() => {
+                                document.querySelector("#loader").style.display = "none";
+                            }, 200);
+                        }
+                    };
+                </script>
                 {% block content %}
                 {% endblock %}
             </div>
