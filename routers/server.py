@@ -32,22 +32,12 @@ def server_files(serverid, **dir):
     if flask.session:
         if len(sqlquery("SELECT * FROM servers WHERE owner_id = ? and id = ?", flask.session["id"], serverid)):
             if dir:
-                payload = {
-                    "user_token": flask.session["token"],
-                    "path": dir["dir"]
-                }
                 subpath = dir["dir"]
                 path = "/home/container/{}".format(dir["dir"])
-                files = requests.get("https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data=payload).json()
             else:
-                payload = {
-                    "user_token": flask.session["token"],
-                    "path": "/"
-                }
                 subpath = "/"
                 path = "/home/container"
-                files = requests.get("https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data=payload).json()
-            return flask.render_template("/server/files.html", title="File Manager", sqlquery=sqlquery, serverid=serverid, json=json, files=files, path=path, subpath=subpath)
+            return flask.render_template("/server/files.html", title="File Manager", sqlquery=sqlquery, serverid=serverid, json=json, path=path, subpath=subpath)
         else:
             flask.abort(401)
     else:
