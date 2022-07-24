@@ -3,6 +3,8 @@
         <title>{{ title }}</title>
         <link rel="stylesheet" href="/static/node_modules/flowbite/dist/flowbite.js">
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     </head>
     <body class="bg-zinc-600 flex flex-col h-full w-full items-center justify-center">
         {% if get_flashed_messages() %}
@@ -11,8 +13,8 @@
             </div>
         {% endif %}
         <div class="w-[500px] shadow-2xl">
-            <div class="bg-zinc-800 rounded-t border-b-2 border-blue-500 flex items-center">
-                <h2 class="text-white p-5 text-3xl">Register a account</h2>
+            <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                <h2 class="text-sm uppercase">Register a account</h2>
             </div>
             <div class="bg-zinc-800/70 w-full inline-flex justify-center">
                 <div>
