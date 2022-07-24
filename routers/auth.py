@@ -15,13 +15,11 @@ def auth_login():
                 flask.session["id"] = data[0][0]
                 flask.session["token"] = data[0][4]
                 flask.session["csrf_token"] = os.urandom(250).hex()
-                return flask.redirect("/dashboard")
+                return flask.jsonify({"status": "succes"})
             else:
-                flask.flash("Email or password invalid", "error")
-                return flask.redirect("/login")
+                return flask.jsonify({"status": "error", "message": "Email or password invalid"})
         else:
-            flask.flash("Please fill in all fields", "error")
-            return flask.redirect("/login")
+            return flask.jsonify({"status": "error", "message": "Please fill in all fields"})
 
 @app.route("/register", methods=["GET", "POST"])
 def auth_register():
@@ -34,8 +32,7 @@ def auth_register():
                 flask.request.form.get("email"), flask.request.form.get("username")
             )
             if len(data):
-                flask.flash("User already exists", "error")
-                return flask.redirect("/register")
+                return flask.jsonify({"status": "error", "message": "Username or email already exists"})
             else:
                 sqlquery(
                     "INSERT INTO users (name, email, password, token, user_type) VALUES (?, ?, ?, ?, ?)",
@@ -47,8 +44,6 @@ def auth_register():
                     os.urandom(50).hex(),
                     "user"
                 )
-                flask.flash("Account created succesfully", "succes")
-                return flask.redirect("/login")
+                return flask.jsonify({"status": "succes"})
         else:
-            flask.flash("Please fill in all fields", "error")
-            return flask.redirect("/register")
+            return flask.jsonify({"status": "error", "message": "Please fill in all fields"})
