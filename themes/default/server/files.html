@@ -96,57 +96,82 @@ i{% extends "/server/layout.html" %}
                         <a onclick="document.getElementById('upload_file').click()" class="select-none py-2 px-5 bg-blue-500 mx-1 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Upload File</a>
                     </div>
                 </div>
-                <div class="text-neutral-100 mt-5" id="files">
-                    <script>
-                        var data = new FormData();
-                        data.append("path", `{{ subpath }}`);
-                        data.append("user_token", `{{ session["token"] }}`);
+                <div class="text-neutral-100 mt-5" id="files"></div>
+                <script>
+                    function FileDropDown(filename) {
+                        $(`#dropdown-content-${filename}`).toggleClass("hidden");
+                    }
 
-                        $.ajax({
-                            type: "POST",
-                            url: `{{ "https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]) }}`,
-                            data: data,
-                            processData: false,
-                            contentType: false,
-                            success: function(files) {
-                                files.forEach(file => {
-                                    if (file.edit === true) {
-                                        $("#files").append(
-                                            `
-                                                <a href="/dashboard/server/{{ serverid }}/files/edit/${file.path}/${file.name}">
-                                                    <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 items-center">
-                                                        <div class="flex items-center">
-                                                            <i class="fa fa-file text-center text-xl mr-5"></i>
-                                                            <h2 class="text-xl">${file.name}</h2>
-                                                        </div>
+                    var data = new FormData();
+                    data.append("path", `{{ subpath }}`);
+                    data.append("user_token", `{{ session["token"] }}`);
+
+                    $.ajax({
+                        type: "POST",
+                        url: `{{ "https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]) }}`,
+                        data: data,
+                        processData: false,
+                        contentType: false,
+                        success: function(files) {
+                            var i = 0
+                            files.forEach(file => {
+                                i++
+                                if (file.edit === true) {
+                                    $("#files").append(
+                                        `
+                                            <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 items-center">
+                                                <div class="flex items-center">
+                                                    <i class="fa fa-file text-center text-xl mr-5"></i>
+                                                    <h2 class="text-xl">${file.name}</h2>
+                                                </div>
+                                                <div>
+                                                    <button onclick="FileDropDown('${i}')" id="dropdown_btn">
                                                         <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i>
-                                                    </div>
-                                                </a>
-                                            `
-                                        );
-                                    } else {
-                                        $("#files").append(
-                                            `
-                                                <a href="/dashboard/server/{{ serverid }}/files/${file.path}/${file.name}">
-                                                    <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 items-center">
-                                                        <div class="flex items-center">
-                                                            <i class="fa fa-folder text-center text-xl mr-5"></i>
-                                                            <h2 class="text-xl">${file.name}</h2>
+                                                    </button>
+                                                    <div id="dropdown-content-${i}" class="hidden right-12 absolute bg-zinc-900 p-2 rounded w-48">
+                                                        <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
+                                                            <i class="fa fa-pencil"></i>
+                                                            <a class="ml-3">Rename</a>
                                                         </div>
-                                                        <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i>
+                                                        <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
+                                                            <i class="fa fa-arrow-right"></i>
+                                                            <a class="ml-3">Move</a>
+                                                        </div>    
+                                                        <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
+                                                            <i class="fa fa-download"></i>
+                                                            <a class="ml-3">Download</a>
+                                                        </div>    
+                                                        <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
+                                                            <i class="fa fa-trash"></i>
+                                                            <a class="ml-3">Delete</a>
+                                                        </div>                
                                                     </div>
-                                                </a>
-                                            `
-                                        );
-                                    }
-                                });
-                            },
-                            error: function(err) {
-                                $("#error").removeClass("hidden").addClass("block");
-                            }
-                        });
-                    </script>
-                </div>
+                                                </div>
+                                            </div>
+                                        `
+                                    );
+                                }
+                                //     $("#files").append(
+                                //         `
+                                //             <a href="/dashboard/server/{{ serverid }}/files/${file.path}/${file.name}">
+                                //                 <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 items-center">
+                                //                     <div class="flex items-center">
+                                //                         <i class="fa fa-folder text-center text-xl mr-5"></i>
+                                //                         <h2 class="text-xl">${file.name}</h2>
+                                //                     </div>
+                                //                     <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i>
+                                //                 </div>
+                                //             </a>
+                                //         `
+                                //     );
+                                // }
+                            });
+                        },
+                        error: function(err) {
+                            $("#error").removeClass("hidden").addClass("block");
+                        }
+                    });
+                </script>
             </div>
         </div>
     </div>
