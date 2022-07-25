@@ -98,6 +98,14 @@ i{% extends "/server/layout.html" %}
                 </div>
                 <div class="text-neutral-100 mt-5" id="files"></div>
                 <script>
+                    function DownloadFile(path) {
+                        // Code here
+                    }
+
+                    function DeleteFile(path) {
+                        // Code here
+                    }
+
                     function FileDropDown(filename) {
                         $(`#dropdown-content-${filename}`).toggleClass("hidden");
                     }
@@ -115,6 +123,7 @@ i{% extends "/server/layout.html" %}
                         success: function(files) {
                             var i = 0
                             files.forEach(file => {
+                                console.log(file)
                                 i++
                                 if (file.edit === true) {
                                     $("#files").append(
@@ -130,20 +139,12 @@ i{% extends "/server/layout.html" %}
                                                     </button>
                                                     <div id="dropdown-content-${i}" class="hidden right-12 absolute bg-zinc-900 p-2 rounded w-48">
                                                         <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
-                                                            <i class="fa fa-pencil"></i>
-                                                            <a class="ml-3">Rename</a>
-                                                        </div>
-                                                        <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
-                                                            <i class="fa fa-arrow-right"></i>
-                                                            <a class="ml-3">Move</a>
-                                                        </div>    
-                                                        <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
                                                             <i class="fa fa-download"></i>
-                                                            <a class="ml-3">Download</a>
+                                                            <a onclick="DownloadFile('${file.path}/${file.name}')" class="ml-3">Download</a>
                                                         </div>    
                                                         <div class="flex items-center hover:bg-zinc-800 rounded select-none duration-200 justify-start py-2 px-4 text-neutral-300">
                                                             <i class="fa fa-trash"></i>
-                                                            <a class="ml-3">Delete</a>
+                                                            <a onclick="DeleteFile('${file.path}/${file.name}')" class="ml-3">Delete</a>
                                                         </div>                
                                                     </div>
                                                 </div>
