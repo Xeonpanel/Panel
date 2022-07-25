@@ -9,7 +9,7 @@
     </head>
     <body class="bg-zinc-600 h-full w-full smooth-scroll">
         <div class="fixed w-full bg-zinc-800 shadow-xl">
-            <ul class="flex justify-between h-[4rem] mx-16 text-neutral-200 items-center">
+            <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
                 <a href="/">
                     {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
                         <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">
@@ -43,7 +43,7 @@
         </div>
         {% if sqlquery("SELECT * FROM users WHERE id = ?", session["id"])[0][5] == "administrator" %}
             <div class="fixed h-[calc(100vh-4rem)] mt-[4rem]">
-                <aside class="w-[260px] h-[calc(100vh-4rem)] bg-zinc-800 shadow-xl" aria-label="Sidebar">
+                <aside class="w-[260px] bg-zinc-900/80 h-[calc(100vh-4rem)] bg-zinc-800 shadow-xl" aria-label="Sidebar">
                     <div class="overflow-y-auto py-4 px-3 pt-5">
                         <ul class="space-y-2">
                             <li>
@@ -121,7 +121,7 @@
                             <li>
                                 <a style="vertical-align: bottom;" href="https://discord.gg/XmbbhFyGW9" class="flex items-center py-3 px-4 text-base font-normal rounded text-white hover:bg-zinc-900/40 duration-200">
                                     <i class="fa-brands fa-discord text-gray-400"></i>
-                                    <span class="ml-3">Official Support Discord</span>
+                                    <span class="ml-3">Support Discord</span>
                                 </a>
                             </li>
                         </ul>

@@ -3,13 +3,10 @@
 {% block content %}
     <div class="w-[calc(100vw-320px)] flex mx-[30px]">
         <div class="w-full shadow-xl mr-4">
-            <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
-                <div class="flex items-center">
-                    <i class="fa fa-cogs text-neutral-100 mx-2 mr-4"></i>
-                    <h2 class="font-semibold text-xl text-neutral-100">Panel settings</h2>
-                </div> 
+            <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                <h2 class="text-sm uppercase">Panel settings</h2>
             </div>
-            <div class="bg-zinc-800/70 p-5 flex justify-center items-center">
+            <div class="bg-zinc-800/70 p-3 flex justify-center items-center">
                 <div class="w-full">
                     <form action="/api/admin/settings/update" method="post" class="flex flex-col text-neutral-100">
                         <label for="panel_name">Panel name</label>
@@ -22,40 +19,23 @@
                     </form>
                 </div>
             </div>
-            <div class="bg-zinc-800/70 rounded-b p-4 w-full">
-                {% if get_flashed_messages(with_categories=true) %}
-                    <div class="flex justify-between">
-                        {% if get_flashed_messages(with_categories=true)[0][0] == "succes" %}
-                            <h2 class="text-neutral-200">{{ get_flashed_messages(with_categories=true)[0][1] }}</h2>
-                        {% else %}
-                            <h2 class="text-red-500">{{ get_flashed_messages(with_categories=true)[0][1] }}</h2>
-                        {% endif %}
-                        <a onclick="document.getElementById('save_changes').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Update Settings</a>
-                    </div>
-                {% else %}
-                    <div class="flex justify-end">
-                        <a onclick="document.getElementById('save_changes').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Update Settings</a>
-                    </div>
-                {% endif %}
+            <div class="bg-zinc-800/70 rounded-b-md pr-4 pb-4 w-full">
+                <div class="flex justify-end">
+                    <a onclick="document.getElementById('save_changes').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-4 py-1 mx-1">Update Settings</a>
+                </div>
             </div>
         </div>
         <div class="w-1/2 ml-4">
             <div class="shadow-xl w-full">
-                <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
-                    <div class="flex items-center">
-                        <i class="fa fa-cogs text-neutral-100 mx-2 mr-4"></i>
-                        <h2 class="font-semibold text-xl text-neutral-100">Panel controls</h2>
-                    </div> 
+                <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                    <h2 class="text-sm uppercase">Panel controls</h2>
                 </div>
-                <div class="bg-zinc-800/70 p-5 flex flex-col justify-center items-center">
+                <div class="bg-zinc-800/70 rounded-b-md p-5 flex flex-col justify-center items-center">
                     <a class="select-none px-5 py-2 rounded bg-orange-500 hover:bg-orange-600 duration-200 text-neutral-100 font-semibold w-full text-center my-2" data-modal-toggle="restart_modal">Restart Server</a>
                     <div id="restart_modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
                         <div class="shadow-xl w-1/3">
-                            <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
-                                <div class="flex items-center">
-                                    <i class="fa fa-cogs text-neutral-100 mx-2 mr-4"></i>
-                                    <h2 class="font-semibold text-xl text-neutral-100">Confirmation</h2>
-                                </div> 
+                            <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                                <h2 class="text-sm uppercase">Confirmation</h2>
                             </div>
                             <div class="bg-zinc-800 px-8 pt-8 w-full">
                                 <div class="flex justify-center">
@@ -79,11 +59,8 @@
                     <a class="select-none px-5 py-2 rounded bg-red-500 hover:bg-red-600 duration-200 text-neutral-100 font-semibold w-full text-center my-2" data-modal-toggle="reset_modal">Factory Reset</a>
                     <div id="reset_modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
                         <div class="shadow-xl w-1/3">
-                            <div class="bg-zinc-900 p-3 rounded-t w-full border-b-2 border-blue-500">
-                                <div class="flex items-center">
-                                    <i class="fa fa-cogs text-neutral-100 mx-2 mr-4"></i>
-                                    <h2 class="font-semibold text-xl text-neutral-100">Confirmation</h2>
-                                </div> 
+                            <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                                <h2 class="text-sm uppercase">Confirmation</h2>
                             </div>
                             <div class="bg-zinc-800 px-8 pt-8 w-full">
                                 <div class="flex justify-center">
