@@ -1,6 +1,7 @@
 import flask, os, sqlite3, json
 
 os.chdir("/etc/xeonpanel")
+
 app = flask.Flask("Xeonpanel", template_folder="themes/{}".format(json.loads(open("config.json", "r").read())["theme"]))
 app.config["MAINTENANCE_MODE"] = False
 app.config["DEVELOPMENT_MODE"] = True
