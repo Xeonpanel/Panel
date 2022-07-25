@@ -3,37 +3,64 @@
         <title>{{ title }}</title>
         <link rel="stylesheet" href="/static/node_modules/flowbite/dist/flowbite.js">
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     </head>
     <body class="bg-zinc-600 flex flex-col h-full w-full items-center justify-center">
-        {% if get_flashed_messages() %}
-            <div class="rounded w-[500px] py-2 px-4 bg-red-500 shadow-2xl my-2 text-white">
-                <h2>{{ get_flashed_messages(with_categories=true)[0][1] }}</h2>
-            </div>
-        {% endif %}
+        <div id="error" class="hidden rounded w-[500px] py-2 px-4 bg-red-500 shadow-2xl my-2 text-white"></div>
         <div class="w-[500px] shadow-2xl">
-            <div class="bg-zinc-800 border-b-2 border-blue-500 rounded-t flex items-center">
-                <h2 class="text-white p-5 text-3xl">Login to your account</h2>
+            <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                <h2 class="text-sm uppercase">Login in to your account</h2>
             </div>
-            <div class="bg-zinc-800/70 w-full inline-flex justify-center">
+            <div class="bg-zinc-800/70 p-3 w-full inline-flex justify-center">
                 <div>
-                    <form action="/login" method="post" class="pt-4 text-white">
-                        <div class="w-96">
-                            <div class="my-2 flex-col flex">
-                                <label for="email" class="text-neutral-100 my-1">Enter your email</label>
-                                <input type="email" name="email" class="rounded bg-zinc-700 py-2 px-4 text-xl" required>
-                            </div>
-                            <div class="my-2 flex-col flex">
-                                <label for="password" class="text-neutral-100 my-1">Enter your password</label>
-                                <input type="password" name="password" class="rounded bg-zinc-700 py-2 px-4 text-xl" required>
-                            </div>
-                            <input type="submit" id="login_account" hidden>
+                    <script>
+                        function ShowErrorMessage(msg) {
+                            $("#error").removeClass("hidden").addClass("block")
+                            $("#error").html(msg)
+                        }
+
+                        function Login(self) {
+                            $(self).html(`<i class="fas fa-circle-notch fa-spin"></i>`)
+                            data = new FormData()
+                            data.append("email", $("#email").val())
+                            data.append("password", $("#password").val())
+
+                            $.ajax({
+                                method: "POST",
+                                url: `/login`,
+                                data: data,
+                                processData: false,
+                                contentType: false,
+                                success: function(res) {
+                                    setTimeout(() => {
+                                        if (res.status === "succes") {
+                                            window.location.href = "/dashboard"
+                                        } else if (res.status === "error") {
+                                            $(self).html("Login")
+                                            ShowErrorMessage(res.message)
+                                        }
+                                    }, 700);
+                                }
+                            })
+                        }
+                    </script>
+                    <div class="w-96 text-white">
+                        <div class="my-2 flex-col flex">
+                            <label for="email" class="text-neutral-100 my-1">Enter your email</label>
+                            <input type="email" id="email" class="rounded bg-zinc-700 py-2 px-4 text-xl" required>
                         </div>
-                    </form>
+                        <div class="my-2 flex-col flex">
+                            <label for="password" class="text-neutral-100 my-1">Enter your password</label>
+                            <input type="password" id="password" class="rounded bg-zinc-700 py-2 px-4 text-xl" required>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="bg-zinc-800/70 flex p-5 p-8 items-center justify-between rounded-b text-center">
-                <a href="/register" class="text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded w-1/2 py-2 mx-1">Register</a>
-                <a onclick="document.getElementById('login_account').click()" class="select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded w-1/2 py-2 mx-1">Login</a>
+                <a href="/register" class="inline-flex justify-center items-center w-[210px] h-[40px] text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded w-1/2 py-2 mx-1">Register</a>
+                <a onclick="Login(this)" class="inline-flex justify-center items-center w-[210px] h-[40px] select-none text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded w-1/2 py-2 mx-1">Login</a>
             </div>
         </div>
     </body>

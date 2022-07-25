@@ -9,7 +9,7 @@
     <body class="bg-zinc-600">
         <div>
             <div class="bg-zinc-800 shadow-xl">
-                <ul class="flex justify-between h-[4rem] mx-16 text-neutral-200 items-center">
+                <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
                     <a href="/">
                         {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
                             <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">

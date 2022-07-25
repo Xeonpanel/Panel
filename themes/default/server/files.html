@@ -1,58 +1,153 @@
-{% extends "/server/layout.html" %}
+i{% extends "/server/layout.html" %}
 
 {% block content %}
-    <div class="flex justify-center">
-        <div class="mt-8 mb-8 w-[1200px]" id="content">
-            <div class="flex items-center justify-between mb-5">
-                <h2 class="text-neutral-200 font-semibold select-none">/home/container</h2>
-                <script>
-                    $(document).ready(function(){
-                        $("#upload").on("submit", function(e){
-                            e.preventDefault();
-                            $.ajax({
-                                type: "POST",
-                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload",
-                                data: new FormData(this),
-                                contentType: false,
-                                cache: false,
-                                processData: false,
-                                success: function(data) {
-                                    window.location.reload();
-                                },
-                            });
-                        });
-                    });
-                </script>
-                <form id="upload" action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
-                    <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
-                    <input type="file" name="file" id="upload_file" onchange="document.getElementById('submit_file').click()" hidden>
-                    <input type="submit" id="submit_file" hidden>
-                </form>
-                <a onclick="document.getElementById('upload_file').click()" class="select-none py-2 px-5 bg-blue-500 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Upload File</a>
+    <div class="mt-20">
+        <div id="error" class="mb-5 hidden mx-16 duration-400 ease-in-out transition-all">
+            <div class="bg-red-500 py-2 my-1 px-4 rounded-md text-neutral-100 flex items-center">
+                <i class="fas fa-circle-notch fa-spin"></i>
+                <h2 class="ml-3">Could not connect to server, node offline</h2>
             </div>
-            {% if requests.get("https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data={"user_token": session["token"]}).status_code == 200 %}
-                <div class="text-neutral-100">
-                    {% for file in requests.get("https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]), data={"user_token": session["token"]}).json() %}
-                        <div class="flex py-5 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-start rounded duration-200 items-center">
-                            <div class="flex items-center">
-                                {% if json.loads(json.dumps(file))["type"] == "file" %}
-                                    <i class="fa fa-file text-center text-xl mr-5"></i>
-                                    <h2 class="text-xl">{{ json.loads(json.dumps(file))["name"] }}</h2>
-                                {% endif %}
-                                {% if json.loads(json.dumps(file))["type"] == "dir" %}
-                                    <i class="fa fa-folder text-center text-xl mr-5"></i>
-                                    <h2 class="text-xl">{{ json.loads(json.dumps(file))["name"] }}</h2>
-                                {% endif %}
+        </div>
+        <div class="flex justify-center w-full">
+            <div class="mx-16 w-full">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-neutral-100 text-lg font-semibold select-none tracking-wide">{{ path }}</h2>
+                    <script>
+                        $( document ).ready(function() {
+                            $("form").on("submit", function(e){
+                                $("#spinner").removeClass("hidden").addClass("block")
+                                e.preventDefault();
+                                $.ajax({
+                                    type: "POST",
+                                    url: e.target.action,
+                                    data: new FormData(this),
+                                    contentType: false,
+                                    cache: false,
+                                    processData: false,
+                                    success: function(res) {
+                                        $("#spinner").removeClass("block").addClass("hidden")
+                                        window.location.reload()
+                                    }
+                                })
+                            })
+                        })
+                    </script>
+                    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
+                        <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
+                        <input type="file" name="file" id="upload_file" onchange="document.getElementById('submit_file').click()" hidden>
+                        <input type="text" name="path" value="{{ subpath }}" hidden>
+                        <input type="submit" id="submit_file" hidden>
+                    </form>
+                    <div>
+                        <a class="select-none py-2 px-5 bg-blue-500 mx-1 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100" data-modal-toggle="createdir_modal">Create Directory</a>
+                        <div id="createdir_modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+                            <div class="shadow-xl w-1/3">
+                                <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                                    <h2 class="text-sm uppercase">Create directory</h2>
+                                </div>
+                                <div class="bg-zinc-800 p-5 w-full text-neutral-200">
+                                    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/create" method="post">
+                                        <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
+                                        <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                                        <div class="flex flex-col">
+                                            <label for="filename" class="my-1 text-lg">Directory name</label>
+                                            <input type="text" name="path" value="{{ subpath }}" hidden>
+                                            <input type="text" name="type" value="dir" hidden>
+                                            <input type="text" name="dir_name" id="dir_name" class="rounded py-2 px-3 my-1" style="background-color: #3f3f46;">
+                                        </div>
+                                        <input type="submit" id="create_dir" hidden>
+                                    </form>
+                                </div>
+                                <div class="bg-zinc-800 p-7 w-full rounded-b">
+                                    <div class="flex justify-between items-center w-full">
+                                        <a onclick="document.getElementById('create_dir').click()" class="select-none rounded py-1 px-4 bg-blue-500 w-full mx-2 text-center hover:bg-blue-600 font-semibold text-neutral-100 duration-200">Create Directory</a>
+                                        <a data-modal-toggle="createdir_modal" class="select-none rounded py-1 px-4 bg-gray-500 w-full mx-2 text-center hover:bg-gray-600 font-semibold text-neutral-100 duration-200">Cancel</a>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i> -->
                         </div>
-                    {% endfor %}
+                        <a class="select-none py-2 px-5 bg-blue-500 mx-1 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100" data-modal-toggle="createfile_modal">Create File</a>
+                        <div id="createfile_modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 md:inset-0 h-modal md:h-full">
+                            <div class="shadow-xl w-1/3">
+                                <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
+                                    <h2 class="text-sm uppercase">Create file</h2>
+                                </div>
+                                <div class="bg-zinc-800 p-5 w-full text-neutral-200">
+                                    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/create" method="post">
+                                        <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
+                                        <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
+                                        <div class="flex flex-col">
+                                            <label for="filename" class="my-1 text-lg">Filename</label>
+                                            <input type="text" name="path" value="{{ subpath }}" hidden>
+                                            <input type="text" name="type" value="file" hidden>
+                                            <input type="text" name="file_name" class="rounded py-2 px-3 my-1" style="background-color: #3f3f46;">
+                                        </div>
+                                        <input type="submit" id="create_file" hidden>
+                                    </form>
+                                </div>
+                                <div class="bg-zinc-800 p-7 w-full rounded-b">
+                                    <div class="flex justify-between items-center w-full">
+                                        <a onclick="document.getElementById('create_file').click()" class="select-none rounded py-1 px-4 bg-blue-500 w-full mx-2 text-center hover:bg-blue-600 font-semibold text-neutral-100 duration-200">Create File</a>
+                                        <a data-modal-toggle="createfile_modal" class="select-none rounded py-1 px-4 bg-gray-500 w-full mx-2 text-center hover:bg-gray-600 font-semibold text-neutral-100 duration-200">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a onclick="document.getElementById('upload_file').click()" class="select-none py-2 px-5 bg-blue-500 mx-1 hover:bg-blue-600 duration-200 font-semibold rounded text-neutral-100">Upload File</a>
+                    </div>
                 </div>
-            {% else %}
-                <div class="text-center text-neutral-200 font-semibold mt-5">
-                    <h2>No files found on your server</h2>
+                <div class="text-neutral-100 mt-5" id="files">
+                    <script>
+                        var data = new FormData();
+                        data.append("path", `{{ subpath }}`);
+                        data.append("user_token", `{{ session["token"] }}`);
+
+                        $.ajax({
+                            type: "POST",
+                            url: `{{ "https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]) }}`,
+                            data: data,
+                            processData: false,
+                            contentType: false,
+                            success: function(files) {
+                                files.forEach(file => {
+                                    if (file.edit === true) {
+                                        $("#files").append(
+                                            `
+                                                <a href="/dashboard/server/{{ serverid }}/files/edit/${file.path}/${file.name}">
+                                                    <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 items-center">
+                                                        <div class="flex items-center">
+                                                            <i class="fa fa-file text-center text-xl mr-5"></i>
+                                                            <h2 class="text-xl">${file.name}</h2>
+                                                        </div>
+                                                        <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i>
+                                                    </div>
+                                                </a>
+                                            `
+                                        );
+                                    } else {
+                                        $("#files").append(
+                                            `
+                                                <a href="/dashboard/server/{{ serverid }}/files/${file.path}/${file.name}">
+                                                    <div class="flex py-3 px-5 my-1 bg-zinc-800 hover:bg-zinc-800/70 justify-between rounded duration-200 items-center">
+                                                        <div class="flex items-center">
+                                                            <i class="fa fa-folder text-center text-xl mr-5"></i>
+                                                            <h2 class="text-xl">${file.name}</h2>
+                                                        </div>
+                                                        <i class="text-2xl fa fa-ellipsis-h text-neutral-100 hover:text-white duration-200"></i>
+                                                    </div>
+                                                </a>
+                                            `
+                                        );
+                                    }
+                                });
+                            },
+                            error: function(err) {
+                                $("#error").removeClass("hidden").addClass("block");
+                            }
+                        });
+                    </script>
                 </div>
-            {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}

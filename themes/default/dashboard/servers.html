@@ -5,7 +5,7 @@
         <div class="mt-8">
             {% for server in sqlquery("SELECT * FROM servers WHERE owner_id = ?", session["id"]) %}
                 <script>
-                    var stats{{ loop.index }} = new WebSocket("ws://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', server[0])[0][5])[0][4] }}:8080/status");
+                    var stats{{ loop.index }} = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', server[0])[0][5])[0][4] }}:8080/status");
                     stats{{ loop.index }}.addEventListener("message", (msg) => {
                         if (msg.data === "online") {
                             $("#server_status{{ loop.index }}").removeClass().addClass("py-5 px-1 bg-green-500 rounded-lg ml-4");

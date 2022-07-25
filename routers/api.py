@@ -432,3 +432,39 @@ def api_update_server_variable(serverid):
             flask.abort(401)
     else:
         return flask.redirect("/login")
+
+@app.route("/api/servers/<serverid>/reinstall", methods=["POST"])
+def api_reinstall_server(serverid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
+            data = sqlquery("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
+            if len(data):
+                startup_command = sqlquery("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][2]
+                docker_image = sqlquery("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][3]
+                imageid = sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]
+                sqlquery("DELETE FROM server_variables WHERE image_id = ? and server_id = ?", imageid, serverid)
+                sqlquery("UPDATE servers SET image_id = ?, startup = ?, image = ? WHERE id = ?", flask.request.form.get("server_image"), startup_command, docker_image, serverid)
+                flask.flash("Server reinstall completed succesfully", "succes")
+                return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
+            else:
+                flask.abort(404)
+        else:
+            flask.abort(401)
+    else:
+        return flask.redirect("/login")
+
+@app.route("/api/servers/<serverid>/rename", methods=["POST"])
+def api_rename_server(serverid):
+    if flask.session:
+        if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
+            data = sqlquery("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
+            if len(data):
+                sqlquery("UPDATE servers SET name = ? WHERE id = ?", flask.request.form.get("server_name"), serverid)
+                flask.flash("Server name changed succesfully", "succes")
+                return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
+            else:
+                flask.abort(404)
+        else:
+            flask.abort(401)
+    else:
+        return flask.redirect("/login")
