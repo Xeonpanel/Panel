@@ -4,6 +4,7 @@ os.chdir("/etc/xeonpanel")
 
 app = flask.Flask("Xeonpanel", template_folder="themes/{}".format(json.loads(open("config.json", "r").read())["theme"]))
 app.config["MAINTENANCE_MODE"] = False
+app.config["DEVELOPMENT_MODE"] = True
 app.config["SECRET_KEY"] =  json.loads(open("config.json", "r").read())["secret"]
 
 def sqlquery(sql, *parameter):
@@ -57,4 +58,7 @@ def main():
     else:
         return flask.redirect("/login")
 
-app.run(debug=False, host="0.0.0.0", port=5000)
+if app.config["DEVELOPMENT_MODE"]:
+    app.run(debug=True, host="0.0.0.0", port=5000)
+else:
+    app.run(debug=False, host="0.0.0.0", port=5000)
