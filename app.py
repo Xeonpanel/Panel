@@ -1,10 +1,10 @@
-import flask, os, sqlite3
+import flask, os, sqlite3, json
 
 os.chdir("/etc/xeonpanel")
 
-app = flask.Flask("Xeonpanel", template_folder="themes/default")
+app = flask.Flask("Xeonpanel", template_folder="themes/{}".format(json.loads(open("config.json", "r").read())["theme"]))
 app.config["MAINTENANCE_MODE"] = False
-app.config["SECRET_KEY"] =  os.urandom(200).hex()
+app.config["SECRET_KEY"] =  json.loads(open("config.json", "r").read())["secret"]
 
 def sqlquery(sql, *parameter):
     conn = sqlite3.connect("database.db", check_same_thread=False)
@@ -13,8 +13,6 @@ def sqlquery(sql, *parameter):
     conn.commit()
     return data
 
-# Do not change this line
-# This can give an attacker access on your panel
 if not os.path.isfile("database.db"):
     import routers.setup
 
