@@ -8,7 +8,7 @@ def setup_register_admin():
     cursor = conn.cursor()
     cursor.executescript(open("schema.sql").read())
     conn.commit()
-    cursor.execute("INSERT INTO settings (panel_name) VALUES ('Xeonpanel')")
+    cursor.execute("INSERT INTO settings (panel_name, panel_logo) VALUES ('Xeonpanel', 'https://cdn.discordapp.com/attachments/986710139585306635/1000086700862738482/dd.png')")
     cursor.execute(
         "INSERT INTO users (name, email, password, token, user_type) VALUES (?, ?, ?, ?, ?)",
         (

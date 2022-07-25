@@ -17,12 +17,10 @@ then
     echo ""
     sleep 1s
     sudo apt update
-    sudo apt-get python3 python3-pip nginx -y
-    sudo apt install git
-    sudo apt install certbot python3-certbot-nginx
+    sudo apt-get --ignore-missing install python3 git python3-pip nginx certbot python3-certbot-nginx
     cd /etc
     git clone https://github.com/Xeonpanel/Panel.git xeonpanel
-    python3 -m pip install -r /etc/xeonpanel/requirements.txt
+    python3 -m pip install flask requests
     mv /etc/xeonpanel/xeonpanel.service /etc/systemd/system/
     systemctl daemon-reload
     systemctl enable --now xeonpanel.service
@@ -36,23 +34,6 @@ then
     ln -s /etc/nginx/sites-available/xeonpanel.conf /etc/nginx/sites-enabled/xeonpanel.conf
     systemctl restart nginx
     echo "Panel is now available at https://$domain"
-    read -p "Do you want to install deamon? [y/n] " -n 1 -r
-    if [[ $REPLY == "y" || $REPLY == "Y" || $REPLY == "yes" || $REPLY == "Yes" ]]
-    then
-        apt update
-        apt-get install git python3 python3-pip docker containerd docker.io -y
-        python3 -m pip install flask flask_sock flask_cors docker waitress 
-        cd /etc
-        git clone https://github.com/Xeonpanel/Deamon.git deamon
-        mv /etc/deamon/deamon.service /etc/systemd/system/
-        echo ""
-        echo " --> Installation completed"
-        echo ""
-    else
-        echo ""
-        echo " --> Installation cancelled"
-        echo ""
-    fi
 else
     echo ""
     echo " --> Installation cancelled"
