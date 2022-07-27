@@ -1,6 +1,7 @@
 import flask, os, hashlib
 
 from __main__ import app, sqlquery
+from classes import User
 
 @app.route("/login", methods=["GET", "POST"])
 def auth_login():
