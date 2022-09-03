@@ -14,12 +14,12 @@
                     <script>
                         function GetLogs() {
                             term.clear();
-                            const ws = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/logs");
+                            const ws = new WebSocket("wss://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/logs");
                             ws.addEventListener("message", (msg) => {
                                 term.write(msg.data)
                             });
                             ws.addEventListener("open", (event) => {
-                                ws.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                                ws.send('{"uuid": "{{ query("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
                             ws.addEventListener("error", (err) => {
                                 term.write("\x1b[31mCould not fetch messages, connection refused\n")
@@ -31,31 +31,31 @@
 
                         function GetDiskStats() {
                             term.clear();
-                            const diskstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/disk");
+                            const diskstats = new WebSocket("wss://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/disk");
                             const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
                             diskstats.addEventListener("message", (msg) => {
                                 $("#disk_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
                             });
                             diskstats.addEventListener("open", (event) => {
-                                diskstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                                diskstats.send('{"uuid": "{{ query("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
                         }
 
                         function GetMemoryStats() {
                             term.clear();
-                            const memstats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
+                            const memstats = new WebSocket("wss://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/memory");
                             const bytesToMegaBytes = bytes => bytes / (1024 ** 2);
                             memstats.addEventListener("message", (msg) => {
                                 $("#memory_usage").html(Math.floor(bytesToMegaBytes(msg.data)));
                             });
                             memstats.addEventListener("open", (event) => {
-                                memstats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                                memstats.send('{"uuid": "{{ query("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
                         }
 
                         function GetStatus() {
                             term.clear();
-                            const stats = new WebSocket("wss://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/status");
+                            const stats = new WebSocket("wss://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/status");
                             stats.addEventListener("message", (msg) => {
                                 if (msg.data === "offline") {
                                     $("#restart_button").removeClass().addClass("text-neutral-300 rounded w-1/2 py-2 px-4 font-semibold bg-orange-700 duration-200 mx-1");
@@ -74,7 +74,7 @@
                                 }
                             });
                             stats.addEventListener("open", (event) => {
-                                stats.send('{"uuid": "{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
+                                stats.send('{"uuid": "{{ query("SELECT * FROM servers WHERE id = ?", serverid)[0][9] }}"}');
                             });
                         }
 
@@ -89,10 +89,10 @@
                             term.write("Server marked as starting..\n");
                             $.ajax ({
                                 type: "post",
-                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/start",
+                                url: "https://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/start",
                                 data: JSON.stringify({
                                     "user_token": "{{ session['token'] }}",
-                                    "image": "{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][11] }}",
+                                    "image": "{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][11] }}",
                                     "startup_command": "{{ startup }}"
                                 }),
                                 dataType: "json",
@@ -109,7 +109,7 @@
                             term.write("\nServer marked a stopping..");
                             $.ajax ({
                                 type: "post",
-                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/stop",
+                                url: "https://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/stop",
                                 data: JSON.stringify({
                                     "user_token": "{{ session['token'] }}"
                                 }),
@@ -134,7 +134,7 @@
                         </div>
                         <div class="ml-4">
                             <h2 class="text-sm upper text-neutral-200">IP Address</h2>
-                            <p class="text-lg font-semibold text-neutral-100">{{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][4] }}</p>
+                            <p class="text-lg font-semibold text-neutral-100">{{ query("SELECT * FROM servers WHERE id = ?", serverid)[0][4] }}</p>
                         </div>
                     </div>
                     <div class="shadow-xl bg-zinc-800/70 rounded-md p-3 px-4 mt-5 flex items-center text-white select-none">
@@ -143,7 +143,7 @@
                         </div>
                         <div class="ml-4">
                             <h2 class="text-sm upper text-neutral-200">Memory Usage</h2>
-                            <p class="text-lg font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</p>
+                            <p class="text-lg font-semibold text-neutral-100"><span id="memory_usage">0.0</span>MB / {{ query("SELECT * FROM servers WHERE id = ?", serverid)[0][2] }}MB</p>
                         </div>
                     </div>
                     <div class="shadow-xl bg-zinc-800/70 rounded-md p-3 px-4 mt-5 flex items-center text-white select-none">
@@ -152,7 +152,7 @@
                         </div>
                         <div class="ml-4">
                             <h2 class="text-sm upper text-neutral-200">Disk Usage</h2>
-                            <p class="text-lg font-semibold text-neutral-100"><span id="disk_usage">0.0</span>MB / {{ sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</p>
+                            <p class="text-lg font-semibold text-neutral-100"><span id="disk_usage">0.0</span>MB / {{ query("SELECT * FROM servers WHERE id = ?", serverid)[0][3] }}MB</p>
                         </div>
                     </div>
                 </div>

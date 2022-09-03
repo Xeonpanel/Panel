@@ -22,17 +22,17 @@
             </div> 
         </div>
         <div class="w-[calc(100vw-320px)] bg-zinc-800/70 p-6 overflow-y-auto">
-            <form action="/api/admin/users/{{ sqlquery('SELECT * FROM users WHERE id = ?', userid)[0][0] }}/update" method="post">
+            <form action="/api/admin/users/{{ query('SELECT * FROM users WHERE id = ?', userid)[0][0] }}/update" method="post">
                 <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
                 <input type="text" name="token" value="{{ session['token'] }}" hidden>
                 <div class="flex">
                     <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
                         <label for="username" class="mb-2">Username</label>
-                        <input type="text" name="username" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" value="{{ sqlquery('SELECT * FROM users WHERE id = ?', userid)[0][1] }}" required>
+                        <input type="text" name="username" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" value="{{ query('SELECT * FROM users WHERE id = ?', userid)[0][1] }}" required>
                     </div>
                     <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
                         <label for="email" class="mb-2">Email</label>
-                        <input type="email" name="email" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" value="{{ sqlquery('SELECT * FROM users WHERE id = ?', userid)[0][2] }}" required>
+                        <input type="email" name="email" class="rounded bg-zinc-700 py-1 px-3 border border-zinc-600" value="{{ query('SELECT * FROM users WHERE id = ?', userid)[0][2] }}" required>
                     </div>
                     <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
                         <label for="password" class="mb-2">Password</label>
@@ -41,7 +41,7 @@
                     <div class="text-neutral-100 mx-2 flex flex-col w-1/4">
                         <label for="user_type" class="mb-2">User type</label>
                         <select name="user_type" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
-                            {% if sqlquery("SELECT * FROM users WHERE id = ?", userid)[0][5] == "administrator" %}
+                            {% if query("SELECT * FROM users WHERE id = ?", userid)[0][5] == "administrator" %}
                                 <option value="administrator">Admin</option>
                                 <option value="user">User</option>
                             {% else %}

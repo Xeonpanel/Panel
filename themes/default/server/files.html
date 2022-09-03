@@ -32,7 +32,7 @@ i{% extends "/server/layout.html" %}
                             })
                         })
                     </script>
-                    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
+                    <form action="https://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/upload" method="post" enctype="multipart/form-data">
                         <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
                         <input type="file" name="file" id="upload_file" onchange="document.getElementById('submit_file').click()" hidden>
                         <input type="text" name="path" value="{{ subpath }}" hidden>
@@ -46,7 +46,7 @@ i{% extends "/server/layout.html" %}
                                     <h2 class="text-sm uppercase">Create directory</h2>
                                 </div>
                                 <div class="bg-zinc-800 p-5 w-full text-neutral-200">
-                                    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/create" method="post">
+                                    <form action="https://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/create" method="post">
                                         <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
                                         <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
                                         <div class="flex flex-col">
@@ -73,7 +73,7 @@ i{% extends "/server/layout.html" %}
                                     <h2 class="text-sm uppercase">Create file</h2>
                                 </div>
                                 <div class="bg-zinc-800 p-5 w-full text-neutral-200">
-                                    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/create" method="post">
+                                    <form action="https://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/create" method="post">
                                         <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
                                         <input type="text" name="csrf_token" value="{{ session['csrf_token'] }}" hidden>
                                         <div class="flex flex-col">
@@ -116,7 +116,7 @@ i{% extends "/server/layout.html" %}
 
                     $.ajax({
                         type: "POST",
-                        url: `{{ "https://{}:8080/api/servers/{}/files".format(sqlquery("SELECT * FROM nodes WHERE id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][9]) }}`,
+                        url: `{{ "https://{}:8080/api/servers/{}/files".format(query("SELECT * FROM nodes WHERE id = ?", query("SELECT * FROM servers WHERE id = ?", serverid)[0][5])[0][4], query("SELECT * FROM servers WHERE id = ?", serverid)[0][9]) }}`,
                         data: data,
                         processData: false,
                         contentType: false,

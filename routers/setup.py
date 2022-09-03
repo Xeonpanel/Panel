@@ -49,7 +49,7 @@ def setup_register_admin():
     conn.commit()
     return flask.redirect("/setup/setup-final")
 
-@app.route("/setup/reboot", methods=["GET"])
+@app.route("/setup/finish", methods=["GET"])
 def setup_reboot_server():
     time.sleep(1)
     os.execv(sys.executable, ["python"] + sys.argv)

@@ -1,12 +1,12 @@
 import flask
 
-from __main__ import app, sqlquery
+from __main__ import app, query
 
 @app.route("/admin", methods=["GET"])
 def admin():
     if flask.session:
-        if sqlquery("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":
-            return flask.render_template("/admin/settings.html", title="Settings", sqlquery=sqlquery)
+        if query("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":
+            return flask.render_template("/admin/settings.html", title="Settings", query=query)
         else:
             flask.abort(401)
     else:

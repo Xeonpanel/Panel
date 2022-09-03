@@ -1,12 +1,12 @@
 import flask, hashlib, sys, time, requests, os
 
-from __main__ import app, sqlquery
+from __main__ import app, query
 
 @app.route("/api/password/<userid>/update", methods=["POST"])
 def api_update_password(userid):
     if flask.session:
         if flask.request.form.get("csrf_token") == flask.session["csrf_token"]:
-            data = sqlquery(
+            data = query(
                 "SELECT * FROM users WHERE password = ? and id = ?",
                 hashlib.sha256(
                     flask.request.form.get("password").encode("utf-8")
@@ -14,7 +14,7 @@ def api_update_password(userid):
                 userid
             )
             if len(data):
-                sqlquery(
+                query(
                     "UPDATE users SET password = ? WHERE password = ? and id = ?",
                     hashlib.sha256(
                         flask.request.form.get("new_password").encode("utf-8")
@@ -39,7 +39,7 @@ def api_update_password(userid):
 def api_update_username(userid):
     if flask.session:
         if flask.request.form.get("csrf_token") == flask.session["csrf_token"]:
-            data = sqlquery(
+            data = query(
                 "SELECT * FROM users WHERE password = ? and id = ?",
                 hashlib.sha256(
                     flask.request.form.get("password").encode("utf-8")
@@ -47,7 +47,7 @@ def api_update_username(userid):
                 userid
             )
             if len(data):
-                sqlquery(
+                query(
                     "UPDATE users SET name = ? WHERE password = ? and id = ?",
                     flask.request.form.get("username"),
                     hashlib.sha256(
@@ -71,11 +71,11 @@ def api_update_username(userid):
 def api_update_settings():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    sqlquery("UPDATE settings SET panel_name = ?", flask.request.form.get("panel_name"),)
-                    sqlquery("UPDATE settings SET panel_logo = ?", flask.request.form["panel_logo"],)
+                    query("UPDATE settings SET panel_name = ?", flask.request.form.get("panel_name"),)
+                    query("UPDATE settings SET panel_logo = ?", flask.request.form["panel_logo"],)
                     flask.flash("Updated succesfully", "succes")
                     return flask.redirect("/admin")
                 else:
@@ -92,7 +92,7 @@ def api_update_settings():
 def api_reboot_server():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
                     if data[0][0] == 1:
@@ -115,7 +115,7 @@ def api_reboot_server():
 def api_factory_reset():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
                     if data[0][0] == 1:
@@ -138,10 +138,10 @@ def api_factory_reset():
 def api_create_node():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    sqlquery(
+                    query(
                         "INSERT INTO nodes (name, memory, disk, ip, token) VALUES (?, ?, ?, ?, ?)",
                         flask.request.form.get("name"),
                         flask.request.form.get("memory"),
@@ -166,14 +166,14 @@ def api_create_node():
 def api_create_user():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    if len(sqlquery("SELECT * FROM users WHERE name = ? or email = ?", flask.request.form.get("username"), flask.request.form.get("email"))):
+                    if len(query("SELECT * FROM users WHERE name = ? or email = ?", flask.request.form.get("username"), flask.request.form.get("email"))):
                         flask.flash("User already exists", "error")
                         return flask.redirect("/admin/users")
                     else:
-                        sqlquery( 
+                        query( 
                             "INSERT INTO users (name, email, password, token, user_type) VALUES (?, ?, ?, ?, ?)",
                             flask.request.form.get("username"),
                             flask.request.form.get("email"),
@@ -199,16 +199,16 @@ def api_create_user():
 def api_update_user(userid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form["token"])
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form["token"])
             if len(data):
                 if data[0][5] == "administrator":
-                    if len(sqlquery("SELECT * FROM users WHERE id = ?", userid)):
+                    if len(query("SELECT * FROM users WHERE id = ?", userid)):
                         if int(userid) == 1:
                             flask.flash("Cannot update master user", "error")
                             return flask.redirect("/admin/users")
                         else:
                             if flask.request.form.get("password"):
-                                sqlquery(
+                                query(
                                     "UPDATE users SET name = ?, email = ?, password = ?, user_type = ? WHERE id = ?",
                                     flask.request.form.get("username"),
                                     flask.request.form.get("email"),
@@ -217,7 +217,7 @@ def api_update_user(userid):
                                     userid
                                 )
                             else:
-                                sqlquery(
+                                query(
                                     "UPDATE users SET name = ?, email = ?, user_type = ? WHERE id = ?",
                                     flask.request.form.get("username"),
                                     flask.request.form.get("email"),
@@ -243,10 +243,10 @@ def api_update_user(userid):
 def api_create_image():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    sqlquery(
+                    query(
                         "INSERT INTO images (name, startup, image) VALUES (?, ?, ?)",
                         flask.request.form.get("image_name"),
                         flask.request.form.get("startup_command"),
@@ -269,34 +269,34 @@ def api_create_image():
 def api_create_server():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    if len(sqlquery("SELECT * FROM servers WHERE ip_port = ?", "{}:{}".format(sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], flask.request.form.get("server_port")))):
+                    if len(query("SELECT * FROM servers WHERE ip_port = ?", "{}:{}".format(query("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], flask.request.form.get("server_port")))):
                         flask.flash("This port is already used", "error")
                         return flask.redirect("/admin/servers")
                     try:
                         server_uuid = os.urandom(13).hex()
                         payload = {
-                            "system_token": sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][5],
+                            "system_token": query("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][5],
                             "user_token": flask.request.form.get("token"),
                             "port": flask.request.form.get("server_port"),
                             "memory": flask.request.form.get("server_memory")
                         }
-                        if requests.post("https://{}:8080/api/servers/{}/create".format(sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], server_uuid), data=payload).text == "server created":
-                            sqlquery (
+                        if requests.post("https://{}:8080/api/servers/{}/create".format(query("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], server_uuid), data=payload).text == "server created":
+                            query (
                                 "INSERT INTO servers (name, memory, disk, ip_port, node_id, image_id, owner_id, suspended, uuid, image, startup) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                                 flask.request.form.get("server_name"),
                                 flask.request.form.get("server_memory"),
                                 flask.request.form.get("server_storage"),
-                                "{}:{}".format(sqlquery("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], flask.request.form.get("server_port")),
+                                "{}:{}".format(query("SELECT * FROM nodes WHERE id = ?", flask.request.form.get("server_node"))[0][4], flask.request.form.get("server_port")),
                                 flask.request.form.get("server_node"),
                                 flask.request.form.get("server_image"),
                                 flask.request.form.get("server_owner"),
                                 0,
                                 server_uuid,
-                                sqlquery("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][3],
-                                sqlquery("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][2]
+                                query("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][3],
+                                query("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][2]
                             )
                             flask.flash("Server created succesfully", "succes")
                             return flask.redirect("/admin/servers")
@@ -321,10 +321,10 @@ def api_create_server():
 def api_update_image(imageid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    sqlquery(
+                    query(
                         "UPDATE images SET name = ?, startup = ?, image = ? WHERE id = ?",
                         flask.request.form.get("image_name"),
                         flask.request.form.get("startup_command"),
@@ -347,10 +347,10 @@ def api_update_image(imageid):
 def api_create_variable(imageid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    sqlquery(
+                    query(
                         "INSERT INTO image_variables (name, variable, image_id) VALUES (?, ?, ?)",
                         flask.request.form.get("variable_name"),
                         flask.request.form.get("variable"),
@@ -373,10 +373,10 @@ def api_create_variable(imageid):
 def api_update_variable(imageid, variableid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    sqlquery(
+                    query(
                         "UPDATE image_variables SET name = ?, variable = ? WHERE id = ?",
                         flask.request.form.get("variable_name"),
                         flask.request.form.get("variable"),
@@ -398,10 +398,10 @@ def api_update_variable(imageid, variableid):
 def api_delete_variable(imageid, variableid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
+            data = query("SELECT * FROM users WHERE token = ?", flask.request.form.get("token"))
             if len(data):
                 if data[0][5] == "administrator":
-                    sqlquery("DELETE FROM image_variables WHERE id = ? and image_id = ?", variableid, imageid)
+                    query("DELETE FROM image_variables WHERE id = ? and image_id = ?", variableid, imageid)
                     flask.flash("Variable deleted succesfully", "succes")
                     return flask.redirect("/admin/images/{}/view".format(imageid))
                 else:
@@ -418,13 +418,13 @@ def api_delete_variable(imageid, variableid):
 def api_update_server_variable(serverid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
+            data = query("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
             if len(data):
-                if len(sqlquery("SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?", serverid, flask.request.form.get("image_id"), flask.request.form.get("variable_id"))):
-                    sqlquery("UPDATE server_variables SET data = ? WHERE server_id = ? and image_id = ? and variable_id = ?", flask.request.form.get("variable_data"), serverid, flask.request.form.get("image_id"), flask.request.form.get("variable_id"))
+                if len(query("SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?", serverid, flask.request.form.get("image_id"), flask.request.form.get("variable_id"))):
+                    query("UPDATE server_variables SET data = ? WHERE server_id = ? and image_id = ? and variable_id = ?", flask.request.form.get("variable_data"), serverid, flask.request.form.get("image_id"), flask.request.form.get("variable_id"))
                     return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
                 else:
-                    sqlquery("INSERT INTO server_variables (data, image_id, server_id, variable_id) VALUES (?, ?, ?, ?)", flask.request.form.get("variable_data"), flask.request.form.get("image_id"), serverid, flask.request.form.get("variable_id"))
+                    query("INSERT INTO server_variables (data, image_id, server_id, variable_id) VALUES (?, ?, ?, ?)", flask.request.form.get("variable_data"), flask.request.form.get("image_id"), serverid, flask.request.form.get("variable_id"))
                     return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
             else:
                 flask.abort(404)
@@ -437,13 +437,13 @@ def api_update_server_variable(serverid):
 def api_reinstall_server(serverid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
+            data = query("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
             if len(data):
-                startup_command = sqlquery("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][2]
-                docker_image = sqlquery("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][3]
-                imageid = sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]
-                sqlquery("DELETE FROM server_variables WHERE image_id = ? and server_id = ?", imageid, serverid)
-                sqlquery("UPDATE servers SET image_id = ?, startup = ?, image = ? WHERE id = ?", flask.request.form.get("server_image"), startup_command, docker_image, serverid)
+                startup_command = query("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][2]
+                docker_image = query("SELECT * FROM images WHERE id = ?", flask.request.form.get("server_image"))[0][3]
+                imageid = query("SELECT * FROM servers WHERE id = ?", serverid)[0][6]
+                query("DELETE FROM server_variables WHERE image_id = ? and server_id = ?", imageid, serverid)
+                query("UPDATE servers SET image_id = ?, startup = ?, image = ? WHERE id = ?", flask.request.form.get("server_image"), startup_command, docker_image, serverid)
                 flask.flash("Server reinstall completed succesfully", "succes")
                 return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
             else:
@@ -457,9 +457,9 @@ def api_reinstall_server(serverid):
 def api_rename_server(serverid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
-            data = sqlquery("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
+            data = query("SELECT * FROM servers WHERE id = ? and owner_id = ?", serverid, flask.session["id"])
             if len(data):
-                sqlquery("UPDATE servers SET name = ? WHERE id = ?", flask.request.form.get("server_name"), serverid)
+                query("UPDATE servers SET name = ? WHERE id = ?", flask.request.form.get("server_name"), serverid)
                 flask.flash("Server name changed succesfully", "succes")
                 return flask.redirect("/dashboard/server/{}/configuration".format(serverid))
             else:

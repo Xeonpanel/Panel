@@ -1,13 +1,13 @@
 import flask, os, sqlite3, json
 
-os.chdir("/etc/xeonpanel")
+# os.chdir("/etc/xeonpanel")
 
 app = flask.Flask("Xeonpanel", template_folder="themes/{}".format(json.loads(open("config.json", "r").read())["theme"]))
 app.config["MAINTENANCE_MODE"] = False
 app.config["DEVELOPMENT_MODE"] = True
 app.config["SECRET_KEY"] =  json.loads(open("config.json", "r").read())["secret"]
 
-def sqlquery(sql, *parameter):
+def query(sql, *parameter):
     conn = sqlite3.connect("database.db", check_same_thread=False)
     cursor = conn.cursor()
     data = cursor.execute(sql, (parameter)).fetchall()
@@ -16,6 +16,10 @@ def sqlquery(sql, *parameter):
 
 if not os.path.isfile("database.db"):
     import routers.setup
+else:
+    @app.route("/setup/finish", methods=["GET"])
+    def setup_reboot_server():
+        return flask.redirect("/")
 
 import routers.dashboard, routers.auth, routers.api, routers.server
 import admin.settings, admin.nodes, admin.servers, admin.images, admin.users

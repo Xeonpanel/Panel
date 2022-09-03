@@ -7,41 +7,41 @@
         <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
         <script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
     </head>
-    <body class="bg-zinc-600 h-full w-full smooth-scroll">
-        <div class="fixed w-full bg-zinc-800 shadow-xl">
+    <body class="bg-zinc-900/90 h-full w-full smooth-scroll">
+        <div class="fixed w-full bg-zinc-900 shadow-xl">
             <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
                 <a href="/">
-                    {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
-                        <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">
+                    {% if query('SELECT panel_logo FROM settings')[0][0] %} 
+                        <img class="h-[35px]" src="{{ query('SELECT panel_logo FROM settings')[0][0] }}">
                     {% else %}    
-                        <li class="text-2xl font-semibold">{{ sqlquery("SELECT panel_name FROM settings")[0][0] }}</li>
+                        <li class="text-2xl font-semibold">{{ query("SELECT panel_name FROM settings")[0][0] }}</li>
                     {% endif %}
                 </a>
                 <div class="flex items-center mr-4 h-full">
                     <a href="/dashboard">
-                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-4 border-zinc-900 hover:border-indigo-400">
                             <i class="mt-1 fa fa-server"></i>
                         </div>
                     </a>
-                    <a href="/dashboard/account">
-                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                    <!-- <a href="/dashboard/account">
+                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-4 border-zinc-900 hover:border-indigo-400">
                             <i class="mt-1 fa fa-user"></i>
                         </div>
-                    </a>
+                    </a> -->
                     <a href="/admin">
-                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500 hover:border-blue-500">
+                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-4 border-indigo-400 hover:border-indigo-400">
                             <i class="mt-1 fa fa-cog"></i>
                         </div>
                     </a>
                     <a href="/logout?csrf={{ session['csrf_token'] }}">
-                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                        <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-4 border-zinc-900 hover:border-indigo-400">
                             <i class="mt-1 fa fa-sign-out"></i>
                         </div>
                     </a>
                 </div>
             </ul>
         </div>
-        {% if sqlquery("SELECT * FROM users WHERE id = ?", session["id"])[0][5] == "administrator" %}
+        {% if query("SELECT * FROM users WHERE id = ?", session["id"])[0][5] == "administrator" %}
             <div class="fixed h-[calc(100vh-4rem)] mt-[4rem]">
                 <aside class="w-[260px] bg-zinc-900/80 h-[calc(100vh-4rem)] bg-zinc-800 shadow-xl" aria-label="Sidebar">
                     <div class="overflow-y-auto py-4 px-3 pt-5">

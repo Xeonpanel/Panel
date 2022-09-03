@@ -29,7 +29,7 @@
                     <div class="text-neutral-100 mx-2 flex flex-col w-1/3">
                         <label for="server_image" class="mb-2">Server Image</label>
                         <select name="server_image" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
-                            {% for image in sqlquery("SELECT * FROM images ORDER BY id ASC") %}
+                            {% for image in query("SELECT * FROM images ORDER BY id ASC") %}
                                 <option value="{{ image[0] }}">{{ image[1] }}</option>
                             {% endfor %}
                         </select>
@@ -37,7 +37,7 @@
                     <div class="text-neutral-100 mx-2 flex flex-col w-1/3">
                         <label for="server_node" class="mb-2">Server Node</label>
                         <select name="server_node" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
-                            {% for node in sqlquery("SELECT * FROM nodes ORDER BY id ASC") %}
+                            {% for node in query("SELECT * FROM nodes ORDER BY id ASC") %}
                                 <option value="{{ node[0] }}">{{ node[1] }} ( {{ node[4] }} )</option>
                             {% endfor %}
                         </select>
@@ -45,7 +45,7 @@
                     <div class="text-neutral-100 mx-2 flex flex-col w-1/3">
                         <label for="server_owner" class="mb-2">Server Owner</label>
                         <select name="server_owner" class="rounded bg-zinc-700 py-1 px-2 border border-zinc-600">
-                            {% for user in sqlquery("SELECT * FROM users ORDER BY id ASC") %}
+                            {% for user in query("SELECT * FROM users ORDER BY id ASC") %}
                                 <option value="{{ user[0] }}">{{ user[2] }}</option>
                             {% endfor %}
                         </select>

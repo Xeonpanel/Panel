@@ -6,53 +6,53 @@
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     </head>
-    <body class="bg-zinc-600">
+    <body class="bg-zinc-900/90">
         <div>
-            <div class="bg-zinc-800 shadow-xl">
+            <div class="bg-zinc-900 shadow-xl">
                 <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
                     <a href="/">
-                        {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
-                            <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">
+                        {% if panellogo %} 
+                            <img class="h-[35px]" src="{{ panellogo }}">
                         {% else %}    
-                            <li class="text-2xl font-semibold">{{ sqlquery("SELECT panel_name FROM settings")[0][0] }}</li>
+                            <li class="text-2xl font-semibold">{{ panelname }}</li>
                         {% endif %}
                     </a>
                     <div class="flex items-center mr-4 h-full">
                         {% if title == "Your servers" %}
                             <a href="/dashboard">
-                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-800 p-4 border-b-4 border-indigo-400">
                                     <i class="mt-1 fa fa-server"></i>
                                 </div>
                             </a>
                         {% else %}
                             <a href="/dashboard">
-                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-800 p-4 border-b-4 border-zinc-900 hover:border-indigo-400">
                                     <i class="mt-1 fa fa-server"></i>
                                 </div>
                             </a>
                         {% endif %}
-                        {% if title == "Account settings" %}
+                        <!-- {% if title == "Account settings" %}
                             <a href="/dasboard/account">
-                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-blue-500">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-800 p-4 border-b-4 border-indigo-400">
                                     <i class="mt-1 fa fa-user"></i>
                                 </div>
                             </a>
                         {% else %}
                             <a href="/dashboard/account">
-                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-800 p-4 border-b-4  border-zinc-900 hover:border-indigo-400">
                                     <i class="mt-1 fa fa-user"></i>
                                 </div>
                             </a>
-                        {% endif %}
-                        {% if sqlquery("SELECT user_type FROM users WHERE id = ?", session["id"])[0][0] == "administrator" %}
+                        {% endif %} -->
+                        {% if usertype == "administrator" %}
                             <a href="/admin">
-                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                                <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-800 p-4 border-b-4 border-zinc-900 hover:border-indigo-400">
                                     <i class="mt-1 fa fa-cog"></i>
                                 </div>
                             </a>
                         {% endif %}
                         <a href="/logout?csrf={{ session['csrf_token'] }}">
-                            <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
+                            <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-800 p-4 border-b-4 border-zinc-900 hover:border-indigo-400">
                                 <i class="mt-1 fa fa-sign-out"></i>
                             </div>
                         </a>

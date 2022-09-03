@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS "servers" (
 	"uuid"	VARCHAR(255),
 	"startup"	VARCHAR(255),
 	"image"	VARCHAR(255),
-	"subusers"	VARCHAR(255)
+	"subusers"	VARCHAR(255),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS "images" (
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-CREATE TABLE "image_variables" (
+CREATE TABLE IF NOT EXISTS "image_variables" (
 	"id"	INTEGER UNIQUE,
 	"name"	VARCHAR(255),
 	"variable"	VARCHAR(255),

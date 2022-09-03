@@ -46,8 +46,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if sqlquery("SELECT * FROM nodes ORDER BY id ASC") %}
-                        {% for node in sqlquery("SELECT * FROM nodes ORDER BY id ASC")  %}
+                    {% if query("SELECT * FROM nodes ORDER BY id ASC") %}
+                        {% for node in query("SELECT * FROM nodes ORDER BY id ASC")  %}
                             <tr class="border-t bg-zinc-800/70 border-zinc-700 hover:bg-zinc-800 duration-200">
                                 <td class="pl-6 py-4">
                                     <i class="fas fa-circle-notch fa-spin" id="ping{{ loop.index }}"></i>

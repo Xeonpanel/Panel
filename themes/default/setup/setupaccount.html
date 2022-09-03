@@ -4,44 +4,37 @@
         <script src="/static/node_modules/flowbite/dist/flowbite.js"></script>
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
-    <body class="bg-zinc-700 flex h-full w-full items-center justify-center">
+    <body class="bg-zinc-600 flex h-full w-full items-center justify-center">
         <div class="w-[800px] shadow-2xl">
             <div class="bg-zinc-800 rounded-t flex justify-between items-center">
-                <h2 class="text-white p-5 text-3xl">Creating an account</h2>
+                <h2 class="text-white p-4 text-3xl">Getting started</h2>
                 <div class="flex mr-4">
                     <div class="bg-zinc-700/80 p-2 mx-1 rounded-full"></div>
                     <div class="bg-blue-500 p-2 mx-1 rounded-full"></div>
                     <div class="bg-zinc-700/80 p-2 mx-1 rounded-full"></div>
                 </div>
             </div>
-            <div class="bg-zinc-800/70 w-full inline-flex justify-center">
-                <div>
-                    <form action="/setup/register-admin" method="post" class="px-5 py-8 text-white">
-                        <div>
-                            <div class="my-2 flex-col flex">
-                                <label for="username" class="text-neutral-100 my-1">Enter a username</label>
-                                <input type="text" name="username" class="rounded bg-zinc-700 py-1 px-3 text-xl" required>
-                            </div>
-                            <div class="my-2 flex-col flex">
-                                <label for="email" class="text-neutral-100 my-1">Enter a email</label>
-                                <input type="email" name="email" class="rounded bg-zinc-700 py-1 px-3 text-xl" required>
-                            </div>
-                            <div class="my-2 flex-col flex">
-                                <label for="password" class="text-neutral-100 my-1">Enter a password</label>
-                                <input type="password" name="password" class="rounded bg-zinc-700 py-1 px-3 text-xl" required>
-                            </div>
-                            <input type="submit" id="submit" hidden>
+            <form action="/setup/register-admin" method="post" class="p-0 m-0">
+                <div class="bg-zinc-800/70 w-full inline-flex justify-center">
+                    <div class="px-5 py-8 text-white w-full mx-20">
+                        <div class="my-2 flex-col flex">
+                            <label for="username" class="text-neutral-100 my-1">Enter a username</label>
+                            <input type="text" name="username" class="rounded bg-zinc-700 py-1 px-3 text-xl border border-black" required>
                         </div>
-                    </form>
+                        <div class="my-2 flex-col flex">
+                            <label for="email" class="text-neutral-100 my-1">Enter a email</label>
+                            <input type="email" name="email" class="rounded bg-zinc-700 py-1 px-3 text-xl border border-black" required>
+                        </div>
+                        <div class="my-2 flex-col flex">
+                            <label for="password" class="text-neutral-100 my-1">Enter a password</label>
+                            <input type="password" name="password" class="rounded bg-zinc-700 py-1 px-3 text-xl border border-black" required>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="bg-zinc-800/70 flex p-5 p-8 items-center justify-between rounded-b">
-                <h2 class="text-sm text-neutral-200">Did you know Xeon panel is an project of Xeonnode.</h2>
-                <div class="flex">
-                    <a href="/setup/getting-started" class="text-white font-semibold bg-zinc-700/80 mx-1 hover:bg-zinc-70 duration-300 rounded px-4 py-1">Back</a>
-                    <a onclick="document.getElementById('submit').click()" class="select-none text-white font-semibold bg-blue-500 mx-1 hover:bg-blue-600 duration-300 rounded px-4 py-1">Next</a>
+                <div class="bg-zinc-800/70 flex p-5 p-8 items-center justify-end rounded-b">
+                    <button type="submit" href="/setup/setup-account" class="text-white font-semibold bg-blue-500 hover:bg-blue-600 duration-300 rounded px-5 py-1">Next</button>
                 </div>
-            </div>
+            </form>
         </div>
     </body>
 </html> 

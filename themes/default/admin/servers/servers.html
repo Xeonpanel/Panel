@@ -46,8 +46,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if sqlquery("SELECT * FROM servers ORDER BY id ASC") %}
-                        {% for server in sqlquery("SELECT * FROM servers ORDER BY id ASC") %}
+                    {% if query("SELECT * FROM servers ORDER BY id ASC") %}
+                        {% for server in query("SELECT * FROM servers ORDER BY id ASC") %}
                             <tr class="border-t bg-zinc-800/70 border-zinc-700 hover:bg-zinc-800 duration-200">
                                 <td class="pl-6 py-4">
                                     {{ server[1] }}
@@ -59,7 +59,7 @@
                                     {{ server[3] }}MB
                                 </td>
                                 <td class="px-6 py-4">
-                                    {{ sqlquery("SELECT * FROM users WHERE id = ?", server[7])[0][2] }}
+                                    {{ query("SELECT * FROM users WHERE id = ?", server[7])[0][2] }}
                                 </td>
                                 <td class="px-6 py-4">
                                     {{ server[4] }}

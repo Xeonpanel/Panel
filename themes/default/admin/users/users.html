@@ -40,8 +40,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if sqlquery("SELECT * FROM users ORDER BY id ASC") %}
-                        {% for user in sqlquery("SELECT * FROM users ORDER BY id ASC") %}
+                    {% if query("SELECT * FROM users ORDER BY id ASC") %}
+                        {% for user in query("SELECT * FROM users ORDER BY id ASC") %}
                             <tr class="border-t bg-zinc-800/70 border-zinc-700 hover:bg-zinc-800 duration-200">
                                 <td class="px-6 py-4">
                                     {{ user[1] }}

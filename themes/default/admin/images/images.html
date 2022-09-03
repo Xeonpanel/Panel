@@ -40,8 +40,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if sqlquery("SELECT * FROM images ORDER BY id ASC") %}
-                        {% for image in sqlquery("SELECT * FROM images ORDER BY id ASC") %}
+                    {% if query("SELECT * FROM images ORDER BY id ASC") %}
+                        {% for image in query("SELECT * FROM images ORDER BY id ASC") %}
                             <tr class="border-t bg-zinc-800/70 border-zinc-700 hover:bg-zinc-800 duration-200">
                                 <td class="px-6 py-4">
                                     {{ image[1] }}

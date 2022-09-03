@@ -26,8 +26,8 @@
                         <input type="text" name="token" value="{{ session['token'] }}" hidden>
                         <div class="flex flex-col">
                             <select name="server_image" class="rounded py-2 px-3 bg-zinc-700 my-1">
-                                {% for image in sqlquery("SELECT * FROM images ORDER BY id ASC") %}
-                                    {% if image[1] == sqlquery('SELECT * FROM images WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][6])[0][1] %}
+                                {% for image in query("SELECT * FROM images ORDER BY id ASC") %}
+                                    {% if image[1] == query('SELECT * FROM images WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][6])[0][1] %}
                                         <option selected="selected" value="{{ image[0] }}">{{ image[1] }}</option>
                                     {% else %}
                                         <option value="{{ image[0] }}">{{ image[1] }}</option>
@@ -112,7 +112,7 @@
                             })
                         }
                     </script>
-                    <input type="text" id="server_name" value="{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1 w-full">
+                    <input type="text" id="server_name" value="{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1 w-full">
                 </div>
                 <div class="flex rounded-b justify-end items-center p-4 bg-zinc-800/70">
                     <a onclick="UpdateName(this)" class="inline-flex items-center justify-center select-none w-[140px] h-[32px] bg-blue-500 hover:bg-blue-600 duration-200 rounded py-1 px-4 text-neutral-100 font-semibold">Update Name</a>
@@ -134,18 +134,18 @@
     </div>
     <div class="w-full flex justify-center">
         <div class="flex justify-center flex-wrap mx-16 w-full mt-8">
-            {% for variable in sqlquery("SELECT * FROM image_variables WHERE image_id = ?", sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]) %}
+            {% for variable in query("SELECT * FROM image_variables WHERE image_id = ?", query("SELECT * FROM servers WHERE id = ?", serverid)[0][6]) %}
                 <div class="w-1/2">
                     <div class="shadow-xl mx-2">
                         <div class="rounded-t-md text-neutral-100 font-semibold bg-zinc-900 p-3">
                             <h2 class="text-sm uppercase">{{ variable[1] }}</h2>
                         </div>
                         <div class="text-neutral-200 p-4 bg-zinc-800/70">
-                            {% set imageid = sqlquery("SELECT * FROM servers WHERE id = ?", serverid)[0][6]  %}
+                            {% set imageid = query("SELECT * FROM servers WHERE id = ?", serverid)[0][6]  %}
                             {% set variableid = variable[0] %}
                             <div class="flex flex-col">
-                                {% if sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid) | length > 0 %}
-                                    <input type="text" id="var{{ variable[0] }}" name="variable_data" value="{{ sqlquery('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1" required>
+                                {% if query('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid) | length > 0 %}
+                                    <input type="text" id="var{{ variable[0] }}" name="variable_data" value="{{ query('SELECT * FROM server_variables WHERE server_id = ? and image_id = ? and variable_id = ?', serverid, imageid, variableid)[0][1] }}" class="rounded py-2 px-3 bg-zinc-700 my-1" required>
                                 {% else %}
                                     <input type="text" id="var{{ variable[0] }}" name="variable_data" class="rounded py-2 px-3 bg-zinc-700 my-1" required>
                                 {% endif %}

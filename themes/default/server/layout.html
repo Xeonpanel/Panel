@@ -25,10 +25,10 @@
         <div class="bg-zinc-800 shadow-xl fixed top-0 w-full">
             <ul class="flex justify-between h-[4rem] mx-20 text-neutral-200 items-center">
                 <a href="/">
-                    {% if sqlquery('SELECT panel_logo FROM settings')[0][0] %} 
-                        <img class="h-[35px]" src="{{ sqlquery('SELECT panel_logo FROM settings')[0][0] }}">
+                    {% if query('SELECT panel_logo FROM settings')[0][0] %} 
+                        <img class="h-[35px]" src="{{ query('SELECT panel_logo FROM settings')[0][0] }}">
                     {% else %}    
-                        <li class="text-2xl font-semibold">{{ sqlquery("SELECT panel_name FROM settings")[0][0] }}</li>
+                        <li class="text-2xl font-semibold">{{ query("SELECT panel_name FROM settings")[0][0] }}</li>
                     {% endif %}
                 </a>
                 <div class="flex items-center h-full">
@@ -42,7 +42,7 @@
                             <i class="mt-1 fa fa-user"></i>
                         </div>
                     </a>
-                    {% if sqlquery("SELECT user_type FROM users WHERE id = ?", session["id"])[0][0] == "administrator" %}
+                    {% if query("SELECT user_type FROM users WHERE id = ?", session["id"])[0][0] == "administrator" %}
                         <a href="/admin">
                             <div class="px-6 h-full flex items-center duration-200 hover:bg-zinc-900 p-4 border-b-2 border-zinc-800 hover:border-blue-500">
                                 <i class="mt-1 fa fa-cog"></i>
@@ -104,7 +104,7 @@
                             e.preventDefault();
                             $.ajax({
                                 type: "POST",
-                                url: "https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit",
+                                url: "https://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit",
                                 data: new FormData(this),
                                 contentType: false,
                                 cache: false,

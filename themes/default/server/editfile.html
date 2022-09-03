@@ -8,7 +8,7 @@
         .CodeMirror-sizer { margin-left: 40px !important; }
         .CodeMirror-gutter { background-color: #18181b !important; }
     </style>
-    <form action="https://{{ sqlquery('SELECT * FROM nodes WHERE id = ?', sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ sqlquery('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit" method="post" id="save_file">
+    <form action="https://{{ query('SELECT * FROM nodes WHERE id = ?', query('SELECT * FROM servers WHERE id = ?', serverid)[0][5])[0][4] }}:8080/api/servers/{{ query('SELECT * FROM servers WHERE id = ?', serverid)[0][9] }}/files/edit" method="post" id="save_file">
         <input type="text" name="user_token" value="{{ session['token'] }}" hidden>
         <input type="text" name="file" value="{{ path }}" hidden>
         <textarea name="content" id="code">{{ content }}</textarea>
