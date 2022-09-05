@@ -2,7 +2,7 @@ import flask
 
 from __main__ import app, query
 
-@app.route("/dashboard", methods=["GET"])
+@app.get("/dashboard")
 def dashboard():
     if flask.session:
         return flask.render_template(

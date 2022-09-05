@@ -26,10 +26,6 @@ def postlogin():
     else:
         return flask.jsonify({"status": "error", "message": "Please fill in all fields"})
 
-@app.get("/register")
-def getregister():
-    return flask.render_template("/auth/register.html", title="Register", sqlquery=query)
-
 @app.post("/register")
 def postregister():
     return flask.jsonify({"status": "error", "message": "Try again later.."})

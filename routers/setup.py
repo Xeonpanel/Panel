@@ -2,7 +2,7 @@ import flask, os, time, sys, sqlite3, hashlib
 
 from __main__ import app
 
-@app.route("/setup/register-admin", methods=["POST"])
+@app.post("/setup/register-admin")
 def setup_register_admin():
     conn = sqlite3.connect("database.db", check_same_thread=False)
     cursor = conn.cursor()
