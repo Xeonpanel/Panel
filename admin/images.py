@@ -2,7 +2,7 @@ import flask
 
 from __main__ import app, query
 
-@app.route("/admin/images", methods=["GET"])
+@app.get("/admin/images")
 def images():
     if flask.session:
         if query("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":
@@ -12,7 +12,7 @@ def images():
     else:
         return flask.redirect("/login")
 
-@app.route("/admin/images/create", methods=["GET"])
+@app.get("/admin/images/create")
 def create_image():
     if flask.session:
         if query("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":
@@ -22,7 +22,7 @@ def create_image():
     else:
         return flask.redirect("/login")
 
-@app.route("/admin/images/<imageid>/view", methods=["GET"])
+@app.get("/admin/images/<imageid>/view")
 def view_image(imageid):
     if flask.session:
         if query("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":

@@ -16,7 +16,7 @@ def dashboard():
     else:
         return flask.redirect("/")
 
-@app.route("/dashboard/account", methods=["GET"])
+@app.get("/dashboard/account")
 def dashboard_account():
     if flask.session:
         return flask.render_template("/dashboard/account.html", title="Account settings", query=query)

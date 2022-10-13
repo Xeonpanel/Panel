@@ -2,7 +2,7 @@ import flask, hashlib, sys, time, requests, os
 
 from __main__ import app, query
 
-@app.route("/api/password/<userid>/update", methods=["POST"])
+@app.post("/api/password/<userid>/update")
 def api_update_password(userid):
     if flask.session:
         if flask.request.form.get("csrf_token") == flask.session["csrf_token"]:
@@ -35,7 +35,7 @@ def api_update_password(userid):
     else:
         flask.abort(401)
 
-@app.route("/api/username/<userid>/update", methods=["POST"])
+@app.post("/api/username/<userid>/update")
 def api_update_username(userid):
     if flask.session:
         if flask.request.form.get("csrf_token") == flask.session["csrf_token"]:
@@ -67,7 +67,7 @@ def api_update_username(userid):
     else:
         flask.abort(401)
 
-@app.route("/api/admin/settings/update", methods=["POST"])
+@app.post("/api/admin/settings/update")
 def api_update_settings():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -88,7 +88,7 @@ def api_update_settings():
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/reboot", methods=["POST"])
+@app.post("/api/admin/reboot")
 def api_reboot_server():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -111,7 +111,7 @@ def api_reboot_server():
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/reset", methods=["POST"])
+@app.post("/api/admin/reset")
 def api_factory_reset():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -134,7 +134,7 @@ def api_factory_reset():
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/nodes/create", methods=["POST"])
+@app.post("/api/admin/nodes/create")
 def api_create_node():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -162,7 +162,7 @@ def api_create_node():
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/users/create", methods=["POST"])
+@app.post("/api/admin/users/create")
 def api_create_user():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -195,7 +195,7 @@ def api_create_user():
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/users/<userid>/update", methods=["POST"])
+@app.post("/api/admin/users/<userid>/update")
 def api_update_user(userid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -239,7 +239,7 @@ def api_update_user(userid):
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/images/create", methods=["POST"])
+@app.post("/api/admin/images/create")
 def api_create_image():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -265,7 +265,7 @@ def api_create_image():
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/servers/create", methods=["POST"])
+@app.post("/api/admin/servers/create")
 def api_create_server():
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -317,7 +317,7 @@ def api_create_server():
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/images/<imageid>/update", methods=["POST"])
+@app.post("/api/admin/images/<imageid>/update")
 def api_update_image(imageid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -343,7 +343,7 @@ def api_update_image(imageid):
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/images/<imageid>/variables/create", methods=["POST"])
+@app.post("/api/admin/images/<imageid>/variables/create")
 def api_create_variable(imageid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -369,7 +369,7 @@ def api_create_variable(imageid):
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/images/<imageid>/variables/<variableid>/update", methods=["POST"])
+@app.post("/api/admin/images/<imageid>/variables/<variableid>/update")
 def api_update_variable(imageid, variableid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -394,7 +394,7 @@ def api_update_variable(imageid, variableid):
     else:
         return flask.redirect("/login")
 
-@app.route("/api/admin/images/<imageid>/variables/<variableid>/delete", methods=["POST"])
+@app.post("/api/admin/images/<imageid>/variables/<variableid>/delete")
 def api_delete_variable(imageid, variableid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -414,7 +414,7 @@ def api_delete_variable(imageid, variableid):
     else:
         return flask.redirect("/login")
 
-@app.route("/api/servers/<serverid>/variables/update", methods=["POST"])
+@app.post("/api/servers/<serverid>/variables/update")
 def api_update_server_variable(serverid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -433,7 +433,7 @@ def api_update_server_variable(serverid):
     else:
         return flask.redirect("/login")
 
-@app.route("/api/servers/<serverid>/reinstall", methods=["POST"])
+@app.post("/api/servers/<serverid>/reinstall")
 def api_reinstall_server(serverid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):
@@ -453,7 +453,7 @@ def api_reinstall_server(serverid):
     else:
         return flask.redirect("/login")
 
-@app.route("/api/servers/<serverid>/rename", methods=["POST"])
+@app.post("/api/servers/<serverid>/rename")
 def api_rename_server(serverid):
     if flask.session:
         if flask.session["csrf_token"] == flask.request.form.get("csrf_token"):

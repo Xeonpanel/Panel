@@ -34,7 +34,6 @@ def setup_register_admin():
         "INSERT INTO image_variables (name, variable, image_id) VALUES ('Python packages', 'PIP_PACKAGES', '1')"
     )
     conn.commit()
-    #
     cursor.execute(
         "INSERT INTO images (name, startup, image) VALUES ('Nodejs bot', 'npm install [[NODE_PACKAGES]]; node /home/container/[[NODE_FILE]]', 'node:latest')"
     )
@@ -49,26 +48,26 @@ def setup_register_admin():
     conn.commit()
     return flask.redirect("/setup/setup-final")
 
-@app.route("/setup/finish", methods=["GET"])
+@app.get("/setup/finish")
 def setup_reboot_server():
     time.sleep(1)
     os.execv(sys.executable, ["python"] + sys.argv)
 
-@app.route("/setup/setup-final", methods=["GET"])
+@app.get("/setup/setup-final")
 def setup_final():
     return flask.render_template(
         "/setup/setupfinal.html",
         title="Installing"
     )
 
-@app.route("/setup/getting-started", methods=["GET"])
+@app.get("/setup/getting-started")
 def setup_getting_started():
     return flask.render_template(
         "/setup/welcome.html",
         title="Getting Started"
     )
 
-@app.route("/setup/setup-account", methods=["GET"])
+@app.get("/setup/setup-account")
 def setup_account():
     return flask.render_template(
         "/setup/setupaccount.html",

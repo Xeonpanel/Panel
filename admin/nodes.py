@@ -2,7 +2,7 @@ import flask
 
 from __main__ import app, query
 
-@app.route("/admin/nodes", methods=["GET"])
+@app.get("/admin/nodes")
 def nodes():
     if flask.session:
         if query("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":
@@ -12,7 +12,7 @@ def nodes():
     else:
         return flask.redirect("/login")
 
-@app.route("/admin/nodes/create", methods=["GET"])
+@app.get("/admin/nodes/create")
 def create_node():
     if flask.session:
         if query("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":
@@ -22,7 +22,7 @@ def create_node():
     else:
         return flask.redirect("/login")
 
-@app.route("/admin/nodes/<nodeid>/view", methods=["GET"])
+@app.get("/admin/nodes/<nodeid>/view")
 def view_node(nodeid):
     if flask.session:
         if query("SELECT * FROM users WHERE id = ?", flask.session["id"])[0][5] == "administrator":

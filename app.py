@@ -1,7 +1,5 @@
 import flask, os, sqlite3, json
 
-# os.chdir("/etc/xeonpanel")
-
 app = flask.Flask("Xeonpanel", template_folder="themes/{}".format(json.loads(open("config.json", "r").read())["theme"]))
 app.config["MAINTENANCE_MODE"] = False
 app.config["DEVELOPMENT_MODE"] = True
@@ -17,7 +15,7 @@ def query(sql, *parameter):
 if not os.path.isfile("database.db"):
     import routers.setup
 else:
-    @app.route("/setup/finish", methods=["GET"])
+    @app.get("/setup/finish")
     def setup_reboot_server():
         return flask.redirect("/")
 
@@ -48,14 +46,14 @@ def error_404(error):
 def error_401(error):
     return flask.render_template("/errors/401.html") 
 
-@app.route("/logout", methods=["GET"])
+@app.get("/logout")
 def logout():
     if flask.session:
         if flask.request.args["csrf"] == flask.session["csrf_token"]:
             flask.session.clear()
         return flask.redirect("/")
 
-@app.route("/", methods=["GET"])
+@app.get("/")
 def main():
     if flask.session:
         return flask.redirect("/dashboard")

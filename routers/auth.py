@@ -28,31 +28,24 @@ def postlogin():
 
 @app.post("/register")
 def postregister():
-    return flask.jsonify({"status": "error", "message": "Try again later.."})
-
-# @app.route("/register", methods=["GET", "POST"])
-# def auth_register():
-#     if flask.request.method == "GET":
-#         return flask.render_template("/auth/register.html", title="Register", sqlquey=query)
-#     if flask.request.method == "POST":
-#         if flask.request.form.get("email") and flask.request.form.get("password") and flask.request.form.get("username"):
-#             data = query(
-#                 "SELECT * FROM users WHERE email = ? or name = ?",
-#                 flask.request.form.get("email"), flask.request.form.get("username")
-#             )
-#             if len(data):
-#                 return flask.jsonify({"status": "error", "message": "Username or email already exists"})
-#             else:
-#                 query(
-#                     "INSERT INTO users (name, email, password, token, user_type) VALUES (?, ?, ?, ?, ?)",
-#                     flask.request.form.get("username"),
-#                     flask.request.form.get("email"),
-#                     hashlib.sha256(
-#                         flask.request.form.get("password").encode("utf-8")
-#                     ).hexdigest(),
-#                     os.urandom(50).hex(),
-#                     "user"
-#                 )
-#                 return flask.jsonify({"status": "succes"})
-#         else:
-#             return flask.jsonify({"status": "error", "message": "Please fill in all fields"})
+    if flask.request.form.get("email") and flask.request.form.get("password") and flask.request.form.get("username"):
+        data = query(
+            "SELECT * FROM users WHERE email = ? or name = ?",
+            flask.request.form.get("email"), flask.request.form.get("username")
+        )
+        if len(data):
+            return flask.jsonify({"status": "error", "message": "Username or email already exists"})
+        else:
+            query(
+                "INSERT INTO users (name, email, password, token, user_type) VALUES (?, ?, ?, ?, ?)",
+                flask.request.form.get("username"),
+                flask.request.form.get("email"),
+                hashlib.sha256(
+                    flask.request.form.get("password").encode("utf-8")
+                ).hexdigest(),
+                os.urandom(50).hex(),
+                "user"
+            )
+            return flask.jsonify({"status": "succes"})
+    else:
+        return flask.jsonify({"status": "error", "message": "Please fill in all fields"})

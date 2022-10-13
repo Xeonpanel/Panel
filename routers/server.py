@@ -3,7 +3,7 @@ import flask, requests, json
 
 from __main__ import app, query
 
-@app.route("/dashboard/server/<serverid>")
+@app.get("/dashboard/server/<serverid>")
 def server(serverid):
     if flask.session:
         if len(query("SELECT * FROM servers WHERE owner_id = ? and id = ?", flask.session["id"], serverid)):
@@ -27,8 +27,8 @@ def server(serverid):
     else:
         return flask.redirect("/login")
 
-@app.route("/dashboard/server/<serverid>/files")
-@app.route("/dashboard/server/<serverid>/files/<path:dir>")
+@app.get("/dashboard/server/<serverid>/files")
+@app.get("/dashboard/server/<serverid>/files/<path:dir>")
 def server_files(serverid, **dir):
     if flask.session:
         if len(query("SELECT * FROM servers WHERE owner_id = ? and id = ?", flask.session["id"], serverid)):
@@ -44,7 +44,7 @@ def server_files(serverid, **dir):
     else:
         return flask.redirect("/login")
 
-@app.route("/dashboard/server/<serverid>/configuration")
+@app.get("/dashboard/server/<serverid>/configuration")
 def server_configuration(serverid):
     if flask.session:
         if len(query("SELECT * FROM servers WHERE owner_id = ? and id = ?", flask.session["id"], serverid)):
@@ -68,7 +68,7 @@ def server_configuration(serverid):
     else:
         return flask.redirect("/login")
 
-@app.route("/dashboard/server/<serverid>/files/edit/<path:dir>")
+@app.get("/dashboard/server/<serverid>/files/edit/<path:dir>")
 def edit_file(serverid, **dir):
     if flask.session:
         if len(query("SELECT * FROM servers WHERE owner_id = ? and id = ?", flask.session["id"], serverid)):
