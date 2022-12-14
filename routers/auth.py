@@ -12,8 +12,8 @@ def getregister():
 
 @app.post("/login")
 def postlogin():
-    username = flask.request.form.get("username")
-    password = flask.request.form.get("password")
+    username = flask.request.json.get("username")
+    password = flask.request.json.get("password")
     if username and password:
         user = Users.query.filter_by(username=username).first()
         if user and bcrypt.check_password_hash(user.password, password):
