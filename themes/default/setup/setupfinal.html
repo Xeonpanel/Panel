@@ -1,27 +1,25 @@
 <html>
     <head>
         <title>{{ title }}</title>
-        <script src="/static/node_modules/flowbite/dist/flowbite.js"></script>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css?family=Rubik" rel="stylesheet">
     </head>
     <body class="bg-[#242631] flex h-full w-full items-center justify-center">
-        <div class="w-[700px] shadow-2xl">
-            <div class="bg-[#1b1c24] rounded-t flex justify-between items-center">
-                <h2 class="text-white p-4 text-3xl">Installation completed</h2>
+        <div class="w-[750px] shadow-xl">
+            <div class="bg-[#7c3aed] rounded-t py-4 px-8 flex justify-between items-center">
+                <h2 class="text-neutral-200 text-2xl uppercase" style="font-family: Rubik">{{ title }}</h2>
                 <div class="flex mr-4">
                     <div class="bg-zinc-700/80 p-2 mx-1 rounded-full"></div>
                     <div class="bg-zinc-700/80 p-2 mx-1 rounded-full"></div>
-                    <div class="bg-green-600 p-2 mx-1 rounded-full"></div>
+                    <div class="bg-zinc-800 p-2 mx-1 rounded-full"></div>
                 </div>
             </div>
             <div class="bg-[#1b1c24]/70 flex justify-center">
-                <img src="/static/img/undraw_set_preferences_kwia.svg" class="px-5 py-16" width="400">
+                <img src="/static/img/undraw_preferences_re_49in.svg" class="px-5 py-16" width="400">
             </div>
-            <div class="bg-[#1b1c24]/70 flex p-5 p-8 items-center justify-between rounded-b">
-                <h2 class="text-sm text-neutral-200">Xeon panel is now installed on your system.</h2>
-                <div class="flex">
-                    <a href="/setup/finish" class="text-white font-semibold bg-green-600 mx-1 hover:bg-green-700 duration-300 rounded px-5 py-1">Finish</a>
-                </div>
+            <div class="bg-[#1b1c24]/70 flex p-8 items-center justify-between rounded-b">
+                <h2 class="text-sm text-neutral-200">Your installation was succesfull.</h2>
+                <a href="/setup/setup-finish" class="text-white text-sm font-semibold bg-[#7c3aed] hover:text-neutral-200 hover:bg-[#5526a7] duration-300 rounded px-6 py-2 font-semibold">Finish</a>
             </div>
         </div>
     </body>
