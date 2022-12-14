@@ -9,9 +9,9 @@ def setup_register_admin():
         password = flask.request.form["password"]
         email = flask.request.form["email"]
 
-        if username and password and email:
+        if username and password and email:  
             if not os.path.exists("database/database.sqlite"):
-                with app.app_context():
+                with app.app_context(): 
                     db.create_all()
                     db.session.commit() 
                 
@@ -33,8 +33,8 @@ def setup_reboot_server():
 def setup_final():
     return flask.render_template(
         "/setup/setupfinal.html",
-        title="Installing",
-        page="setup.installing"
+        title="Installed",
+        page="setup.installed"
     )
 
 @app.get("/setup/getting-started")
