@@ -35,7 +35,8 @@ def postregister():
         elif Users.query.filter_by(email=email).first():
             return flask.jsonify({"status": "error", "message": "Email already exists"})
         else:
-            user = Users(username=username, password=bcrypt.generate_password_hash(password), email=email, admin=False, created_at=datetime.datetime.now(), updated_at=datetime.datetime.now())
+            password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
+            user = Users(username=username, password=password_hash, email=email, admin=False, created_at=datetime.datetime.now(), updated_at=datetime.datetime.now())
             db.session.add(user)
             db.session.commit()
             flask.session["user_id"] = user.id
