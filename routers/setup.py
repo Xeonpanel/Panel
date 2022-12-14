@@ -4,28 +4,30 @@ from models import Users
 
 @app.post("/setup/register-admin")
 def setup_register_admin():
-    username = flask.request.form["username"]
-    password = flask.request.form["password"]
-    email = flask.request.form["email"]
+    if os.path.isfile("routers/setup.py"):
+        username = flask.request.form["username"]
+        password = flask.request.form["password"]
+        email = flask.request.form["email"]
 
-    if username and password and email:
-        if not os.path.exists("database/database.sqlite"):
-            with app.app_context():
-                db.create_all()
-                db.session.commit()
-        with app.app_context():
+        if username and password and email:
+            if not os.path.exists("database/database.sqlite"):
+                with app.app_context():
+                    db.create_all()
+                    db.session.commit() 
+                
             hashed_password = bycrypt.generate_password_hash(password).decode("utf-8")
             admin = Users(username=username, password=hashed_password, email=email, admin=True, created_at=datetime.datetime.now(), updated_at=datetime.datetime.now())
             db.session.add(admin)
             db.session.commit()
-        
-        os.remove("routers/setup.py")
-        return flask.redirect("/setup/setup-final")
+            
+            os.remove("routers/setup.py")
+            return flask.redirect("/setup/setup-final")
+    else:
+        flask.abort(404)
 
 @app.get("/setup/finish")
 def setup_reboot_server():
-    time.sleep(1)
-    exit(0)
+    return flask.redirect("/")
 
 @app.get("/setup/setup-final")
 def setup_final():
