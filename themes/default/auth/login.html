@@ -7,26 +7,31 @@
         <script src="https://code.jquery.com/jquery-3.6.2.js" integrity="sha256-pkn2CUZmheSeyssYw3vMp1+xyub4m+e+QK4sQskvuo4=" crossorigin="anonymous"></script>'
     </head>
     <body class="bg-[#242631] flex h-full w-full items-center justify-center">
-        <div class="w-[500px] shadow-xl">
-            <div class="bg-[#7c3aed] rounded-t py-4 px-8 flex items-center">
-                <h2 class="text-neutral-200 text-2xl uppercase" style="font-family: Rubik">{{ title }}</h2>
-            </div>
-            <form action="/login" class="m-0 p-0" method="post">
-                <div class="bg-[#1b1c24]/70 flex justify-center">
-                    <div class="w-full pt-14 pb-5">
-                        <div class="px-12 space-y-5">
-                            <input type="text" name="username" class="bg-[#242631] text-neutral-200 ring-[#7c3aed] ring-1 focus:outline-0 focus:ring-2 duration-150 rounded px-4 py-3 w-full" placeholder="Enter your Username" required>
-                            <input type="password" name="password" class="bg-[#242631] text-neutral-200 ring-[#7c3aed] ring-1 focus:outline-0 focus:ring-2 duration-150 rounded px-4 py-3 w-full" placeholder="Enter your Password" required>
+        <div class="space-y-2">
+            <div class="w-[500px] shadow-xl">
+                <div class="bg-[#7c3aed] rounded-t py-4 px-8 flex items-center">
+                    <h2 class="text-neutral-200 text-2xl uppercase" style="font-family: Rubik">{{ title }}</h2>
+                </div>
+                <form action="/login" class="m-0 p-0" method="post">
+                    <div class="bg-[#1b1c24]/70 flex justify-center">
+                        <div class="w-full pt-14 pb-5">
+                            <div class="px-12">
+                                <div class="space-y-5">
+                                    <input type="text" name="username" class="bg-[#242631] text-neutral-200 ring-[#7c3aed] ring-1 focus:outline-0 focus:ring-2 duration-150 rounded px-4 py-3 w-full" placeholder="Enter your Username" required>
+                                    <input type="password" name="password" class="bg-[#242631] text-neutral-200 ring-[#7c3aed] ring-1 focus:outline-0 focus:ring-2 duration-150 rounded px-4 py-3 w-full" placeholder="Enter your Password" required>
+                                </div>
+                                <div id="error" class="mt-2 text-red-500"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="bg-[#1b1c24]/70 flex p-8 items-center justify-end rounded-b">
-                    <div class="space-x-2 flex items-center">
-                        <a href="/register" class="text-white text-sm font-semibold bg-[#7c3aed] h-[36px] hover:text-neutral-200 hover:bg-[#5526a7] duration-300 rounded px-6 py-2 font-semibold">Register</a>
-                        <button type="submit" class="text-white text-sm font-semibold bg-[#7c3aed] h-[36px] hover:text-neutral-200 hover:bg-[#5526a7] duration-300 rounded px-6 py-2 font-semibold">Login</button>
+                    <div class="bg-[#1b1c24]/70 flex p-8 items-center justify-end rounded-b">
+                        <div class="space-x-2 flex items-center">
+                            <a href="/register" class="text-white text-sm font-semibold bg-[#7c3aed] h-[36px] hover:text-neutral-200 hover:bg-[#5526a7] duration-300 rounded px-6 py-2 font-semibold">Register</a>
+                            <button type="submit" class="text-white text-sm font-semibold bg-[#7c3aed] h-[36px] hover:text-neutral-200 hover:bg-[#5526a7] duration-300 rounded px-6 py-2 font-semibold">Login</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
         <script>
             function showError(message) {
@@ -37,6 +42,8 @@
             document.querySelector("form").addEventListener("submit", function(e) {
                 e.preventDefault();
                 button = document.querySelector("button");
+                input_u = document.querySelector("input[name='username']");
+                input_p = document.querySelector("input[name='password']");
                 button.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i>`;
                 button.disabled = true;
                 button.classList.remove("hover:bg-[#5526a7]");
@@ -57,10 +64,13 @@
                     if (data.status == "success") {
                         window.location.href = "/dashboard";
                     } else {
+                        input_u.classList.add("ring-red-500");
+                        input_p.classList.add("ring-red-500");
                         button.innerHTML = "Login";
                         button.disabled = false;
                         button.classList.add("hover:bg-[#5526a7]");
-                        showError(data.message)
+                        $("#error").removeClass("hidden");
+                        $("#error").html(data.message);
                     }
                 })
             })
