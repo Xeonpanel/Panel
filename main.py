@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
-bycrypt = Bcrypt()
+bcrypt = Bcrypt()
 app = flask.Flask("Xeonpanel", template_folder=f"themes/default")
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////usr/src/app/database.sqlite"
