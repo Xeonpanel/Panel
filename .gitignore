@@ -1,5 +1,5 @@
 *.pyc
-*.db
+*.sqlite
 __pycache__/
 *.DS_Store
 compose.yaml
