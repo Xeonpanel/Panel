@@ -1,21 +1,10 @@
-import flask, os, sqlite3, json
+import flask, os
+from flask_sqlalchemy import SQLAlchemy
 
-app = flask.Flask("Xeonpanel", template_folder="themes/{}".format(json.loads(open("config.json", "r").read())["theme"]))
-app.config["SECRET_KEY"] =  json.loads(open("config.json", "r").read())["secret"]
-
-def query(sql, *parameter):
-    conn = sqlite3.connect("database.db", check_same_thread=False)
-    cursor = conn.cursor()
-    data = cursor.execute(sql, (parameter)).fetchall()
-    conn.commit()
-    return data
-
-if not os.path.isfile("database.db"):
-    import routers.setup
-else:
-    @app.get("/setup/finish")
-    def setup_reboot_server():
-        return flask.redirect("/")
+db = SQLAlchemy()
+app = flask.Flask("Xeonpanel", template_folder=f"themes/default")
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.sqlite"
 
 import routers.dashboard, routers.auth, routers.api, routers.server
 import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
