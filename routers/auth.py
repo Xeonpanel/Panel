@@ -1,51 +1,43 @@
-import flask, os, hashlib
-
-from __main__ import app, query
+import flask, os
+from __main__ import app, db, bcrypt
+from models import Users
 
 @app.get("/login")
 def getlogin():
-    return flask.render_template("/auth/login.html", title="Login")
+    return flask.render_template("/auth/login.html", title="Login", page="auth.login")
 
 @app.get("/register")
 def getregister():
-    return flask.render_template("/auth/register.html", title="Register")
+    return flask.render_template("/auth/register.html", title="Register", page="auth.register")
 
 @app.post("/login")
 def postlogin():
-    if flask.request.form.get("email") and flask.request.form.get("password"):
-        data = query("SELECT * FROM users WHERE email = ? and password = ?", flask.request.form.get("email"), hashlib.sha256(flask.request.form.get("password").encode("utf-8")).hexdigest())
-        if len(data):
-            flask.session["username"] = data[0][1]
-            flask.session["email"] = data[0][2]
-            flask.session["id"] = data[0][0]
-            flask.session["token"] = data[0][4]
-            flask.session["csrf_token"] = os.urandom(250).hex()
-            return flask.jsonify({"status": "succes"})
+    username = flask.request.form.get("username")
+    password = flask.request.form.get("password")
+    if username and password:
+        user = Users.query.filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            flask.session["user_id"] = user.id
+            flask.session["admin"] = user.admin
+            flask.session["csrf_token"] = os.urandom(50).hex()
+            return flask.redirect("/dashboard")
         else:
-            return flask.jsonify({"status": "error", "message": "Email or password invalid"})
-    else:
-        return flask.jsonify({"status": "error", "message": "Please fill in all fields"})
+            return flask.jsonify({"status": "error", "message": "Invalid username or password"})
 
 @app.post("/register")
 def postregister():
-    if flask.request.form.get("email") and flask.request.form.get("password") and flask.request.form.get("username"):
-        data = query(
-            "SELECT * FROM users WHERE email = ? or name = ?",
-            flask.request.form.get("email"), flask.request.form.get("username")
-        )
-        if len(data):
-            return flask.jsonify({"status": "error", "message": "Username or email already exists"})
+    username = flask.request.form.get("username")
+    password = flask.request.form.get("password")
+    email = flask.request.form.get("email")
+    if username and password and email:
+        if Users.query.filter_by(username=username).first():
+            return flask.jsonify({"status": "error", "message": "Username already exists"})
+        elif Users.query.filter_by(email=email).first():
+            return flask.jsonify({"status": "error", "message": "Email already exists"})
         else:
-            query(
-                "INSERT INTO users (name, email, password, token, user_type) VALUES (?, ?, ?, ?, ?)",
-                flask.request.form.get("username"),
-                flask.request.form.get("email"),
-                hashlib.sha256(
-                    flask.request.form.get("password").encode("utf-8")
-                ).hexdigest(),
-                os.urandom(50).hex(),
-                "user"
-            )
-            return flask.jsonify({"status": "succes"})
+            user = Users(username=username, password=bcrypt.generate_password_hash(password), email=email, admin=False, created_at=flask.datetime.datetime.now(), updated_at=flask.datetime.datetime.now())
+            db.session.add(user)
+            db.session.commit()
+            return flask.jsonify({"status": "success", "message": "Account created"})
     else:
         return flask.jsonify({"status": "error", "message": "Please fill in all fields"})
