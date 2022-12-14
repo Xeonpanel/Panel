@@ -1,16 +1,16 @@
 import flask, os
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
 db = SQLAlchemy()
+bycrypt = Bcrypt()
 app = flask.Flask("Xeonpanel", template_folder=f"themes/default")
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 import models
-import routers.dashboard, routers.auth, routers.api, routers.server
-import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
 
 @app.before_request
 def check_maintenance():
@@ -44,8 +44,9 @@ def main():
         return flask.redirect("/login")
 
 if not os.path.exists("database/database.sqlite"):
-    db.create_all()
-else:
+    with app.app_context():
+        db.create_all()
+        db.session.commit()
     import routers.setup
 
 if os.getenv("DEVELOPMENT_MODE"):
