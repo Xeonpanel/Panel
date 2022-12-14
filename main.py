@@ -5,21 +5,16 @@ db = SQLAlchemy()
 app = flask.Flask("Xeonpanel", template_folder=f"themes/default")
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.sqlite"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
 
 import routers.dashboard, routers.auth, routers.api, routers.server
 import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
 
 @app.before_request
-def maintenance():
+def check_maintenance():
     if os.getenv("MAINTENANCE_MODE"):
         flask.abort(503) 
-    else:
-        if not "/setup" in flask.request.path:
-            if not "/static" in flask.request.path:
-                if not os.path.isfile("database.db"):
-                    return flask.redirect("/setup/getting-started")
-        elif "/setup/reboot" in flask.request.path:
-            return flask.redirect("/")
 
 @app.errorhandler(503)
 def error_503(error):
