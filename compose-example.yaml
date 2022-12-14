@@ -8,3 +8,7 @@ services:
     restart: always
     ports:
       - 5000:5000
+    environment:
+      - MAINTENANCE_MODE=False
+      - DEVELOPMENT_MODE=False
+      - SECRET_KEY=RANDOM_KEY
