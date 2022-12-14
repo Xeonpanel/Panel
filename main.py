@@ -11,6 +11,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 import models
+import routers.auth
 
 if os.path.isfile("routers/setup.py"):
     import routers.setup
