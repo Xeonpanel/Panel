@@ -1,5 +1,5 @@
 import flask, os, time, datetime
-from __main__ import db, bycrypt, app
+from __main__ import db, bcrypt, app
 from models import Users
 
 @app.post("/setup/register-admin")
@@ -15,7 +15,7 @@ def setup_register_admin():
                     db.create_all()
                     db.session.commit() 
                 
-            hashed_password = bycrypt.generate_password_hash(password).decode("utf-8")
+            hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
             admin = Users(username=username, password=hashed_password, email=email, admin=True, created_at=datetime.datetime.now(), updated_at=datetime.datetime.now())
             db.session.add(admin)
             db.session.commit()
