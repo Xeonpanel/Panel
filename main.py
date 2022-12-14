@@ -6,7 +6,7 @@ db = SQLAlchemy()
 bycrypt = Bcrypt()
 app = flask.Flask("Xeonpanel", template_folder=f"themes/default")
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////usr/src/app/database.sqlite"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
