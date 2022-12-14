@@ -8,6 +8,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.sqlite"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
+import models
 import routers.dashboard, routers.auth, routers.api, routers.server
 import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
 
@@ -41,6 +42,11 @@ def main():
         return flask.redirect("/dashboard")
     else:
         return flask.redirect("/login")
+
+if not os.path.exists("database/database.sqlite"):
+    db.create_all()
+else:
+    import routers.setup
 
 if os.getenv("DEVELOPMENT_MODE"):
     app.run(debug=True, host="0.0.0.0", port=5000)
