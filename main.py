@@ -1,8 +1,6 @@
 import flask, os, sqlite3, json
 
 app = flask.Flask("Xeonpanel", template_folder="themes/{}".format(json.loads(open("config.json", "r").read())["theme"]))
-app.config["MAINTENANCE_MODE"] = False
-app.config["DEVELOPMENT_MODE"] = True
 app.config["SECRET_KEY"] =  json.loads(open("config.json", "r").read())["secret"]
 
 def query(sql, *parameter):
@@ -24,7 +22,7 @@ import admin.settings, admin.nodes, admin.servers, admin.images, admin.users
 
 @app.before_request
 def maintenance():
-    if app.config["MAINTENANCE_MODE"]:
+    if os.getenv("MAINTENANCE_MODE"):
         flask.abort(503) 
     else:
         if not "/setup" in flask.request.path:
@@ -60,7 +58,7 @@ def main():
     else:
         return flask.redirect("/login")
 
-if app.config["DEVELOPMENT_MODE"]:
+if os.getenv("DEVELOPMENT_MODE"):
     app.run(debug=True, host="0.0.0.0", port=5000)
 else:
     app.run(debug=False, host="0.0.0.0", port=5000)
