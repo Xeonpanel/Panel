@@ -12,9 +12,12 @@ db.init_app(app)
 
 import models
 
+if os.path.isfile("routers/setup.py"):
+    import routers.setup
+
 @app.before_request
 def check_maintenance():
-    if os.getenv("MAINTENANCE_MODE"):
+    if os.getenv("MAINTENANCE_MODE").lower() == "true":
         flask.abort(503) 
 
 @app.errorhandler(503)
@@ -38,18 +41,20 @@ def logout():
 
 @app.get("/")
 def main():
-    if flask.session:
-        return flask.redirect("/dashboard")
+    if os.path.isfile("routers/setup.py"):
+        return flask.redirect("/setup/getting-started")
     else:
-        return flask.redirect("/login")
+        if flask.session:
+            return flask.redirect("/dashboard")
+        else:
+            return flask.redirect("/login")
 
 if not os.path.exists("database/database.sqlite"):
     with app.app_context():
         db.create_all()
         db.session.commit()
-    import routers.setup
 
-if os.getenv("DEVELOPMENT_MODE"):
+if os.getenv("DEVELOPMENT_MODE").lower() == "true":
     app.run(debug=True, host="0.0.0.0", port=5000)
 else:
     app.run(debug=False, host="0.0.0.0", port=5000)
