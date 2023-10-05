@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Dashboard</title>
+</head>
+<body class="bg-gray-800">
+    <%- include("../../partials/sidebar") %>
+    <div class="lg:ml-[275px]">
+        <div class="h-screen w-full p-6">
+            <h2 class="font-semibold text-white text-3xl">Node <%= node.id %></h2>
+            <p class="text-neutral-200 text-sm">Manage your node</p>
+            <% if (message.length > 0) { %>
+                <div class="bg-red-500 text-white text-center mt-5 py-2 px-3 rounded mb-4">
+                    <%= message %>
+                </div>
+            <% } %>
+            <div class="grid grid-cols-3 gap-3 auto-rows-fr">
+                <div class="p-3 rounded bg-gray-700 mt-5 h-fit space-y-3">
+                    <div class="flex w-full justify-between">
+                        <h2 class="text-white font-semibold text-2xl">Install Node</h2>
+                        <button class="w-36 bg-gray-500 text-white py-1 px-2 rounded" onclick="copyRSAKey(this)">Copy Command</button>
+                        <script>
+                            function copyRSAKey(e) {
+                                e.innerText = "Copied";
+                                e.classList.remove("bg-gray-500");
+                                e.classList.add("bg-blue-500");
+                                setTimeout(() => {
+                                    e.innerText = "Copy Command";
+                                    e.classList.remove("bg-blue-500");
+                                    e.classList.add("bg-gray-500");
+                                }, 1500);
+                                var copyText = document.getElementById("install");
+                                navigator.clipboard.writeText(copyText.innerText);
+                            }
+                        </script>
+                    </div>
+                    <div id="install" class="bg-gray-800 p-2 rounded text-neutral-200 text-sm h-fit break-all">
+                        node index.js setup --token <%= node.b64_public %>
+                    </div>
+                    <div>
+                        <p class="text-neutral-200 text-sm">Run this command on your server to install the node.</p>
+                        <p class="text-neutral-200 text-sm">Make sure you are in the directory you want to install the node in.</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="p-3 rounded bg-gray-700 mt-5 h-fit space-y-3">
+                        <h2 class="text-white font-semibold text-2xl">Open Ports</h2>
+                        <div class="p-2 bg-gray-800 rounded">
+                            <table class="w-full">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left text-neutral-200 text-sm">Port</th>
+                                        <th class="text-left text-neutral-200 text-sm">Protocol</th>
+                                        <th class="text-left text-neutral-200 text-sm">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% node.ports.forEach(port => { %>
+                                        <tr>
+                                            <td class="text-left text-neutral-200 text-sm"><%= port.port %></td>
+                                            <td class="text-left text-neutral-200 text-sm">TCP</td>
+                                            <td class="text-left text-neutral-200 text-sm">
+                                                <form action="/admin/nodes/<%= node.id %>/ports/<%= port.id %>/delete" method="POST">
+                                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+        
+                                    <% if (node.ports.length == 0) { %>
+                                        <tr>
+                                            <td class="text-left text-neutral-200 text-sm">No ports open</td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded bg-gray-700 mt-5 h-fit space-y-3">
+                        <form action="/admin/nodes/<%= node.id %>" class="flex items-center space-x-3 justify-between" method="post">
+                            <input type="text" name="port" id="port" class="bg-gray-800 w-full rounded p-2 text-neutral-200" placeholder="Port" required>
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 w-1/4 text-white py-1 px-2 rounded">Add Port</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="p-3 rounded bg-gray-700 mt-5 h-fit">
+                    <h2 class="text-white font-semibold text-2xl">Node Managment</h2>
+                    <div class="space-y-3">
+                        <p class="text-neutral-200 text-sm">Deleting a node will remove all data associated with it.</p>
+                        <button class="bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded">Delete Node</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</body>
+</html>
