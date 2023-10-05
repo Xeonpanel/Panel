@@ -36,8 +36,9 @@ router.post("/jwt", async (req, res) => {
         return res.status(401).send("Unauthorized");
     }
 
-    const jwt_key = await Token.findAll()[0].jwt_key;
-    const jwtToken = jwt.sign({ authorized: true }, randomKey);
+    const token = await Token.findAll()
+    const jwt_key = token[0].jwt_key;
+    const jwtToken = jwt.sign({ authorized: true }, jwt_key);
     res.send(jwtToken);
 });
 
