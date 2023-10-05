@@ -1,0 +1,6 @@
+package-lock.json
+/node_modules
+config.json
+db.sqlite3
+/.vscode
+/ssl
