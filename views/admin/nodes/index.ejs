@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Dashboard</title>
+</head>
+<body class="bg-gray-800">
+    <%- include("../../partials/sidebar") %>
+    <div class="lg:ml-[275px]">
+        <div class="h-screen w-full p-6">
+            <div class="flex w-full justify-between items-center">
+                <div>
+                    <h2 class="font-semibold text-white text-3xl">Admin Nodes</h2>
+                    <p class="text-neutral-200 text-sm">Manage your nodes</p>
+                </div>
+                <button onclick="openModal()" class="bg-blue-500 rounded text-white py-2 px-3 hover:bg-blue-600 transition-all duration-100">Create Node</button>
+                <div class="modal hidden w-full h-screen fixed top-0 left-0 z-50 right flex items-center justify-center bg-black/50">
+                    <div class="p-4 bg-gray-700 rounded w-1/5">
+                        <form action="/admin/nodes" method="post" class="space-y-3">
+                            <h1 class="text-white font-semibold text-2xl">Create Node</h1>
+                            <div class="flex flex-col space-y-1">
+                                <label for="name" class="text-neutral-200 text-sm">Node Name</label>
+                                <input type="text" name="name" class="bg-gray-800 rounded p-2 text-neutral-200" placeholder="ubuntu-16gb" required>
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="ip" class="text-neutral-200 text-sm">Node IP</label>
+                                <input type="text" name="ip" class="bg-gray-800 rounded p-2 text-neutral-200" placeholder="23.08.12.223" required>
+                            </div>
+                            <div class="flex flex-col space-y-1">
+                                <label for="port" class="text-neutral-200 text-sm">Node Port</label>
+                                <input type="text" name="port" class="bg-gray-800 rounded p-2 text-neutral-200" placeholder="8080" required>
+                            </div>
+                            <div class="flex w-full justify-end">
+                                <div class="space-x-2">
+                                    <button type="button" onclick="closeModal()" class="text-neutral-300 hover:text-white transition-all duration-100 py-2 px-3">Cancel</button>
+                                    <button type="submit" class="bg-blue-500 rounded text-white py-2 px-3 hover:bg-blue-600 transition-all duration-100">Create Node</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <script>
+                    const modal = document.querySelector(".modal");
+
+                    function closeModal() {
+                        modal.classList.add("hidden");
+                    }
+
+                    function openModal() {
+                        modal.classList.remove("hidden");
+                    }
+
+                    window.onclick = function(event) {
+                        if (event.target == modal) {
+                            closeModal();
+                        }
+                    }
+                </script>
+            </div>
+            <% if (message.length > 0) { %>
+                <div class="bg-red-500 text-white text-center mt-5 py-2 px-3 rounded mb-4">
+                    <%= message %>
+                </div>
+            <% } %>
+            <table class="w-full bg-gray-700 rounded mt-4">
+                <thead class="bg-gray-900">
+                    <tr>
+                        <th class="text-left text-white py-2 px-3">Name</th>
+                        <th class="text-left text-white py-2 px-3">UUID</th>
+                        <th class="text-left text-white py-2 px-3">Memory Allocation</th>
+                        <th class="text-left text-white py-2 px-3">CPU Allocation</th>
+                        <th class="text-left text-white py-2 px-3">Disk Allocation</th>
+                        <th class="text-left text-white py-2 px-3">Connection</th>
+                        <th class="text-left text-white py-2 px-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% nodes.forEach(node => { %>
+                        <tr>
+                            <td class="text-left text-white py-2 px-3"><%= node.name %></td>
+                            <td class="text-left text-white py-2 px-3"><%= node.id %></td>
+                            <td class="text-left text-white py-2 px-3">0 / 0</td>
+                            <td class="text-left text-white py-2 px-3">0 / 0</td>
+                            <td class="text-left text-white py-2 px-3">0 / 0</td>
+                            <td class="text-left text-white py-2 px-3"><%= node.ip %>:<%= node.port %></td>
+                            <td class="text-left text-white py-2 px-3">
+                                <a href="/admin/nodes/<%= node.id %>" class="text-blue-500 hover:underline">Manage Node</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                
+                    <% if (nodes.length == 0) { %>
+                        <tr>
+                            <td class="text-left text-white py-2 px-3" colspan="3">No Nodes found.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div> 
+    </div>
+</body>
+</html>
