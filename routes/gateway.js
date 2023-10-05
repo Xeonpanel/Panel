@@ -30,4 +30,35 @@ async function generateJWT(node) {
 
 const jwtCache = {};
 
+router.get("/:node_id/ping", async (req, res) => {
+    const { node_id } = req.params;
+
+    if (!node_id) {
+        return res.json({ success: false, error: "Node id not provided" });
+    }
+
+    const node = await Node.findOne({ where: { id: node_id } });
+    if (!node) {
+        return res.json({ success: false, error: "Node not found" });
+    }
+
+    const jwt = await generateJWT(node);
+    if (!jwt) {
+        return res.json({ success: false, error: "Internal Server Error" });
+    }
+
+    const resp = await fetch(`https://${node.ip}:${node.port}/api`, {
+        method: "GET",
+        headers: {
+            "x-access-token": jwt
+        }
+    });
+
+    if (resp.status === 200) {
+        return res.json({ success: true });
+    } else {
+        return res.json({ success: false, error: "Something went wrong" });
+    }
+});
+
 module.exports = router;
