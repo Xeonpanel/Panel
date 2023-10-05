@@ -4,4 +4,5 @@ config.json
 db.sqlite3
 /.vscode
 /ssl
+ssl/
 node_modules/
