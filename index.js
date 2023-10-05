@@ -56,5 +56,5 @@ https.createServer({
     cert: fs.readFileSync("./ssl/cert.pem"),
 }, app).listen(3000, () => {
     console.log(`[${chalk.cyan("Info")}] Using SSL certificate from ${path.join(__dirname, "ssl", "cert.pem")}`);
-    console.log(`[${chalk.green("Success")}] Server started on https://localhost:3000`);
+    console.log(`[${chalk.green("Success")}] Panel started on https://localhost:3000`);
 });
