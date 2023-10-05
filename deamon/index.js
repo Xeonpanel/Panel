@@ -48,7 +48,7 @@ app.use("/api", require("./api"));
 https.createServer({
     key: fs.readFileSync("./ssl/key.pem"),
     cert: fs.readFileSync("./ssl/cert.pem"),
-}, app).listen(3001, () => {
+}, app).listen(8080, () => {
     console.log(`[${chalk.cyan("Info")}] Using SSL certificate from ${path.join(__dirname, "ssl", "cert.pem")}`);
-    console.log(`[${chalk.green("Success")}] Deamon started on https://localhost:3001`);
+    console.log(`[${chalk.green("Success")}] Deamon started on https://localhost:8080`);
 });
