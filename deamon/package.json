@@ -2,7 +2,7 @@
   "name": "deamon",
   "version": "1.0.0",
   "description": "",
-  "main": "deamon.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +15,7 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.2",
+    "minimist": "^1.2.8",
     "selfsigned": "^2.1.1",
     "sequelize": "^6.33.0"
   }
