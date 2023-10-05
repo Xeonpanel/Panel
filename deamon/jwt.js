@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const { Token } = require("./models");
 
 async function requireJWT(req, res, next) {
-    const jwtToken = req.headers["Authorization"];
+    const jwtToken = req.headers["x-access-token"];
 
     if (!jwtToken) {
         return res.json({ success: false, error: "Unauthorized" });
