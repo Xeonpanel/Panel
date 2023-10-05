@@ -2,6 +2,7 @@ const express = require("express");
 const crypto = require("crypto");
 const { Token } = require("./models");
 const jwt = require("jsonwebtoken");
+const { requireJWT } = require("./jwt");
 const fs = require("fs");
 
 const router = express.Router();
@@ -35,8 +36,13 @@ router.post("/jwt", async (req, res) => {
         return res.status(401).send("Unauthorized");
     }
 
-    const jwtToken = jwt.sign({ authorized: true }, fs.readFileSync("./ssl/key.pem"), { algorithm: "RS256" });
+    const jwt_key = await Token.findAll()[0].jwt_key;
+    const jwtToken = jwt.sign({ authorized: true }, randomKey);
     res.send(jwtToken);
+});
+
+router.get("/", requireJWT, async (req, res) => {
+    return res.json({ success: true });
 });
 
 module.exports = router;
