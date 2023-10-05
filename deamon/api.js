@@ -25,13 +25,13 @@ router.get("/jwt", async (req, res) => {
 
 router.post("/jwt", async (req, res) => {
     const { randomBytes } = req.session;
-    const { decryptedText } = req.body;
+    const { decryptedBytes } = req.body;
 
-    if (!randomBytes || !decryptedText) {
+    if (!randomBytes || !decryptedBytes) {
         return res.status(400).send("Bad Request");
     }
 
-    if (randomBytes !== decryptedText) {
+    if (randomBytes !== decryptedBytes) {
         return res.status(401).send("Unauthorized");
     }
 
