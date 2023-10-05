@@ -10,6 +10,10 @@ const Token = sequelize.define("token", {
     public_key: {
         type: Sequelize.STRING,
         allowNull: false
+    },
+    jwt_key: {
+        type: Sequelize.STRING,
+        allowNull: false
     }
 });
 
