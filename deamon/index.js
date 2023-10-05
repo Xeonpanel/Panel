@@ -27,6 +27,11 @@ if (!fs.existsSync("./ssl/key.pem") || !fs.existsSync("./ssl/cert.pem")) {
 }
 
 const app = express();
+app.use(session({
+    secret: crypto.randomBytes(24).toString("hex"),
+    resave: true,
+    saveUninitialized: true,
+}));
 app.use(parser.urlencoded({ extended: false }));
 app.use(parser.json());
 
@@ -37,5 +42,5 @@ https.createServer({
     cert: fs.readFileSync("./ssl/cert.pem"),
 }, app).listen(3001, () => {
     console.log(`[${chalk.cyan("Info")}] Using SSL certificate from ${path.join(__dirname, "ssl", "cert.pem")}`);
-    console.log(`[${chalk.green("Success")}] Deamon Server started on https://localhost:3001`);
+    console.log(`[${chalk.green("Success")}] Deamon started on https://localhost:3001`);
 });
