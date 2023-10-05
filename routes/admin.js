@@ -27,7 +27,7 @@ router.post("/nodes", checkAuth, async (req, res) => {
     }
 
     const { privateKey, publicKey } = crypto.generateKeyPairSync("rsa", {
-        modulusLength: 4096,
+        modulusLength: 2048,
         publicKeyEncoding: { type: "spki", format: "pem" },
         privateKeyEncoding: { type: "pkcs8", format: "pem" }
     });
