@@ -1,0 +1,46 @@
+<div class="absolute top-0 left-0 h-screen hidden lg:flex p-4 w-[275px] bg-gray-900 flex-col items-center justify-between">
+    <div class="w-full">
+        <h1 class="text-center font-semibold text-white text-2xl">Panel</h1>
+        <p class="text-center text-neutral-200 text-sm">Nodejs Panel</p>
+        <div class="flex flex-col my-6 space-y-2" id="nav-items">
+            <a class="text-white rounded space-x-2 py-2 px-3 border border-gray-700 duration-100 hover:bg-gray-800" href="/dashboard">
+                <i class="fa fa-server"></i>    
+                <span>Servers</span>
+            </a>
+            <a class="text-white rounded space-x-2 py-2 px-3 border border-gray-700 duration-100 hover:bg-gray-800" href="/dashboard/profile">
+                <i class="fa fa-user"></i>    
+                <span>Profile</span>
+            </a>
+            <div class="py-3">
+                <div class="h-[1px] rounded-full w-full bg-zinc-600"></div>
+            </div>
+            <a class="text-white rounded space-x-2 py-2 px-3 border border-gray-700 duration-100 hover:bg-gray-800" href="/admin/servers">
+                <i class="fa fa-server"></i>    
+                <span>Admin Servers</span>
+            </a>
+            <a class="text-white rounded space-x-2 py-2 px-3 border border-gray-700 duration-100 hover:bg-gray-800" href="/admin/users">
+                <i class="fa fa-users"></i>    
+                <span>Admin Users</span>
+            </a>
+            <a class="text-white rounded space-x-2 py-2 px-3 border border-gray-700 duration-100 hover:bg-gray-800" href="/admin/nodes">
+                <i class="fa fa-network-wired"></i>    
+                <span>Admin Nodes</span>
+            </a>
+        </div>
+    </div>
+    <a class="w-full text-white rounded space-x-2 py-2 px-3 border border-gray-700 duration-100 hover:bg-gray-800" href="/auth/logout">
+        <i class="fa fa-sign-out"></i>    
+        <span>Logout</span>
+    </a>
+</div>
+
+<script>
+    currPage = window.location.pathname
+
+    navItems = Array.from(document.getElementById("nav-items").children)
+    navItems.forEach(item => {
+        if (item.pathname == currPage) {
+            item.classList.add("bg-gray-800")
+        }
+    });
+</script>
