@@ -1,0 +1,12 @@
+<div class="bg-gray-900 p-6 flex justify-between w-full">
+    <a href="/" class="text-white text-xl font-semibold">Home</a>
+    <div class="space-x-2">
+        <% if (user) { %>
+            <a href="/dashboard " class="text-neutral-200 hover:text-white transition-all duration-100 text-xl font-semibold">Dashboard</a>
+            <a href="/auth/logout" class="text-neutral-200 hover:text-white transition-all duration-100 text-xl font-semibold">Logout</a>
+        <% } else { %>
+            <a href="/auth/login" class="text-neutral-200 hover:text-white transition-all duration-100 text-xl font-semibold">Login</a>
+            <a href="/auth/register" class="text-neutral-200 hover:text-white transition-all duration-100 text-xl font-semibold">Register</a>
+        <% } %>
+    </div>
+</div>
