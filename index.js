@@ -17,7 +17,7 @@ if (!fs.existsSync("./ssl/key.pem") || !fs.existsSync("./ssl/cert.pem")) {
     console.log(`[${chalk.yellow("Warn")}] Generating SSL certificate`);
 
     const attrs = [{ name: "commonName", value: os.hostname() }];
-    const pems = selfsigned.generate(attrs, { days: 90 });
+    const pems = selfsigned.generate(attrs, { days: 365 });
 
     try {
     fs.mkdirSync(path.join(__dirname, "ssl"));
