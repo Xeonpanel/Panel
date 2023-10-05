@@ -9,13 +9,21 @@ const https = require("https");
 const path = require("path");
 const os = require("os")
 const fs = require("fs");
+const { Token } = require("./models");
+
+Token.findAll().then((token) => {
+    if (token.length <= 0) {
+        console.log(`[${chalk.red("Error")}] Token not found, please run the setup.js script`);
+        process.exit(1);
+    }
+});
 
 if (!fs.existsSync("./ssl/key.pem") || !fs.existsSync("./ssl/cert.pem")) {
     console.log(`[${chalk.red("Error")}] SSL certificate not found`);
     console.log(`[${chalk.yellow("Warn")}] Generating SSL certificate`);
 
     const attrs = [{ name: "commonName", value: os.hostname() }];
-    const pems = selfsigned.generate(attrs, { days: 90 });
+    const pems = selfsigned.generate(attrs, { days: 365 });
 
     try {
     fs.mkdirSync(path.join(__dirname, "ssl"));
