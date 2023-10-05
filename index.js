@@ -49,6 +49,7 @@ app.get("/", checkAuth, async (req, res) => {
 app.use("/auth", require("./routes/auth"));      
 app.use("/dashboard", require("./routes/dashboard"));
 app.use("/admin", require("./routes/admin"));
+app.use("/gateway", require("./routes/gateway"));
 
 https.createServer({
     key: fs.readFileSync("./ssl/key.pem"),
