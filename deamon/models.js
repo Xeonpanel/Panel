@@ -15,4 +15,4 @@ const Token = sequelize.define("token", {
 
 Token.sync();
 
-module.exports = Token;
+module.exports = { Token }
