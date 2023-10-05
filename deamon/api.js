@@ -9,7 +9,13 @@ const router = express.Router();
 router.get("/jwt", async (req, res) => {
     const randomBytes = crypto.randomBytes(24).toString("hex");
     req.session.randomBytes = randomBytes;
-    const publicKey = await Token.findOne().public_key;
+    const token = await Token.findAll();
+
+    if (token.length <= 0) {
+        return res.status(500).send("Internal Server Error");
+    }
+
+    const publicKey = token[0].public_key;
 
     const encryptedBytes = crypto.publicEncrypt(publicKey, Buffer.from(randomBytes));
     const encryptedText = encryptedBytes.toString("base64");
