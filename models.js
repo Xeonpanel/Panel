@@ -44,8 +44,19 @@ const DockerImage = sequelize.define("DockerImage", {
     dockerfile: Sequelize.STRING
 });
 
+const Port = sequelize.define("Port", {
+    id: {
+        type: Sequelize.STRING,
+        primaryKey: true,
+        defaultValue: Sequelize.UUIDV4
+    },
+    port: Sequelize.INTEGER,
+    node_id: Sequelize.STRING
+});
+
 User.sync();
 Node.sync();
 DockerImage.sync();
+Port.sync();
 
-module.exports = { User, Node, DockerImage };
+module.exports = { User, Node, DockerImage, Port };
