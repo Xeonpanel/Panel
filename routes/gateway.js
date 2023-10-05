@@ -8,13 +8,17 @@ async function generateJWT(node) {
         method: "GET",
     });
 
+    let cookies = resp.headers.get("set-cookie");
     let encryptedBytes = await resp.text();
     let decryptedBytes = crypto.privateDecrypt(node.private_key, Buffer.from(encryptedBytes, "base64"));
-    let decryptedText = decryptedBytes.toString("utf8");
+    let decryptedText = decryptedBytes.toString();
 
     resp = await fetch(`https://${node.ip}:${node.port}/api/jwt`, {
         method: "POST",
         body: decryptedText,
+        headers: {
+            "Cookie": cookies,
+        }
     });
 
     return await resp.text();
