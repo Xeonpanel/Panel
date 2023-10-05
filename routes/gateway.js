@@ -18,13 +18,16 @@ async function generateJWT(node) {
 
     resp = await fetch(`https://${node.ip}:${node.port}/api/jwt`, {
         method: "POST",
-        body: decryptedText,
+        body: JSON.stringify({ decryptedBytes: decryptedText }),
         headers: {
             "Cookie": cookies,
+            "Content-Type": "application/json"
         }
     });
 
     return await resp.text();
 }
+
+const jwtCache = {};
 
 module.exports = router;
