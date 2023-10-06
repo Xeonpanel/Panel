@@ -4,8 +4,11 @@ const { Token } = require("./models");
 const jwt = require("jsonwebtoken");
 const { requireJWT } = require("./jwt");
 const fs = require("fs");
+const Docker = require("dockerode");
+const path = require("path");
 
 const router = express.Router();
+const docker = new Docker({ socketPath: "/var/run/docker.sock" });
 
 router.get("/jwt", async (req, res) => {
     const randomBytes = crypto.randomBytes(24).toString("hex");
@@ -44,6 +47,51 @@ router.post("/jwt", async (req, res) => {
 
 router.get("/", requireJWT, async (req, res) => {
     return res.json({ success: true });
+});
+
+router.post("/server", requireJWT, async (req, res) => {
+    const { dockerfile, name, ram, cpu, port, uuid } = req.body;
+
+    if (!dockerfile || !name || !ram || !cpu || !port || !uuid) {
+        return res.status(400).send("Bad Request");
+    }
+
+    if (fs.existsSync(path.join(__dirname, "containers", uuid))) {
+        return res.status(400).send("Bad Request");
+    }
+
+    fs.mkdirSync(path.join(__dirname, "containers", uuid), { recursive: true });
+    const containerPath = path.join(__dirname, "containers", uuid);
+    fs.writeFileSync(path.join(containerPath, "Dockerfile"), dockerfile);
+
+    const image = await docker.buildImage({
+        context: containerPath,
+        src: ["Dockerfile"]
+    }, { t: uuid });
+
+    image.pipe(process.stdout);
+
+    const server = await docker.run(uuid, [], null, {
+        name: uuid,
+        HostConfig: {
+            PortBindings: {
+                "80/tcp": [{
+                    HostPort: port.toString()
+                }]
+            },
+            Memory: ram * 1024 * 1024,
+            NanoCPUs: cpu,
+            Detach: true
+        }
+    });
+
+    res.json({ success: true, server: server });
+});
+
+router.get("/servers", requireJWT, async (req, res) => {
+    const containers = await docker.listContainers();
+
+    res.send(containers);
 });
 
 module.exports = router;
